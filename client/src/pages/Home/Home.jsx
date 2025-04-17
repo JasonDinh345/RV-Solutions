@@ -2,6 +2,7 @@
 import { useState } from "react";
 import "./Home.css"
 import RVSearch from "./components/RVSearch";
+import RVListContianer  from "./components/RVListContainer"
 import { getTodayPST } from "../../util/getDate";
 export default function Home(){
     const [searchValues, setSearchValues] = useState({location: "", checkIn: getTodayPST(), checkOut: getTodayPST()})
@@ -17,6 +18,7 @@ export default function Home(){
                 <RVSearch value={searchValues} onSearchChange={(e)=>handleSearchChange(e)}/>
                 <button>Search</button>
             </div>
+            <RVListContianer filter={searchValues}/>
         </div>
         </>
     )

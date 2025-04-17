@@ -6,15 +6,15 @@
     height: 10%;
     justify-content: right;
     align-items: center;
-    border-bottom: #1c75b2 5px solid;
+    border-bottom: var(--default-color) 5px solid;
 }
 
 #nav h2, h1{
-    color: #1c75b2;
+    color: var(--default-color);
     padding-right: 2%;
 }
 #nav h1{
-    color: #1c75b2;
+    color: var(--default-color);
     padding-right: 2%;
     justify-self: left;
     margin-right: auto;
