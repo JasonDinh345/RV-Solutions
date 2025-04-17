@@ -1,6 +1,6 @@
 import {useEffect, useReducer } from 'react';
 import { getTodayPST } from '../../../util/getDate';
-export default function RVSearch({ value, onSearchChange }) {
+export default function RVSearch({ value, onSearchChange, onSearch }) {
     
     const searchReducer = (searchValues, action)=>{
         let newValues = {...searchValues};
@@ -42,7 +42,7 @@ export default function RVSearch({ value, onSearchChange }) {
     },[searchValues, onSearchChange])
     return(
         <>
-        <div>
+        <div id='RVSearchBox'>
             <input type='text' value={searchValues.location} onChange={(e)=>handleChange(e, "change-location")} placeholder={"City"}/>
             <input 
                 type="date" 
@@ -56,6 +56,9 @@ export default function RVSearch({ value, onSearchChange }) {
                 min={searchValues.checkIn} 
                 onChange={(e)=>handleChange(e, "change-checkOut")}
                 />
+            <div className='searchButton' onClick={onSearch}>
+                 <img src='search.png'></img>
+            </div>
         </div>
         </>
     )

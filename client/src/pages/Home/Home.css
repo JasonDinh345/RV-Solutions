@@ -11,12 +11,51 @@
   gap:10%
 }
 
-#searchBox{
+
+/*RVSearch Component*/
+#RVSearchBox{
   display: flex;
   flex-direction: row;
+  height: 10%;
+  box-shadow: var(--default-box-shadow);
+  width: 30%;
+  border-radius: 50px;
+  overflow: hidden;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-around;
+  border: lightgray 2px solid;
 }
-/*RVSearch Component*/
+#RVSearchBox *{
+  
+  box-sizing: border-box;
+  border-radius: 50px;
+  border: 0;
+  height: 80%;
+  padding: 1%;
+  font-size: medium;
+ 
+}
+#RVSearchBox *:hover{
+  
+  background-color: rgb(214, 214, 214);
+  
+}
+.searchButton{
+  width: 50px;
+  height: 50px;
+  background-color: rgb(0, 162, 255);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  object-fit: contain;
 
+}
+.searchButton:hover{
+  
+  background-color: rgb(0, 128, 202);
+  
+}
 
 /*RVListContainer*/
 #rvListContainer{
@@ -27,13 +66,14 @@
   
   height: 100%;
   gap: 2%;
+  
 }
 /*RV*/
 .RV{
   display: flex;
   flex-direction: column;
   width: 15%;
-  height: 35%;
+  height: 37%;
   border: var(--default-color) 5px solid;
   box-sizing: border-box;
   border-radius: 20px;
