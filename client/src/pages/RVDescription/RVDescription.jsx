@@ -33,14 +33,25 @@ export default function RVDescription(){
                     <h1>{RV.make}, {RV.model}</h1>
                     <h2>{RV.city}</h2>
                 </div>
-                <img style={{width: "40%"}}src="/RV.jpg"></img>
+                <div id="rvSection1">
+                    <div className="imgContainer">
+                        <img src="/RV.jpg"></img>
+                    </div>
+                    <div className="RVSpecs">
+                        <h2>Specifications:</h2>
+                        <ul>
+                            <li>Class: {RV.class}</li>
+                            <li>Dimensions: {RV.length_ft}ft x {RV.width_ft}ft x {RV.height_ft}ft</li>
+                            <li>Total Mileage: {RV.mileage}</li>
+                            <li>Available from {reformatDate(RV.availStart)} to {reformatDate(RV.availEnd)}</li>
+                        </ul>
+                    </div>
+                </div>
                 
-                <div className="RVSpecs">
-                    
-                    <p>Class: {RV.class}</p>
-                    <p>Dimensions: {RV.length_ft}ft x {RV.width_ft}ft x {RV.height_ft}ft</p>
-                    <p>Total Mileage: {RV.mileage}</p>
-                    <p>Available from {reformatDate(RV.availStart)} to {reformatDate(RV.availEnd)}</p>
+                
+                <h2>Description</h2>
+                <div className="RVTextDesc">
+
                 </div>
             </div>
             </>
