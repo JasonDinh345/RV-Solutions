@@ -1,6 +1,10 @@
+import { useNavigate } from "react-router-dom"
+
 export default function RV({rvData}){
+    const navigate = useNavigate();
+
     const handleOnClick = ()=>{
-        
+        navigate("/RV/" + rvData.vin)
     }
     return(
         <>

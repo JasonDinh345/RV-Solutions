@@ -1,0 +1,41 @@
+#RVDescprition{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 60%;
+    height: 100%;
+    padding: 2%;
+    align-items: flex-start;
+    justify-content:left;
+    gap: 2%;
+}
+#RVDescprition img{
+    border: var(--default-color) 5px solid;
+    border-radius: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.RVSpecs{
+    
+    width: 50%;
+    border: var(--default-color) 5px solid;
+    border-radius: 20px;
+    padding: 2%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    
+}
+.rvHeader{
+    
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    
+}
+.rvHeader *{
+    
+   margin: 1%;
+}

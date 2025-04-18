@@ -7,4 +7,12 @@ export function getDatePST(offsetDays = 0) {
     const date = new Date(now);
     date.setDate(date.getDate() + offsetDays);
     return date.toLocaleDateString('en-CA'); // 'YYYY-MM-DD'
+}
+
+export function reformatDate(dateStr) {
+    const [year, month, day] = dateStr.split('-');
+    
+    return `${month}-${day}-${year}`;
   }
+
+ 

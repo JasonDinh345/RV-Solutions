@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./Home.css"
 import RVSearch from "./components/RVSearch";
 import RVListContianer  from "./components/RVListContainer"
-import { getTodayPST,getDatePST } from "../../util/getDate";
+import { getTodayPST,getDatePST } from "../../util/dataUtil";
 export default function Home(){
     const [searchValues, setSearchValues] = useState({location: "", checkIn: getTodayPST(), checkOut: getTodayPST()})
     
