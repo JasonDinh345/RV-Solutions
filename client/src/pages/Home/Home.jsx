@@ -5,7 +5,7 @@ import RVSearch from "./components/RVSearch";
 import RVListContianer  from "./components/RVListContainer"
 import { getTodayPST,getDatePST } from "../../util/dataUtil";
 export default function Home(){
-    const [searchValues, setSearchValues] = useState({location: "", checkIn: getTodayPST(), checkOut: getTodayPST()})
+    const [searchValues, setSearchValues] = useState({location: "", class: ""})
     
     const handleSearchChange = (values)=>{
         setSearchValues(values)
@@ -26,8 +26,7 @@ export default function Home(){
                 mileage: 1234, 
                 cost_per_day: 100, 
                 city: "Tacoma", 
-                availStart: getTodayPST(), 
-                availEnd:getDatePST(7)
+                isAvailable: true
             },{
                 length_ft: 19.5,
                 width_ft: 7.8,
@@ -39,8 +38,7 @@ export default function Home(){
                 mileage: 1500,
                 cost_per_day: 150,
                 city: "Seattle",
-                availStart: getTodayPST(), 
-                availEnd: getDatePST(10) 
+                isAvailable: true
             },
             {
                 length_ft: 16.5,
@@ -53,8 +51,7 @@ export default function Home(){
                 mileage: 800,
                 cost_per_day: 90,
                 city: "Spokane",
-                availStart: getTodayPST(), 
-                availEnd: getDatePST(3) 
+                isAvailable: true
             }]
         const [rvList, setRVList] = useState(initialRVList)   
         const isLoading = false;
@@ -65,12 +62,12 @@ export default function Home(){
             
             const newList = rvList.filter(rv =>
                 (!searchValues.location || rv.city.includes(searchValues.location)) &&
-                (!searchValues.checkIn || rv.availStart <= searchValues.checkIn) &&
-                (!searchValues.checkOut  || rv.availEnd >= searchValues.checkOut)
+                (!searchValues.class || rv.class ===  searchValues.class) 
             );
             setFilteredRVs(newList)
             
         }
+    console.log(searchValues.class)
     console.log(filteredRVs)
     return(
         <>

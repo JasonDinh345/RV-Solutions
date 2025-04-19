@@ -1,5 +1,5 @@
 //import { useParams } from "react-router-dom"
-import { getTodayPST, getDatePST, reformatDate } from "../../util/dataUtil";
+
 import "./RVDescription.css"
 export default function RVDescription(){
     //const {vin} = useParams();
@@ -15,8 +15,7 @@ export default function RVDescription(){
                     mileage: 1234, 
                     cost_per_day: 100, 
                     city: "Tacoma", 
-                    availStart: getTodayPST(), 
-                    availEnd:getDatePST(7)
+                    isAvailable: true
                 }
     const isLoading = false;
     //
@@ -43,7 +42,7 @@ export default function RVDescription(){
                             <li>Class: {RV.class}</li>
                             <li>Dimensions: {RV.length_ft}ft x {RV.width_ft}ft x {RV.height_ft}ft</li>
                             <li>Total Mileage: {RV.mileage}</li>
-                            <li>Available from {reformatDate(RV.availStart)} to {reformatDate(RV.availEnd)}</li>
+                           
                         </ul>
                     </div>
                 </div>

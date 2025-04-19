@@ -8,24 +8,8 @@ export default function RVSearch({ value, onSearchChange, onSearch }) {
             case "change-location":
                 
                 return {...newValues, location: action.payload.value}
-            case "change-checkIn": { 
-                const newCheckIn = action.payload.value;
-                const newCheckOut = newValues.checkOut;
-                if (newCheckIn > newCheckOut) {
-                    return {
-                        ...newValues,
-                        checkIn: newCheckIn,
-                        checkOut: newCheckIn
-                    };
-                }
-            
-                return {
-                    ...newValues,
-                    checkIn: newCheckIn
-                }; 
-            }
-            case "change-checkOut":
-                return {...newValues, checkOut: action.payload.value}   
+            case "change-class":
+                return {...newValues, class: action.payload.value}
             default:
                 return searchValues;
         }
@@ -44,18 +28,16 @@ export default function RVSearch({ value, onSearchChange, onSearch }) {
         <>
         <div id='RVSearchBox'>
             <input type='text' value={searchValues.location} onChange={(e)=>handleChange(e, "change-location")} placeholder={"City"}/>
-            <input 
-                type="date" 
-                value={searchValues.checkIn} 
-                min={today} 
-                onChange={(e)=>handleChange(e, "change-checkIn")}
-                />
-            <input 
-                type="date" 
-                value={searchValues.checkOut} 
-                min={searchValues.checkIn} 
-                onChange={(e)=>handleChange(e, "change-checkOut")}
-                />
+            <div id="RVSearchClass">
+                <p>RV Class:</p>
+                <select defaultValue="" onChange={(e)=>{handleChange(e, "change-class")}}>
+                        <option value="" >None</option>
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                </select>
+            </div>
+            
             <div className='searchButton' onClick={onSearch}>
                  <img src='search.png'></img>
             </div>
