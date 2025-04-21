@@ -8,7 +8,7 @@ export default function NavBar(){
         <>
             <nav id="nav">
                 <img src="/logo.png" height='80%' onClick={()=>{navigate("/")}}></img>
-                <h1>Team 1 RV Solutions</h1>
+                <h1>RV Solutions</h1>
                 
                 <h2 onClick={()=>{navigate("/")}} >Rent</h2>
                 <h2>Host</h2>

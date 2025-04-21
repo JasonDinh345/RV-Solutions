@@ -13,6 +13,14 @@ export function reformatDate(dateStr) {
     const [year, month, day] = dateStr.split('-');
     
     return `${month}-${day}-${year}`;
-  }
+}
+export function getDayDiff(dateInput1, dateInput2){
+    const date1 = new Date(dateInput1);
+    const date2 = new Date(dateInput2);
+    
+    const diff = Math.abs(date1- date2);
+
+    return Math.ceil(diff/(1000*60*60*24))
+}
 
  

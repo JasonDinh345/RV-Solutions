@@ -1,5 +1,6 @@
 //import { useParams } from "react-router-dom"
 
+import BookRVBox from "./components/BookRVBox";
 import "./RVDescription.css"
 export default function RVDescription(){
     //const {vin} = useParams();
@@ -28,30 +29,32 @@ export default function RVDescription(){
         ):(
             <>
             <div id="RVDescprition">
-                <div className="rvHeader">
-                    <h1>{RV.make}, {RV.model}</h1>
-                    <h2>{RV.city}</h2>
-                </div>
-                <div id="rvSection1">
-                    <div className="imgContainer">
-                        <img src="/RV.jpg"></img>
+                <div id="RVmainContent">
+                    <div className="rvHeader">
+                        <h1>{RV.make}, {RV.model}</h1>
+                        <h2>{RV.city}</h2>
                     </div>
+                    
+                        <div className="imgContainer">
+                            <img src="/RV.jpg"></img>
+                        </div>
+                    
                     <div className="RVSpecs">
-                        <h2>Specifications:</h2>
-                        <ul>
-                            <li>Class: {RV.class}</li>
-                            <li>Dimensions: {RV.length_ft}ft x {RV.width_ft}ft x {RV.height_ft}ft</li>
-                            <li>Total Mileage: {RV.mileage}</li>
-                           
-                        </ul>
+                            <h2>Specifications:</h2>
+                            <ul>
+                                <li>Class: {RV.class}</li>
+                                <li>Dimensions: {RV.length_ft}ft x {RV.width_ft}ft x {RV.height_ft}ft</li>
+                                <li>Total Mileage: {RV.mileage}</li>
+                            
+                            </ul>
+                        </div>
+                    
+                    <h2>Description</h2>
+                    <div className="RVTextDesc">
+
                     </div>
                 </div>
-                
-                
-                <h2>Description</h2>
-                <div className="RVTextDesc">
-
-                </div>
+                <BookRVBox costPer={RV.cost_per_day}/>
             </div>
             </>
         )}

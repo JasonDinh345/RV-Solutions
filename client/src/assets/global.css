@@ -8,6 +8,7 @@
 
   --default-box-shadow:10px 5px #0000006e;
   --default-color : #1c75b2;
+  
   height: fit-content;
 }
 body, html {

@@ -45,6 +45,8 @@
 #RVSearchBox input{
   
   width: 40%;
+  font-size: large;
+  padding: 3%;
  
 }
 #RVSearchClass{
