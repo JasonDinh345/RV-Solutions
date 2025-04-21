@@ -8,7 +8,7 @@
 
   --default-box-shadow:10px 5px #0000006e;
   --default-color : #1c75b2;
-  
+  --default-subColor:  #b6d8ffda;
   height: fit-content;
 }
 body, html {
@@ -29,4 +29,9 @@ p, h2,  h1, h3, ul{
   align-items: center;
   justify-self: center;
 
+}
+.flexCenter{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

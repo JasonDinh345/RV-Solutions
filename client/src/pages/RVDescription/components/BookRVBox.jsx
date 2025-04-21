@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { getDatePST, getDayDiff, getTodayPST } from "../../../util/dataUtil";
 
+import feesInfo from "../../../assets/feesInfo";
+
 export default function BookRVBox({costPer}){
     const [bookingInfo, setBookingInfo] = useState({
         startDate: getDatePST(),
         endDate: getTodayPST(),
     })
+    const fees = feesInfo;
     const handleSubmit = (e)=>{
         e.preventDefault();
         console.log("hji")
@@ -18,7 +21,10 @@ export default function BookRVBox({costPer}){
         }
         return setBookingInfo({...bookingInfo, [e.target.name]: e.target.value})
     }
-    const totalDays = getDayDiff(bookingInfo.startDate, bookingInfo.endDate) + 1
+    const totalDays = getDayDiff(bookingInfo.startDate, bookingInfo.endDate) + 1;
+    const flatCost = totalDays * costPer;
+    const taxCost = (fees.taxRate * flatCost);
+    const totalCost = (taxCost + flatCost).toFixed(2);
     return(
         <>
         <form onSubmit={handleSubmit} id="bookRVBox">
@@ -33,10 +39,13 @@ export default function BookRVBox({costPer}){
                 </div>
             </div>
             <div id="costContainer" >
-                <h3>Total: ${costPer*totalDays}</h3>
+                <h3>Total: ${totalCost}</h3>
                 <ul>{totalDays} days x ${costPer} per night</ul>
+                
                 <ul>------------------------------------</ul>
-                <ul>${costPer*totalDays}</ul>
+                <ul>Subtotal: ${flatCost}</ul>
+                <ul>Sales Tax: ${taxCost.toFixed(2)}</ul>
+                
             </div>
             <input type="submit" value={"Book Now"} className="bookingSubmit"></input>
         </form>

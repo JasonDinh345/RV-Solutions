@@ -29,16 +29,18 @@ export default function RVDescription(){
         ):(
             <>
             <div id="RVDescprition">
-                <div id="RVmainContent">
+                
                     <div className="rvHeader">
                         <h1>{RV.make}, {RV.model}</h1>
-                        <h2>{RV.city}</h2>
+                        <h2>{RV.city}, WA</h2>
                     </div>
                     
-                        <div className="imgContainer">
-                            <img src="/RV.jpg"></img>
+                        <div id="rvSection1">
+                            <div className="imgContainer">
+                                <img src="/RV.jpg"></img>
+                            </div>
+                            <BookRVBox costPer={RV.cost_per_day}/>
                         </div>
-                    
                     <div className="RVSpecs">
                             <h2>Specifications:</h2>
                             <ul>
@@ -53,8 +55,9 @@ export default function RVDescription(){
                     <div className="RVTextDesc">
 
                     </div>
-                </div>
-                <BookRVBox costPer={RV.cost_per_day}/>
+                    
+                
+                
             </div>
             </>
         )}

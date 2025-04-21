@@ -1,27 +1,23 @@
 #RVDescprition{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: nowrap;
     width: 80%;
-    height: 140vh;
+    height: 150vh;
     padding: 2%;
-    align-items: star;
+    align-items: start;
     justify-content: center ;
-    gap: 2vh;
-}
-#RVmainContent{
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 60%;
-    gap: 2%;
-
-}
-
-
-.imgContainer{
-    width: 70%;
+    gap: 3vh;
     
+}
+#rvSection1{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:2%
+}
+.imgContainer{
+    width: 60%;
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -41,8 +37,7 @@
 .RVSpecs{
     
     
-    height: 20%;
-   
+    height: fit-content;
     display: flex;
     flex-direction: column;
     border: var(--default-color) 5px solid;
@@ -50,7 +45,8 @@
     box-sizing: border-box;
     overflow: hidden;
     box-shadow: var(--default-box-shadow);
-    padding: 2%;
+    padding: 3%;
+    width: 100%;
     
     
 }
@@ -95,20 +91,16 @@
     display: flex;
     flex-direction: column;
     border: var(--default-color) 5px solid;
-    width: 20%;
-    position: relative;
+    width: 40%;
+    height: 100%;
     
-    height: 10%;
+    
+    
     border-radius: 20px;
     overflow: hidden;
     box-shadow: var(--default-box-shadow);
-    height: fit-content;
-    margin-top: 7%;
-    position: fixed;
-    top: 18%;
-    right: 2.5%;
-    z-index: 999;
-    background-color: white;
+    align-items: center ;
+    
 }
 #bookingContainer{
     
@@ -116,12 +108,13 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    width: 100%;
    
     
 }
 
 .bookingDate{
-    width:20vw;
+    width:50%;
     font-size: large;
     text-align: center;
     display: flex;
@@ -143,7 +136,7 @@
     font-size: large;
     text-align: center;
     border: 0;
-    background-color: #b6d8ffda;
+    background-color: var(--default-subColor);
     border-radius: 20px;
 }
 .bookingDate input:hover{
@@ -153,6 +146,9 @@
     padding: 2%;
     font-size: large;
     transition: all ease 0.1;
+    align-self: flex-start;
+    margin: 5%;
+    overflow-y: auto;
     
 }
 #costContainer h3{
@@ -160,8 +156,14 @@
     margin-bottom: 2%;
 }
 .bookingSubmit{
-    height: 40%;
+    height: 20%;
     font-size: large;
     text-align: center;
-    
+    width: 80%;
+    margin-top: auto;
+    margin-bottom: 5%;
+    background-color:var(--default-subColor) ;
+    border: var(--default-color) 3px solid;
+    border-radius: 20px;
+    box-shadow: var(--default-box-shadow);
 }
