@@ -2,6 +2,7 @@ import { Pool, ResultSetHeader } from "mysql2/promise";
 import bcrypt from 'bcrypt'
 import { User } from "../types/User.type.js";
 import { RefreshToken } from "../types/RefreshToken.type.js";
+import { getInsertQuery } from "../util/queryPrep.js";
 export class AuthService{
     
     private pool : Pool
@@ -19,7 +20,7 @@ export class AuthService{
             if(!userData.email || !userData.password){
                 throw new Error("INVALID_FIELDS")
             }
-            const [rows] = await this.pool.query("SELECT * FROM users WHERE email = ?",[userData.email]);
+            const [rows] = await this.pool.query("SELECT * FROM user WHERE email = ?",[userData.email]);
             const user = rows[0];
             if(!user){
                 throw new Error("INVALID_USER")
@@ -41,8 +42,9 @@ export class AuthService{
          * Adds the newly generated refresh token in the db
          * @param refreshToken, token to generate a new access token
          */
-        async addRefreshToken(refreshToken: Partial<RefreshToken>): Promise<void>{
-            await this.pool.execute("INSERT INTO refresh_tokens (refresh_token) VALUES ?",[refreshToken])
+        async addRefreshToken(refreshToken: RefreshToken): Promise<void>{
+            
+            await this.pool.execute(getInsertQuery(refreshToken, "refreshToken"),[Object.values(refreshToken)])
         }
         /**
          * Checks if the refresh token is valid or not
@@ -53,7 +55,7 @@ export class AuthService{
             if(!refreshToken){
                 throw new Error("INVALID_TOKEN")
             }
-            const [result] = await this.pool.execute("SELECT * FROM refresh_tokens WHERE refresh_token = ?", [refreshToken])
+            const [result] = await this.pool.execute("SELECT * FROM refreshToken WHERE token = ?", [refreshToken.token])
             return result[0] ? true : false
         }
         /**
@@ -69,7 +71,7 @@ export class AuthService{
         }
 
         const [result] = await this.pool.execute<ResultSetHeader>(
-            'DELETE FROM refresh_tokens WHERE refresh_token = ?',[refreshToken]);
+            'DELETE FROM refreshToken WHERE token = ?',[refreshToken.token]);
 
         return result.affectedRows > 0;
         }

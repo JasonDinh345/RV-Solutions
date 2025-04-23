@@ -1,5 +1,5 @@
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import { RV } from "../types/RV.type.js";
+import { RV, RVwImage } from "../types/RV.type.js";
 import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
 
 export class UserService{
@@ -9,27 +9,39 @@ export class UserService{
         this.pool = pool;
     }
     
-    async getAllRV():Promise<RV[]>{
-        const [rows] = await this.pool.query("SELCT * FROM RV");
+    async getAllRV():Promise<RVwImage[]>{
+        const [rows] = await this.pool.query("SELECT RV.*, Image.filePath AS imageURL FROM RV JOIN Image ON RV.imageID = Image.imageID");
         return rows[0];
     }
     async getRV(vin : String):Promise<RV>{
-        const [rows] = await this.pool.execute("SELECT * FROM RV WHERE vin = ?", [vin])
+        const [rows] = await this.pool.execute("SELECT RV.*, Image.filePath AS imageURL FROM RV JOIN Image ON RV.imageID = Image.imageID WHERE vin = ?", [vin])
         const RV = rows[0];
-        if(!RV){
-            throw new Error("INVALID_VIN")
-        }
+        if (!RV) {
+            console.error('VIN not found:', vin);
+            throw new Error("VIN_NOT_FOUND");
+          }
+      
         return RV;
     }
-    async insertRV(RV: RV): Promise<boolean> {
+    async insertRV(RV: Partial<RV>): Promise<boolean> {
         try {
-          const [result] = await this.pool.execute(getInsertQuery(RV, 'RV'), Object.values(RV));
+          const [result] = await this.pool.execute(getInsertQuery(RV, 'RV'), Object.values(RV)) as [ResultSetHeader];
       
          
-          return (result as any).affectedRows > 0;
+          return result.affectedRows > 0;
         } catch (err) {
-          console.error(err);
-          throw new Error("SERVER_ERROR");
+            if (err.code === 'ER_DUP_ENTRY') {
+                console.error('Duplicate entry error:', err.message);
+                throw new Error("DUPLICATE_ENTRY");
+              } else if (err.code === 'ER_BAD_NULL_ERROR') {
+                console.error('Missing required field:', err.message);
+                throw new Error("MISSING_FIELD");
+              } else if (err.code === 'ER_PARSE_ERROR') {
+                console.error('SQL syntax error:', err.message);
+                throw new Error("SQL_SYNTAX_ERROR");
+              }
+            console.error('Unexpected DB error:', err);
+            throw new Error("SERVER_ERROR");
         }
       }
     async updateRV(rvData: Partial<RV>, vin: string): Promise<boolean>{
@@ -38,6 +50,16 @@ export class UserService{
             const [result] = await this.pool.execute(getUpdateQuery(rvData, 'RV', 'vin'), [...Object.values(rvData), vin])
             return result.affectedRows > 0;
         }catch(err){
+            if (err.code === 'ER_BAD_FIELD_ERROR') {
+                console.error('Unknown field in update query:', err.message);
+                throw new Error("INVALID_FIELD");
+              } else if (err.code === 'ER_DATA_TOO_LONG') {
+                console.error('Data too long for column:', err.message);
+                throw new Error("DATA_TOO_LONG");
+              } else if (err.code === 'ER_NO_REFERENCED_ROW_2') {
+                console.error('Foreign key constraint fails:', err.message);
+                throw new Error("FOREIGN_KEY_ERROR");
+              }
             console.error(err);
             throw new Error("SERVER_ERROR");
         }
@@ -47,8 +69,21 @@ export class UserService{
             const [result] = await this.pool.execute('DELETE FROM RV WHERE vin = ?', [vin]) as [ResultSetHeader];
               
               
-              return result.affectedRows > 0;
+            if (result.affectedRows === 0) {
+                console.error('VIN not found:', vin);
+                throw new Error("VIN_NOT_FOUND");
+              }
+          
+            return true;
         }catch(err){
+            if (err.code === 'ER_ROW_IS_REFERENCED') {
+                console.error('Cannot delete RV: Foreign key constraint violation', err.message);
+                throw new Error("FOREIGN_KEY_ERROR");
+              } else if (err.code === 'ER_PARSE_ERROR') {
+                console.error('SQL syntax error in DELETE query:', err.message);
+                throw new Error("SQL_SYNTAX_ERROR");
+              }
+            console.error('Unexpected error while deleting RV:', err);
             throw new Error("SERVER_ERROR");
         }
     }

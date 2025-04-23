@@ -24,12 +24,18 @@ export class AuthController{
             }
             const accessToken = this.generateAccessToken({email: user.email})
             const refreshToken = jwt.sign({email: user.email}, process.env.REFRESH_TOKEN_SECRET)
-            await this.authService.addRefreshToken(refreshToken)
+            await this.authService.addRefreshToken({refreshToken: refreshToken, userID: user.userID})
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true, // Makes the cookie inaccessible to JavaScript (prevents XSS attacks)
+                secure: process.env.NODE_ENV === 'production', // Ensures cookies are only sent over HTTPS in production
+                sameSite: 'strict', // Prevents CSRF attacks
+                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days expiration (in milliseconds)
+              });
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production', // true in prod (HTTPS)
                 sameSite: 'strict',
-                maxAge: 3600000 // 1 hour
+                maxAge: 900 // 15min
               });
             res.status(201).json({accessToken: accessToken, refreshToken: refreshToken})
         }catch(err){
@@ -71,7 +77,7 @@ export class AuthController{
                         httpOnly: true,
                         secure: process.env.NODE_ENV === 'production', // true in prod (HTTPS)
                         sameSite: 'strict',
-                        maxAge: 3600000 // 1 hour
+                        maxAge: 900 // 15min
                       });
                     res.status(201).json({accessToken: accessToken})
                 })
@@ -100,6 +106,11 @@ export class AuthController{
             const hasDeleted: boolean = await this.authService.deleteRefreshToken(req.body.token)
             if(hasDeleted){
                 res.clearCookie('accessToken');
+                res.clearCookie('refreshToken', {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production', // true for HTTPS in production
+                    sameSite: 'strict',
+                  });
                 res.status(204).json({message: "Deleted Token"})
             }else{
                 res.status(404).json({message: "Token Not Found"})
