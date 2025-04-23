@@ -14,10 +14,22 @@
                 <li><code>util</code>: functions to be imported from to keep things organized
             </ul>
         </ul>
-    <li><code>server</code>: Folder containing all backend components (in progress)</li>
+    <li><code>server</code>: Folder containing all backend components using Express in TS</li>
+        <ul>
+            <li><code>src</code>: Folder containing files for backend
+            <ul>
+                <li><code>types</code>: Folder containing defined types describing the relational schema
+                <li><code>route</code>: Folder containing the route layer for each table that contains the path that the frontend needs to visit in order to manipute/get data
+                <li><code>controller</code>: Folder containing the controller layer for each table that recieves data from the route layer/frontend to be sent to the service layer and sends data back to the frontend
+                <li><code>service</code>: Folder containing the service layer for each table that recieves data from the controller data and sends queries to the database
+                <li><code>util</code>: functions to be imported from to keep things organized
+            </ul>
+        </ul>
 </ul>
     
 <h1>Dependencies</h1>
 <p>Run <code>cd client</code>, then run <code>npm install</code> or <code>npm i</code> to install the needed npm modules</p>
+<p>Run <code>cd ..</code> to return back to the root folder</p>
+<p>Run <code>cd server</code>, then run <code>npm install</code> or <code>npm i</code> to install the needed npm modules</p>
 
 
