@@ -1,5 +1,5 @@
 import express, {Express, Request, Response} from 'express';
-
+import authRouter from './route/auth.route.js';
 import cors from 'cors'
 const authApp: Express = express();
 
@@ -14,6 +14,7 @@ authApp.get("/", (req : Request, res: Response)=>{
 /**
  * Router for users Table
  */
+authApp.use('/auth', authRouter);
 
 
 
