@@ -1,35 +1,22 @@
-import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import { RV, RVwImage } from "../types/RV.type.js";
+import { Pool, ResultSetHeader } from "mysql2";
+import { Image } from "../types/Image.type.js";
 import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
+export class ImageService{
+    private pool
 
-export class RVService{
-    private pool;
-    
     constructor(pool : Pool){
-        this.pool = pool;
+        this.pool = pool
     }
-    
-    async getAllRV():Promise<RVwImage[]>{
-        const [rows] = await this.pool.query("SELECT RV.*, Image.filePath AS imageURL FROM RV JOIN Image ON RV.imageID = Image.imageID");
-        return rows[0];
-    }
-    async getRV(vin : String):Promise<RV>{
-        const [rows] = await this.pool.execute("SELECT RV.*, Image.filePath AS imageURL FROM RV JOIN Image ON RV.imageID = Image.imageID WHERE vin = ?", [vin])
-        const RV = rows[0];
-        if (!RV) {
-            console.error('VIN not found:', vin);
-            throw new Error("VIN_NOT_FOUND");
-          }
-      
-        return RV;
-    }
-    async insertRV(RV: Partial<RV>): Promise<boolean> {
-        try {
-          const [result] = await this.pool.execute(getInsertQuery(RV, 'RV'), Object.values(RV)) as [ResultSetHeader];
-      
-         
-          return result.affectedRows > 0;
-        } catch (err) {
+
+    async insertImage(imageData: Partial<Image>): Promise<Image>{
+        try{
+            const [rows] = await this.pool.execute(getInsertQuery(imageData, "image"), Object.values(imageData))
+            const img = rows[0]
+            if(!img){
+                throw new Error("FAILED_UPLOAD")
+            }
+            return img
+        }catch(err){
             if (err.code === 'ER_DUP_ENTRY') {
                 console.error('Duplicate entry error:', err.message);
                 throw new Error("DUPLICATE_ENTRY");
@@ -43,12 +30,14 @@ export class RVService{
             console.error('Unexpected DB error:', err);
             throw new Error("SERVER_ERROR");
         }
-      }
-    async updateRV(rvData: Partial<RV>, vin: string): Promise<boolean>{
-
+    }
+    async updateImage(imageData: Partial<Image>, imageID: number):Promise<boolean>{
+        delete imageData["userID"]
         try{
-            const [result] = await this.pool.execute(getUpdateQuery(rvData, 'RV', 'vin'), [...Object.values(rvData), vin])
-            return result.affectedRows > 0;
+            const [result] = await this.pool.execute(
+                getUpdateQuery(imageData, `image`, `imageID`),[...Object.values(imageData), imageID]
+            ) as [ResultSetHeader]
+            return result.affectedRows > 0
         }catch(err){
             if (err.code === 'ER_BAD_FIELD_ERROR') {
                 console.error('Unknown field in update query:', err.message);
@@ -64,29 +53,27 @@ export class RVService{
             throw new Error("SERVER_ERROR");
         }
     }
-    async deleteRV(vin: String):Promise<boolean>{
+    async deleteImage(imageID: number):Promise<boolean>{
         try{
-            const [result] = await this.pool.execute('DELETE FROM RV WHERE vin = ?', [vin]) as [ResultSetHeader];
-              
-              
+            const [result] = await this.pool.execute(
+                `DELETE FROM Image WHERE imageID = ?`, [imageID]
+            ) as [ResultSetHeader]
             if (result.affectedRows === 0) {
-                console.error('VIN not found:', vin);
-                throw new Error("VIN_NOT_FOUND");
+                console.error('Image not found:', imageID);
+                throw new Error("IMAGE_NOT_FOUND");
               }
           
             return true;
         }catch(err){
             if (err.code === 'ER_ROW_IS_REFERENCED') {
-                console.error('Cannot delete RV: Foreign key constraint violation', err.message);
+                console.error('Cannot delete Image: Foreign key constraint violation', err.message);
                 throw new Error("FOREIGN_KEY_ERROR");
               } else if (err.code === 'ER_PARSE_ERROR') {
                 console.error('SQL syntax error in DELETE query:', err.message);
                 throw new Error("SQL_SYNTAX_ERROR");
               }
-            console.error('Unexpected error while deleting RV:', err);
+            console.error('Unexpected error while deleting image:', err);
             throw new Error("SERVER_ERROR");
         }
     }
-    
-    
 }

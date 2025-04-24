@@ -1,8 +1,9 @@
-import { UserService } from "../service/RV.service.js";
+import { UserService } from "../service/user.service.js";
 import { Request, Response, NextFunction } from 'express';
 import { User } from "../types/User.type.js";
 import jwt from "jsonwebtoken"
 export class UserController{
+
     private userService;
 
     constructor(userService: UserService) {
