@@ -1,5 +1,5 @@
 export interface Image{
-    imageID: Number,
+    readonly imageID: Number,
     RVID: Number,
     imageURL: String,
     uploadDate: Date,
