@@ -1,15 +1,15 @@
 export interface RV{
-    make: String,
-    model: String,
-    sizeClass : String,
-    description: String,
+    make: string,
+    model: string,
+    sizeClass : string,
+    description: string,
     costToRent : Number,
-    readonly vin: String,
+    readonly vin: string,
     mileage: number,
     isAvailable: Boolean,
     location:String,
-    ownerID: Number
-    imageID?: Number
+    ownerID: number
+
 }
 
 export interface RVwImage{

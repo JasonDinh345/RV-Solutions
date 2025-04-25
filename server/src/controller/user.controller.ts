@@ -2,8 +2,16 @@ import { UserService } from "../service/user.service.js";
 import { Request, Response, NextFunction } from 'express';
 import { User } from "../types/User.type.js";
 import jwt from "jsonwebtoken"
-export class UserController{
 
+declare global {
+    namespace Express {
+      interface Request {
+        user?: Partial<User>; // or 'user: User' if it's always set
+      }
+    }
+  }
+export class UserController{
+    
     private userService;
 
     constructor(userService: UserService) {

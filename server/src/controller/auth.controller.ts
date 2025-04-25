@@ -27,13 +27,13 @@ export class AuthController{
             await this.authService.addRefreshToken({refreshToken: refreshToken, userID: user.userID})
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true, // Makes the cookie inaccessible to JavaScript (prevents XSS attacks)
-                secure: process.env.NODE_ENV === 'production', // Ensures cookies are only sent over HTTPS in production
+                secure: process.env.PROJECT_STATUS === 'production', // Ensures cookies are only sent over HTTPS in production
                 sameSite: 'strict', // Prevents CSRF attacks
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days expiration (in milliseconds)
               });
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production', // true in prod (HTTPS)
+                secure: process.env.PROJECT_STATUS === 'production', // true in prod (HTTPS)
                 sameSite: 'strict',
                 maxAge: 900 // 15min
               });

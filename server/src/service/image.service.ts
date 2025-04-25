@@ -8,14 +8,14 @@ export class ImageService{
         this.pool = pool
     }
 
-    async insertImage(imageData: Partial<Image>): Promise<Image>{
+    async insertImage(imageData: Partial<Image>, rvVin: string): Promise<number>{
         try{
-            const [rows] = await this.pool.execute(getInsertQuery(imageData, "image"), Object.values(imageData))
-            const img = rows[0]
-            if(!img){
+            const [result] = await this.pool.execute(getInsertQuery({...imageData, rvVin: rvVin} , "image"), [...Object.values(imageData), rvVin]) as [ResultSetHeader]
+            const insertId = result.insertId;
+            if(!insertId){
                 throw new Error("FAILED_UPLOAD")
             }
-            return img
+            return insertId
         }catch(err){
             if (err.code === 'ER_DUP_ENTRY') {
                 console.error('Duplicate entry error:', err.message);
@@ -23,7 +23,10 @@ export class ImageService{
               } else if (err.code === 'ER_BAD_NULL_ERROR') {
                 console.error('Missing required field:', err.message);
                 throw new Error("MISSING_FIELD");
-              } else if (err.code === 'ER_PARSE_ERROR') {
+              } else if (err.code === 'ER_NO_REFERENCED_ROW_2') {
+                console.error('Foreign key constraint fails:', err.message);
+                throw new Error("FOREIGN_KEY_ERROR");
+              }else if (err.code === 'ER_PARSE_ERROR') {
                 console.error('SQL syntax error:', err.message);
                 throw new Error("SQL_SYNTAX_ERROR");
               }
@@ -31,11 +34,11 @@ export class ImageService{
             throw new Error("SERVER_ERROR");
         }
     }
-    async updateImage(imageData: Partial<Image>, imageID: number):Promise<boolean>{
-        delete imageData["userID"]
+    async updateImage(imageData: Partial<Image>, rvVin: string):Promise<boolean>{
+ 
         try{
             const [result] = await this.pool.execute(
-                getUpdateQuery(imageData, `image`, `imageID`),[...Object.values(imageData), imageID]
+                getUpdateQuery(imageData, `image`, `rvVin`),[...Object.values(imageData), rvVin]
             ) as [ResultSetHeader]
             return result.affectedRows > 0
         }catch(err){
@@ -53,13 +56,13 @@ export class ImageService{
             throw new Error("SERVER_ERROR");
         }
     }
-    async deleteImage(imageID: number):Promise<boolean>{
+    async deleteImage(rvVin: string):Promise<boolean>{
         try{
             const [result] = await this.pool.execute(
-                `DELETE FROM Image WHERE imageID = ?`, [imageID]
+                `DELETE FROM Image WHERE rvVin = ?`, [rvVin]
             ) as [ResultSetHeader]
             if (result.affectedRows === 0) {
-                console.error('Image not found:', imageID);
+                console.error('Image not found referencing RV with vin:', rvVin);
                 throw new Error("IMAGE_NOT_FOUND");
               }
           

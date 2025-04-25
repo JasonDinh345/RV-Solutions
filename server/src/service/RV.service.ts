@@ -10,11 +10,11 @@ export class RVService{
     }
     
     async getAllRV():Promise<RVwImage[]>{
-        const [rows] = await this.pool.query("SELECT RV.*, Image.filePath AS imageURL FROM RV JOIN Image ON RV.imageID = Image.imageID");
+        const [rows] = await this.pool.query(`SELECT RV.*, Image.smallImageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.rvVin`);
         return rows[0];
     }
-    async getRV(vin : String):Promise<RV>{
-        const [rows] = await this.pool.execute("SELECT RV.*, Image.filePath AS imageURL FROM RV JOIN Image ON RV.imageID = Image.imageID WHERE vin = ?", [vin])
+    async getRV(vin : String):Promise<RVwImage>{
+        const [rows] = await this.pool.execute(`SELECT RV.*, Image.imageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.rvVin WHERE vin = ?`, [vin])
         const RV = rows[0];
         if (!RV) {
             console.error('VIN not found:', vin);

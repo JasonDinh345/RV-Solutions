@@ -1,9 +1,10 @@
 export interface User{
-    name: String,
-    email: String,
-    password:String,
-    address: String,
-    phoneNumber:String //formatted like (111)-111-1111
-    age: Number,
-    userID: Number
+    name: string,
+    email: string,
+    password:string,
+    address: string,
+    phoneNumber:string 
+    insuranceCompany: string,
+    dob: Date,
+    readonly userID: number
 }

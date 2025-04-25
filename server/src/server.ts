@@ -2,8 +2,9 @@ import express, {Express, Request, Response} from 'express';
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import fileUpload from 'express-fileupload'
+import dotenv from 'dotenv'
 const app: Express = express();
-
+dotenv.config()
 app.use(cors())
 app.use(express.json());
 app.use(cookieParser());

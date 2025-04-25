@@ -1,9 +1,10 @@
 
 export interface Image{
-    readonly imageID: Number,
-    RVID: Number,
-    img: Blob,
-    mimetype: Date,
+    readonly rvVin: string,
+    imageURL: string,
+    smallImageURL: string,
+    imageID: string,
+    uploadDate: Date
 }
 
 

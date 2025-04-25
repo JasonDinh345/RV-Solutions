@@ -1,8 +1,9 @@
 export interface Booking{
     status: String,
-    bookingID: Number,
-    RVID: Number,
+    readonly bookingID: number,
+    vin: number,
     startDate: Date,
     endDate: Date,
-    totalCost: Number
+    totalCost: number,
+    userID: number
 }

@@ -69,11 +69,11 @@ export class UserService{
             throw new Error("SERVER_ERROR");
         }
     }
-    async deleteUser(userID: number): Promise<boolean>{
+    async deleteUser(email: string): Promise<boolean>{
         try{
-            const [result] = await this.pool.execute(`DELETE FROM user WHERE userID = ?`, [userID]) as [ResultSetHeader]
+            const [result] = await this.pool.execute(`DELETE FROM user WHERE email = ?`, [email]) as [ResultSetHeader]
             if (result.affectedRows <= 0){
-                console.error("No user with id:", userID)
+                console.error("No user with email:", email)
                 throw new Error("INVALID_USER")
             }
             return true
