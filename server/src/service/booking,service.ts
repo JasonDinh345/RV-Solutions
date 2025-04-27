@@ -116,9 +116,9 @@ export class BookingService{
                 case "ER_BAD_FIELD_ERROR":
                     console.error('Unknown field in update query:', err.message);
                 throw new Error("INVALID_FIELD");
-                case "ER_BAD_NULL_ERROR":
-                    console.error('Missing required field:', err.message);
-                    throw new Error("MISSING_FIELD");
+                case "ER_NULL_CONSTRAINT_VIOLATION":
+                    console.error('Field can not be null:', err.message);
+                    throw new Error("NULL_FIELD");
                 case "ER_NO_REFERENCED_ROW_2":
                     console.error('Foreign key constraint fails:', err.message);
                     throw new Error("FOREIGN_KEY_ERROR");

@@ -22,7 +22,14 @@ export class BookingController{
                 res.status(404).json({message: `No booking found with given VIN: ${vin}`})
             }
         }catch(err){
-
+            switch(err.message){
+                case "SQL_SYNTAX_ERROR":
+                    res.status(500).json({message: `SQL syntax error!`})
+                    break;
+                default:
+                    res.status(500).json({message: `Server error occured!`})
+                    break;
+            }
         }
     }
     async getAllBookingsToAccount(req:Request, res: Response):Promise<void>{
@@ -38,7 +45,14 @@ export class BookingController{
                 res.status(404).json({message: `No booking found with given accountID: ${accountID}`})
             }
         }catch(err){
-
+            switch(err.message){
+                case "SQL_SYNTAX_ERROR":
+                    res.status(500).json({message: `SQL syntax error!`})
+                    break;
+                default:
+                    res.status(500).json({message: `Server error occured!`})
+                    break;
+            }
         }
     }
     async getAllBookingsToOwner(req:Request, res: Response):Promise<void>{
@@ -54,7 +68,96 @@ export class BookingController{
                 res.status(404).json({message: `No booking found with an RV with ownerID: ${ownerID}`})
             }
         }catch(err){
-
+            switch(err.message){
+                case "SQL_SYNTAX_ERROR":
+                    res.status(500).json({message: `SQL syntax error!`})
+                    break;
+                default:
+                    res.status(500).json({message: `Server error occured!`})
+                    break;
+            }
+        }
+    }
+    async insertBooking(req:Request, res: Response):Promise<void>{
+        try{
+            const bookingData = req.body.bookingData
+            if(await this.bookingService.insertBooking(bookingData)){
+                res.status(201).json({message: "Successfully inserted booking!"})
+            }else{
+                res.status(400).json({message:"Couldn't insert booking into database!"})
+            }
+        }catch(err){
+            switch(err.message){
+                case "INVALID_FIELD":
+                    res.status(400).json({message:`Unknown fields in RV data: ${req.body}`})
+                    break;
+                case "MISSING_FIELD":
+                    res.status(400).json({message:`Missing fields in RV data: ${req.body}`})
+                    break;
+                case "FOREIGN_KEY_ERROR":
+                    res.status(409).json({message:`Foreign key error!`})
+                    break;
+                case "DUPLICATE_ENTRY":
+                    res.status(409).json({message: `RV already exists with VIN: ${req.body.vin}`})
+                    break;
+                case "SQL_SYNTAX_ERROR":
+                    res.status(500).json({message: `SQL syntax error!`})
+                    break;
+                default:
+                    res.status(500).json({message: `Server error occured!`})
+                    break;
+            }
+        }
+    }
+    async updateBooking(req:Request, res: Response):Promise<void>{
+        try{
+            const bookingData = req.body.bookingData
+            const bookingID = req.body.bookingID
+            if(await this.bookingService.updateBooking(bookingData, bookingID)){
+                res.status(204).json({message: "Successfully updated booking!"})
+            }else{
+                res.status(404).json({message: `Couldn't find booking with ID: ${bookingID}`})
+            }
+        }catch(err){
+            switch(err.message){
+                case "INVALID_FIELD":
+                    res.status(400).json({message:`Unknown fields in RV data: ${req.body}`})
+                    break;
+                case "NULL_FIELD":
+                    res.status(400).json({message:`Field can not be null!: ${req.body}`})
+                    break;
+                case "FOREIGN_KEY_ERROR":
+                    res.status(409).json({message:`Foreign key error!`})
+                    break;
+                case "SQL_SYNTAX_ERROR":
+                    res.status(500).json({message: `SQL syntax error!`})
+                    break;
+                default:
+                    res.status(500).json({message: `Server error occured!`})
+                    break;
+            }
+        }
+    }
+    async deleteBooking(req:Request, res: Response):Promise<void>{
+        try{
+            const bookingID = req.body.bookingID
+            if(await this.bookingService.deleteBooking(bookingID)){
+                res.status(204).json({message: `Successfully deleted booking!`})
+            }else{
+                res.status(404).json({message: `Couldn't find booking with ID: ${bookingID}`}) 
+            }
+        }catch(err){
+            switch(err.message){
+                case "FOREIGN_KEY_ERROR":
+                    res.status(409).json({message:`Foreign key error!`})
+                    break;
+                case "SQL_SYNTAX_ERROR":
+                    res.status(500).json({message: `SQL syntax error!`})
+                    break;
+                default:
+                    res.status(500).json({message: `Server error occured!`})
+                    break;
+            }
         }
     }
 }

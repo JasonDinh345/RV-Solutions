@@ -10,18 +10,35 @@ export class RVService{
     }
     
     async getAllRV():Promise<RVwImage[]>{
-        const [rows] = await this.pool.query(`SELECT RV.*, Image.smallImageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.rvVin`);
-        return rows;
+        try{
+          const [rows] = await this.pool.query(`SELECT RV.*, Image.smallImageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.rvVin`);
+          return rows;
+        }catch(err){
+          switch(err.code){
+            case "ER_PARSE_ERROR":
+                console.error('SQL syntax error in DELETE query:', err.message);
+                throw new Error("SQL_SYNTAX_ERROR");
+            default:
+                console.error(err);
+                throw new Error("SERVER_ERROR");
+          }
+        }
     }
     async getRV(vin : String):Promise<RVwImage>{
-        const [rows] = await this.pool.execute(`SELECT RV.*, Image.imageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.rvVin WHERE vin = ?`, [vin])
-        const RV = rows[0];
-        if (!RV) {
-            console.error('VIN not found:', vin);
-            throw new Error("VIN_NOT_FOUND");
-          }
-      
-        return RV;
+        try{
+          const [rows] = await this.pool.execute(`SELECT RV.*, Image.imageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.rvVin WHERE vin = ?`, [vin])
+
+          return rows[0];
+        }catch(err){
+          switch(err.code){
+            case "ER_PARSE_ERROR":
+                console.error('SQL syntax error in DELETE query:', err.message);
+                throw new Error("SQL_SYNTAX_ERROR");
+            default:
+                console.error(err);
+                throw new Error("SERVER_ERROR");
+        }
+        }
     }
     async insertRV(RV: Partial<RV>): Promise<boolean> {
         try {
@@ -54,7 +71,7 @@ export class RVService{
             case "ER_BAD_FIELD_ERROR":
                 console.error('Unknown field in update query:', err.message);
             throw new Error("INVALID_FIELD");
-            case "ER_BAD_NULL_ERROR":
+            case "ER_NULL_CONSTRAINT_VIOLATION ":
                 console.error('Missing required field:', err.message);
                 throw new Error("MISSING_FIELD");
             case "ER_NO_REFERENCED_ROW_2":
@@ -69,14 +86,8 @@ export class RVService{
     async deleteRV(vin: String):Promise<boolean>{
         try{
             const [result] = await this.pool.execute('DELETE FROM RV WHERE vin = ?', [vin]) as [ResultSetHeader];
-              
-              
-            if (result.affectedRows === 0) {
-                console.error('VIN not found:', vin);
-                throw new Error("VIN_NOT_FOUND");
-              }
           
-            return true;
+            return result.affectedRows > 0;
         }catch(err){
             if (err.code === 'ER_ROW_IS_REFERENCED') {
                 console.error('Cannot delete RV: Foreign key constraint violation', err.message);

@@ -11,11 +11,8 @@ export class ImageService{
     async insertImage(imageData: Partial<Image>, vin: string): Promise<number>{
         try{
             const [result] = await this.pool.execute(getInsertQuery({...imageData, vin: vin} , "image"), [...Object.values(imageData), vin]) as [ResultSetHeader]
-            const insertId = result.insertId;
-            if(!insertId){
-                throw new Error("FAILED_UPLOAD")
-            }
-            return insertId
+            
+            return result.insertId
         }catch(err){
             if (err.code === 'ER_DUP_ENTRY') {
                 console.error('Duplicate entry error:', err.message);
@@ -45,9 +42,9 @@ export class ImageService{
             if (err.code === 'ER_BAD_FIELD_ERROR') {
                 console.error('Unknown field in update query:', err.message);
                 throw new Error("INVALID_FIELD");
-              } else if (err.code === 'ER_DATA_TOO_LONG') {
-                console.error('Data too long for column:', err.message);
-                throw new Error("DATA_TOO_LONG");
+              } else if (err.code === 'ER_NULL_CONSTRAINT_VIOLATION') {
+                console.error('Field can not be null!', err.message);
+                throw new Error("NULL_FIELD");
               } else if (err.code === 'ER_NO_REFERENCED_ROW_2') {
                 console.error('Foreign key constraint fails:', err.message);
                 throw new Error("FOREIGN_KEY_ERROR");
@@ -61,12 +58,9 @@ export class ImageService{
             const [result] = await this.pool.execute(
                 `DELETE FROM Image WHERE vin = ?`, [vin]
             ) as [ResultSetHeader]
-            if (result.affectedRows === 0) {
-                console.error('Image not found referencing RV with vin:', vin);
-                throw new Error("IMAGE_NOT_FOUND");
-              }
+            
           
-            return true;
+            return result.affectedRows >0;
         }catch(err){
             if (err.code === 'ER_ROW_IS_REFERENCED') {
                 console.error('Cannot delete Image: Foreign key constraint violation', err.message);

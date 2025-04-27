@@ -11,9 +11,20 @@ export class RVController{
     async getAllRV(req:Request, res: Response):Promise<void>{
         try{
             const allRVs = await this.rvService.getAllRV()
-            res.status(200).json(allRVs)
+            if(allRVs.length > 0){
+                res.status(200).json(allRVs)
+            }else{
+                res.status(404).json({message:"No RVs Found"})
+            }
         }catch(err){
-            res.status(500).json({message: `Server error occured!`})
+            switch(err.message){
+                case "SQL_SYNTAX_ERROR":
+                    res.status(500).json({message: `SQL syntax error!`})
+                    break;
+                default:
+                    res.status(500).json({message: `Server error occured!`})
+                    break;
+            }
         }
     }
     async getRV(req:Request, res: Response):Promise<void>{
@@ -27,15 +38,16 @@ export class RVController{
             if(RV){
                 res.status(200).json(RV)
             }else{
-                res.status(400).json({message: `Couldn't get RV with vin: ${vin}`})
+                res.status(404).json({message: `Couldn't get RV with vin: ${vin}`})
             }
         }catch(err){
             switch(err.message){
-                case("VIN_NOT_FOUND"):
-                    res.status(404).json({message: `RV doesn't exist with vin: ${req.body.vin}`})
+                case "SQL_SYNTAX_ERROR":
+                    res.status(500).json({message: `SQL syntax error!`})
+                    break;
                 default:
-                    res.status(500).json({message:`Unexpected Server Error!`})
-                    break
+                    res.status(500).json({message: `Server error occured!`})
+                    break;
             }
         }
     }
@@ -79,15 +91,15 @@ export class RVController{
             if(await this.rvService.updateRV(rvData, vin)){
                 res.status(204).json({message:`Successfully updated RV`})
             }else{
-                res.status(400).json({message:`Couldn't update RV`})
+                res.status(404).json({message:`Couldn't find RV`})
             }
         }catch(err){
             switch(err.message){
                 case "INVALID_FIELD":
                     res.status(400).json({ message: `Unknown field in update query: ${req.body}` });
                     break;
-                case "DATA_TOO_LONG":
-                    res.status(400).json({message: `Data for a field too long: ${req.body}`})
+                case "MISSING_FIELD":
+                    res.status(400).json({message: `Given fields can't be null!: ${req.body}`})
                     break;
                 case "FOREIGN_KEY_ERROR":
                     res.status(409).json({message: `Owner doesn't exist with ID: ${req.body.rvData.ownerID}`})
@@ -107,7 +119,7 @@ export class RVController{
             if(await this.rvService.deleteRV(vin)){
                 res.status(204).json({message: `Successfully deleted RV`})
             }else{
-                res.status(400).json({message:`Couldn't delete RV with VIN: ${vin}`})
+                res.status(404).json({message:`Couldn't find RV with VIN: ${vin}`})
             }
         }catch(err){
             switch(err.message){

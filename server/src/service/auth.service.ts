@@ -18,9 +18,9 @@ export class AuthService{
          */
         async authenticateUser(accountData: Partial<Account>): Promise<Account>{
             if(!accountData.email || !accountData.password){
-                throw new Error("INVALID_FIELDS")
+                throw new Error("NULL_FIELDS")
             }
-            const [rows] = await this.pool.query("SELECT * FROM account WHERE email = ?",[accountData.email]);
+            const [rows] = await this.pool.execute("SELECT * FROM account WHERE email = ?",[accountData.email]);
             const account = rows[0];
             if(!account){
                 throw new Error("INVALID_USER")
@@ -32,19 +32,31 @@ export class AuthService{
                 throw new Error("INCORRECT_PASSWORD")
             }catch(err){
                 console.error("Authentication error: ", err.message)
-                if(err.message == "INCORRECT_PASSWORD"){
-                    throw new Error("INCORRECT_PASSWORD")
-                }
-                throw new Error("SERVER_ERROR")
+                throw new Error(err.message)
             }
         }
         /**
          * Adds the newly generated refresh token in the db
          * @param refreshToken, token to generate a new access token
          */
-        async addRefreshToken(refreshToken: RefreshToken): Promise<void>{
+        async addRefreshToken(refreshTokenData: RefreshToken): Promise<boolean>{
             
-            await this.pool.execute(getInsertQuery(refreshToken, "refreshToken"),[Object.values(refreshToken)])
+            try{
+                const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery(refreshTokenData, "refreshToken"), Object.values(refreshTokenData))
+                return result.affectedRows > 0
+            }catch(err){
+                switch(err.code){
+                    case "ER_DUP_ENTRY":
+                        console.error('Duplicate user with refresh token error:', err.message);
+                        throw new Error("DUPLICATE_ENTRY");
+                    case "ER_PARSE_ERROR":
+                        console.error('SQL syntax error in DELETE query:', err.message);
+                        throw new Error("SQL_SYNTAX_ERROR");
+                    default:
+                        console.error('Unexpected DB error:', err);
+                        throw new Error("SERVER_ERROR");
+                }
+            }
         }
         /**
          * Checks if the refresh token is valid or not
@@ -52,11 +64,19 @@ export class AuthService{
          * @returns true if in the db, false if not
          */
         async verifyRefreshToken(refreshToken: Partial<RefreshToken>): Promise<boolean>{
-            if(!refreshToken){
-                throw new Error("INVALID_TOKEN")
+            try{
+                if(!refreshToken){
+                    throw new Error("INVALID_TOKEN")
+                }
+                const [result] = await this.pool.execute("SELECT * FROM refreshToken WHERE token = ?", [refreshToken.token])
+                if(!result[0]){
+                    throw new Error("UNKNOWN_TOKEN")
+                }
+                return true
+            }catch(err){
+                console.error(err)
+                throw new Error(err.message)
             }
-            const [result] = await this.pool.execute("SELECT * FROM refreshToken WHERE token = ?", [refreshToken.token])
-            return result[0] ? true : false
         }
         /**
          * Removes the refresh token from the db
@@ -66,13 +86,27 @@ export class AuthService{
          */
         /** Delete a refresh token by its raw value */
         async deleteRefreshToken(refreshToken: Partial<RefreshToken>): Promise<boolean> {
-        if (!refreshToken) {
-        throw new Error("INVALID_TOKEN");
-        }
-
-        const [result] = await this.pool.execute<ResultSetHeader>(
-            'DELETE FROM refreshToken WHERE token = ?',[refreshToken.token]);
-
-        return result.affectedRows > 0;
+            try{
+                if (!refreshToken) {
+                    throw new Error("INVALID_TOKEN");
+                    }
+            
+                    const [result] = await this.pool.execute<ResultSetHeader>(
+                        'DELETE FROM refreshToken WHERE token = ?',[refreshToken.token]);
+            
+                    return result.affectedRows > 0;
+            }catch(err){
+                switch(err.code){
+                    case "ER_ROW_IS_REFERENCED":
+                        console.error('Cannot delete: Foreign key constraint violation', err.message);
+                        throw new Error("FOREIGN_KEY_ERROR");
+                    case "ER_PARSE_ERROR":
+                        console.error('SQL syntax error in DELETE query:', err.message);
+                        throw new Error("SQL_SYNTAX_ERROR");
+                    default:
+                        console.error(err)
+                        throw new Error(err.message)
+                }
+            }
         }
 }

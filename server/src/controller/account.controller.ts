@@ -32,7 +32,7 @@ export class AccountController{
         }
         jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err:Error, account: Partial<Account>)=>{
             if(err){
-                res.status(403).json({message:"Token can't be verified"})
+                res.status(401).json({message:"Token can't be verified"})
                 return;
             }
             req.account = account
@@ -60,7 +60,7 @@ export class AccountController{
     }
     async insertAccount(req:Request, res: Response):Promise<void>{
         try{
-            const accountData: Partial<Account> = req.body;
+            const accountData: Partial<Account> = req.body.accountData;
 
             if(await this.accountService.insertAccount(accountData)){
                 res.status(201).json({message:`Sucessfully created account!`})
@@ -86,17 +86,14 @@ export class AccountController{
     }
     async updateAccount(req:Request, res: Response):Promise<void>{
         try{
-            const accountData: Partial<Account> = req.body
+            const accountData: Partial<Account> = req.body.accountData
             if(await this.accountService.updateAccount(accountData, req.account.email)){
                 res.status(204).json({message:`Sucessfully updated account!`})
             }else{
-                res.status(400).json({message:`Couldn't update account with data: ${JSON.stringify(accountData)}`})
+                res.status(404).json({message:`Unknown account with email: ${req.body.email}`})
             }
         }catch(err){
             switch(err.message){
-                case "INVALID_USER":
-                    res.status(404).json({ message: `Unknown account with email: ${req.body.email}` });
-                    break;
                 case "DUPLICATE_ENTRY":
                     res.status(409).json({ message: `Email already exists: ${req.body.email}` });
                     break;
@@ -120,13 +117,10 @@ export class AccountController{
             if(await this.accountService.deleteAccount(req.account.email)){
                 res.status(204).json({message:`Sucessfully deleted account!`})
             }else{
-                res.status(400).json({message:`Couldn't delete account with email: ${req.account.email}`})
+                res.status(404).json({message:`Couldn't find account with email: ${req.account.email}`})
             }
         }catch(err){
             switch(err.message){
-                case "INVALID_USER":
-                    res.status(404).json({message:`Couldn't find account with email: ${req.account.email}`})
-                    break
                 case "FOREIGN_KEY_ERROR":
                     res.status(409).json({message: "Cannot delete: Foreign key constraint violation"})
                     break;

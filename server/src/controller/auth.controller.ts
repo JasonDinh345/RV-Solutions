@@ -2,6 +2,7 @@ import { AuthService } from "../service/auth.service.js";
 import jwt from 'jsonwebtoken'
 import { Account } from "../types/Account.type.js";
 import { Request, Response } from 'express';
+import { RefreshToken } from "../types/RefreshToken.type.js";
 export class AuthController{
 
     private authService;
@@ -20,11 +21,13 @@ export class AuthController{
         try{
             const account: Account = await this.authService.authenticateUser(req.body)
             if(!account){
-                res.status(400).json({message: "Authorization Failed"})
+                res.status(401).json({message: "Authorization Failed"})
             }
             const accessToken = this.generateAccessToken({email: account.email})
-            const refreshToken = jwt.sign({email: account.email}, process.env.REFRESH_TOKEN_SECRET)
-            await this.authService.addRefreshToken({refreshToken: refreshToken, accountID: account.accountID})
+            const refreshToken:string = jwt.sign({email: account.email}, process.env.REFRESH_TOKEN_SECRET)
+            if(!(await this.authService.addRefreshToken({token: refreshToken, accountID: account.accountID}))){
+                throw new Error("ACCOUNT_NOT_FOUND")
+            }
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true, // Makes the cookie inaccessible to JavaScript (prevents XSS attacks)
                 secure: process.env.PROJECT_STATUS === 'production', // Ensures cookies are only sent over HTTPS in production
@@ -41,14 +44,20 @@ export class AuthController{
         }catch(err){
             console.error(err)
             switch(err.message){
-                case "INVALID_FIELDS":
+                case "NULL_FIELDS":
                     res.status(400).json({message: "Email and password cannot be null"})
                     break;
-                case "INVALID_USER":
-                    res.status(404).json({message: "User with given username can't be found"})
+                case "ACCOUNT_NOT_FOUND":
+                    res.status(404).json({message: "Account with given username can't be found"})
                     break;
                 case "INCORRECT_PASSWORD":
                     res.status(401).json({message: "Invalid password"})
+                    break;
+                case "DUPLICATE_ENTRY":
+                    res.status(409).json({message: 'User already has a refresh token!'})
+                    break;
+                case "SQL_SYNTAX_ERROR":
+                    res.status(500).json({message: 'SQL syntax error!'})
                     break;
                 default:
                     res.status(500).json({message: "Unexpected Server error has occured"})
@@ -69,7 +78,7 @@ export class AuthController{
             if(await this.authService.verifyRefreshToken(refreshToken)){
                 jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err :Error, account: Partial<Account>)=>{
                     if(err){
-                        res.status(403).json({message:"Refresh token is not valid"})
+                        res.status(401).json({message:"Refresh token is not valid"})
                         return;
                     }
                     const accessToken = this.generateAccessToken({email: account.email})
@@ -87,10 +96,13 @@ export class AuthController{
         }catch(err){
             console.error(err)
             switch(err.message){
-                
-                case 'INVALID_TOKEN':
-                    res.status(401).json({message: "Refresh token can't be null or undefined"})
+                case "UNKNOWN_TOKEN":
+                    res.status(404).json({message: "Refresh token unknown in database"})
                     break;
+                case 'INVALID_TOKEN':
+                    res.status(400).json({message: "Refresh token can't be null or undefined"})
+                    break;
+                
                 default:
                     res.status(500).json({message: "Unexpected Server error has occured"})
             }
@@ -128,4 +140,6 @@ export class AuthController{
     generateAccessToken(account: Partial<Account>): string{
         return jwt.sign(account, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15min'})
     }
+
+    
 }

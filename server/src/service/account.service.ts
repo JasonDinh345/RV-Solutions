@@ -11,12 +11,7 @@ export class AccountService{
     async getAccount(email: string):Promise<Account>{
         try{
             const [rows] = await this.pool.execute("SELECT * FROM ACCOOUNT WHERE email = ?", [email])
-            const account = rows[0];
-                if (!account){
-                console.error("No account with email:", email)
-                throw new Error("INVALID_USER")
-            }
-            return account
+            return rows[0]
         }catch(err){
             console.error("Unexpected server error has occured!")
             throw new Error("SERVER_ERROR")
@@ -27,7 +22,7 @@ export class AccountService{
         const hashedPass = await bcrypt.hash(accountData.password!, 10)
         accountData.password = hashedPass;
         try{
-            const [result] = await this.pool.execute(getInsertQuery(accountData, "Account "),Object.values(accountData)) as [ResultSetHeader];
+            const [result] = await this.pool.execute(getInsertQuery(accountData, "Account"),Object.values(accountData)) as [ResultSetHeader];
 
             return result.affectedRows > 0;
         }catch(err){
@@ -52,31 +47,34 @@ export class AccountService{
         }
         try{
             const [result] = await this.pool.execute(getUpdateQuery(accountData, 'account', 'email'), [...Object.values(accountData), email]) as [ResultSetHeader]
-            if (result.affectedRows <= 0){
-                console.error("No account with email:", email)
-                throw new Error("INVALID_USER")
-            }
-            return true
+           
+            return result.affectedRows > 0
         }catch(err){
-            if (err.code === 'ER_BAD_FIELD_ERROR') {
-                console.error('Unknown field in update query:', err.message);
-                throw new Error("INVALID_FIELD");
-              }else if (err.code === 'ER_NO_REFERENCED_ROW_2') {
-                console.error('Foreign key constraint fails:', err.message);
-                throw new Error("FOREIGN_KEY_ERROR");
-              }
-            console.error(err);
-            throw new Error("SERVER_ERROR");
+            switch(err.code){
+                case "ER_BAD_FIELD_ERROR":
+                    console.error('Unknown field in update query:', err.message);
+                    throw new Error("INVALID_FIELD");
+                case "ER_DUP_ENTRY":
+                    console.error('Email already exists:', err.message);
+                    throw new Error("DUPLICATE_ENTRY");
+                case "ER_NO_REFERENCED_ROW_2":
+                    console.error('Foreign key constraint fails:', err.message);
+                    throw new Error("FOREIGN_KEY_ERROR");
+                case "ER_PARSE_ERROR":
+                    console.error('SQL syntax error:', err.message);
+                    throw new Error("SQL_SYNTAX_ERROR");
+                default:
+                    console.error(err);
+                    throw new Error("SERVER_ERROR");
+
+            }
+            
         }
     }
     async deleteAccount(email: string): Promise<boolean>{
         try{
             const [result] = await this.pool.execute(`DELETE FROM account WHERE email = ?`, [email]) as [ResultSetHeader]
-            if (result.affectedRows <= 0){
-                console.error("No account with email:", email)
-                throw new Error("INVALID_USER")
-            }
-            return true
+            return result.affectedRows > 0
         }catch(err){
             if (err.code === 'ER_ROW_IS_REFERENCED') {
                 console.error('Cannot delete: Foreign key constraint violation', err.message);
