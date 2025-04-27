@@ -5,5 +5,5 @@ export interface Booking{
     startDate: Date,
     endDate: Date,
     totalCost: number,
-    userID: number
+    accountID: number
 }

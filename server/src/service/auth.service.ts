@@ -1,6 +1,6 @@
 import { Pool, ResultSetHeader } from "mysql2/promise";
 import bcrypt from 'bcrypt'
-import { User } from "../types/User.type.js";
+import { Account } from "../types/Account.type.js";
 import { RefreshToken } from "../types/RefreshToken.type.js";
 import { getInsertQuery } from "../util/queryPrep.js";
 export class AuthService{
@@ -11,23 +11,23 @@ export class AuthService{
         this.pool = pool;
     }
     /**
-         * Authenticatates user if correct pass and username
-         * @param userData, fields to be authenticated 
-         * @returns an AuthResult(boolean, message?, user?) to see if the authetication 
-         * passed or not, passes the user if successful
+         * Authenticatates account if correct pass and email
+         * @param accountData, fields to be authenticated 
+         * @returns an AuthResult(boolean, message?, account?) to see if the authetication 
+         * passed or not, passes the account if successful
          */
-        async authenticateUser(userData: Partial<User>): Promise<User>{
-            if(!userData.email || !userData.password){
+        async authenticateUser(accountData: Partial<Account>): Promise<Account>{
+            if(!accountData.email || !accountData.password){
                 throw new Error("INVALID_FIELDS")
             }
-            const [rows] = await this.pool.query("SELECT * FROM user WHERE email = ?",[userData.email]);
-            const user = rows[0];
-            if(!user){
+            const [rows] = await this.pool.query("SELECT * FROM account WHERE email = ?",[accountData.email]);
+            const account = rows[0];
+            if(!account){
                 throw new Error("INVALID_USER")
             }
             try{
-                if(await bcrypt.compare(userData.password, user.password)){
-                    return user
+                if(await bcrypt.compare(accountData.password, account.password)){
+                    return account
                 }
                 throw new Error("INCORRECT_PASSWORD")
             }catch(err){

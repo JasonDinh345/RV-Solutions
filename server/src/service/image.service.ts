@@ -8,9 +8,9 @@ export class ImageService{
         this.pool = pool
     }
 
-    async insertImage(imageData: Partial<Image>, rvVin: string): Promise<number>{
+    async insertImage(imageData: Partial<Image>, vin: string): Promise<number>{
         try{
-            const [result] = await this.pool.execute(getInsertQuery({...imageData, rvVin: rvVin} , "image"), [...Object.values(imageData), rvVin]) as [ResultSetHeader]
+            const [result] = await this.pool.execute(getInsertQuery({...imageData, vin: vin} , "image"), [...Object.values(imageData), vin]) as [ResultSetHeader]
             const insertId = result.insertId;
             if(!insertId){
                 throw new Error("FAILED_UPLOAD")
@@ -34,11 +34,11 @@ export class ImageService{
             throw new Error("SERVER_ERROR");
         }
     }
-    async updateImage(imageData: Partial<Image>, rvVin: string):Promise<boolean>{
+    async updateImage(imageData: Partial<Image>, vin: string):Promise<boolean>{
  
         try{
             const [result] = await this.pool.execute(
-                getUpdateQuery(imageData, `image`, `rvVin`),[...Object.values(imageData), rvVin]
+                getUpdateQuery(imageData, `image`, `vin`),[...Object.values(imageData), vin]
             ) as [ResultSetHeader]
             return result.affectedRows > 0
         }catch(err){
@@ -56,13 +56,13 @@ export class ImageService{
             throw new Error("SERVER_ERROR");
         }
     }
-    async deleteImage(rvVin: string):Promise<boolean>{
+    async deleteImage(vin: string):Promise<boolean>{
         try{
             const [result] = await this.pool.execute(
-                `DELETE FROM Image WHERE rvVin = ?`, [rvVin]
+                `DELETE FROM Image WHERE vin = ?`, [vin]
             ) as [ResultSetHeader]
             if (result.affectedRows === 0) {
-                console.error('Image not found referencing RV with vin:', rvVin);
+                console.error('Image not found referencing RV with vin:', vin);
                 throw new Error("IMAGE_NOT_FOUND");
               }
           

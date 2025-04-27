@@ -11,7 +11,7 @@ export class RVService{
     
     async getAllRV():Promise<RVwImage[]>{
         const [rows] = await this.pool.query(`SELECT RV.*, Image.smallImageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.rvVin`);
-        return rows[0];
+        return rows;
     }
     async getRV(vin : String):Promise<RVwImage>{
         const [rows] = await this.pool.execute(`SELECT RV.*, Image.imageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.rvVin WHERE vin = ?`, [vin])
@@ -50,18 +50,20 @@ export class RVService{
             const [result] = await this.pool.execute(getUpdateQuery(rvData, 'RV', 'vin'), [...Object.values(rvData), vin])
             return result.affectedRows > 0;
         }catch(err){
-            if (err.code === 'ER_BAD_FIELD_ERROR') {
+          switch(err.code){
+            case "ER_BAD_FIELD_ERROR":
                 console.error('Unknown field in update query:', err.message);
-                throw new Error("INVALID_FIELD");
-              } else if (err.code === 'ER_DATA_TOO_LONG') {
-                console.error('Data too long for column:', err.message);
-                throw new Error("DATA_TOO_LONG");
-              } else if (err.code === 'ER_NO_REFERENCED_ROW_2') {
+            throw new Error("INVALID_FIELD");
+            case "ER_BAD_NULL_ERROR":
+                console.error('Missing required field:', err.message);
+                throw new Error("MISSING_FIELD");
+            case "ER_NO_REFERENCED_ROW_2":
                 console.error('Foreign key constraint fails:', err.message);
                 throw new Error("FOREIGN_KEY_ERROR");
-              }
-            console.error(err);
-            throw new Error("SERVER_ERROR");
+            default:
+                console.error('Unexpected DB error:', err);
+                throw new Error("SERVER_ERROR");
+        }
         }
     }
     async deleteRV(vin: String):Promise<boolean>{

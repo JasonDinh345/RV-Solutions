@@ -1,33 +1,33 @@
 import { Pool, ResultSetHeader } from "mysql2/promise";
-import { User } from "../types/User.type.js";
+import { Account } from "../types/Account.type.js";
 import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
 import bcrypt from 'bcrypt'
-export class UserService{
+export class AccountService{
     private pool;
 
     constructor(pool: Pool){
         this.pool = pool 
     }
-    async getUser(email: string):Promise<User>{
+    async getAccount(email: string):Promise<Account>{
         try{
-            const [rows] = await this.pool.execute("SELECT * FROM users WHERE email = ?", [email])
-            const user = rows[0];
-                if (!user){
-                console.error("No user with email:", email)
+            const [rows] = await this.pool.execute("SELECT * FROM ACCOOUNT WHERE email = ?", [email])
+            const account = rows[0];
+                if (!account){
+                console.error("No account with email:", email)
                 throw new Error("INVALID_USER")
             }
-            return user
+            return account
         }catch(err){
             console.error("Unexpected server error has occured!")
             throw new Error("SERVER_ERROR")
         }
     }
-    async insertUser(userData: Partial<User>): Promise<boolean>{
+    async insertAccount(accountData: Partial<Account>): Promise<boolean>{
         
-        const hashedPass = await bcrypt.hash(userData.password!, 10)
-        userData.password = hashedPass;
+        const hashedPass = await bcrypt.hash(accountData.password!, 10)
+        accountData.password = hashedPass;
         try{
-            const [result] = await this.pool.execute(getInsertQuery(userData, "user"),Object.values(userData)) as [ResultSetHeader];
+            const [result] = await this.pool.execute(getInsertQuery(accountData, "Account "),Object.values(accountData)) as [ResultSetHeader];
 
             return result.affectedRows > 0;
         }catch(err){
@@ -45,15 +45,15 @@ export class UserService{
             throw new Error("SERVER_ERROR");  
         }
     }
-    async updateUser(userData: Partial<User>, email: number):Promise<boolean>{
-        if(userData.password){
-            const hashedPass = await bcrypt.hash(userData.password, 10)
-            userData.password = hashedPass;
+    async updateAccount(accountData: Partial<Account>, email: number):Promise<boolean>{
+        if(accountData.password){
+            const hashedPass = await bcrypt.hash(accountData.password, 10)
+            accountData.password = hashedPass;
         }
         try{
-            const [result] = await this.pool.execute(getUpdateQuery(userData, 'user', 'email'), [...Object.values(userData), email]) as [ResultSetHeader]
+            const [result] = await this.pool.execute(getUpdateQuery(accountData, 'account', 'email'), [...Object.values(accountData), email]) as [ResultSetHeader]
             if (result.affectedRows <= 0){
-                console.error("No user with email:", email)
+                console.error("No account with email:", email)
                 throw new Error("INVALID_USER")
             }
             return true
@@ -69,11 +69,11 @@ export class UserService{
             throw new Error("SERVER_ERROR");
         }
     }
-    async deleteUser(email: string): Promise<boolean>{
+    async deleteAccount(email: string): Promise<boolean>{
         try{
-            const [result] = await this.pool.execute(`DELETE FROM user WHERE email = ?`, [email]) as [ResultSetHeader]
+            const [result] = await this.pool.execute(`DELETE FROM account WHERE email = ?`, [email]) as [ResultSetHeader]
             if (result.affectedRows <= 0){
-                console.error("No user with email:", email)
+                console.error("No account with email:", email)
                 throw new Error("INVALID_USER")
             }
             return true
