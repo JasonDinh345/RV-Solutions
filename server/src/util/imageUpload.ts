@@ -34,7 +34,7 @@ import stream from 'stream'
           // Generate the smaller image URL (resize while maintaining aspect ratio)
           const smallerUrl = cloudinary.url(publicId, {
             width: 300,  // Desired width for the smaller version
-            height: 199.5,  // Desired height for the smaller version
+            height: 199,  // Desired height for the smaller version
             crop: 'fill', // Resize to fit within the given width and height
             gravity: 'auto', // Auto-adjust for best fit
             fetch_format: 'auto', // Auto-select format (like webp, jpg, png)

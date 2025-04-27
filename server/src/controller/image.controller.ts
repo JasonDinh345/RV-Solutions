@@ -63,8 +63,8 @@ export class ImageController{
                 case "INVALID_FIELD":
                     res.status(400).json({ message: `Unknown field in update query: ${JSON.stringify(req.files.img)}` });
                     break;
-                case "DATA_TOO_LONG":
-                    res.status(413).json({message: `Data is too long for a column!`})
+                case "NULL_FIELD":
+                    res.status(409).json({message: `Fields can't be null!`})
                     break
                 case "FOREIGN_KEY_ERROR":
                     res.status(409).json({ message: `RV doesn't exist with vin: ${req.body.vin}!`});
@@ -88,7 +88,8 @@ export class ImageController{
             if(await this.imageService.deleteImage(imageID)){
                 res.status(204).json({message:`Successfully deleted image!`})
             }else{
-                res.status(400).json({message:`Couldn't delete image with id: ${imageID}`})
+                res.status(404).json({message:`Couldn't find image with id: ${imageID}`})
+                return
             }
             if(!(await deleteImage(imageID))){
                 res.status(400).json({message:`Delete on Cloudinary image has failed!`})

@@ -3,8 +3,8 @@ export interface DamageReport{
     deduction: number,
     description: string,
     policeReportID: string,
-    reportID: number,
-    incidentNum: number,
+    readonly reportID: number, // primary key
+    incidentNum: string,
     bookingID: number
 
 }

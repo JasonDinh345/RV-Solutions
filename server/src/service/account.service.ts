@@ -1,0 +1,90 @@
+import { Pool, ResultSetHeader } from "mysql2/promise";
+import { Account } from "../types/Account.type.js";
+import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
+import bcrypt from 'bcrypt'
+export class AccountService{
+    private pool;
+
+    constructor(pool: Pool){
+        this.pool = pool 
+    }
+    async getAccount(email: string):Promise<Account>{
+        try{
+            const [rows] = await this.pool.execute("SELECT * FROM ACCOOUNT WHERE email = ?", [email])
+            return rows[0]
+        }catch(err){
+            console.error("Unexpected server error has occured!")
+            throw new Error("SERVER_ERROR")
+        }
+    }
+    async insertAccount(accountData: Partial<Account>): Promise<boolean>{
+        
+        const hashedPass = await bcrypt.hash(accountData.password!, 10)
+        accountData.password = hashedPass;
+        try{
+            const [result] = await this.pool.execute(getInsertQuery(accountData, "Account"),Object.values(accountData)) as [ResultSetHeader];
+
+            return result.affectedRows > 0;
+        }catch(err){
+            if (err.code === 'ER_DUP_ENTRY') {
+                console.error('Duplicate entry error:', err.message);
+                throw new Error("DUPLICATE_ENTRY");
+              } else if (err.code === 'ER_BAD_NULL_ERROR') {
+                console.error('Missing required field:', err.message);
+                throw new Error("MISSING_FIELD");
+              } else if (err.code === 'ER_PARSE_ERROR') {
+                console.error('SQL syntax error:', err.message);
+                throw new Error("SQL_SYNTAX_ERROR");
+              }
+            console.error('Unexpected DB error:', err);
+            throw new Error("SERVER_ERROR");  
+        }
+    }
+    async updateAccount(accountData: Partial<Account>, email: number):Promise<boolean>{
+        if(accountData.password){
+            const hashedPass = await bcrypt.hash(accountData.password, 10)
+            accountData.password = hashedPass;
+        }
+        try{
+            const [result] = await this.pool.execute(getUpdateQuery(accountData, 'account', 'email'), [...Object.values(accountData), email]) as [ResultSetHeader]
+           
+            return result.affectedRows > 0
+        }catch(err){
+            switch(err.code){
+                case "ER_BAD_FIELD_ERROR":
+                    console.error('Unknown field in update query:', err.message);
+                    throw new Error("INVALID_FIELD");
+                case "ER_DUP_ENTRY":
+                    console.error('Email already exists:', err.message);
+                    throw new Error("DUPLICATE_ENTRY");
+                case "ER_NO_REFERENCED_ROW_2":
+                    console.error('Foreign key constraint fails:', err.message);
+                    throw new Error("FOREIGN_KEY_ERROR");
+                case "ER_PARSE_ERROR":
+                    console.error('SQL syntax error:', err.message);
+                    throw new Error("SQL_SYNTAX_ERROR");
+                default:
+                    console.error(err);
+                    throw new Error("SERVER_ERROR");
+
+            }
+            
+        }
+    }
+    async deleteAccount(email: string): Promise<boolean>{
+        try{
+            const [result] = await this.pool.execute(`DELETE FROM account WHERE email = ?`, [email]) as [ResultSetHeader]
+            return result.affectedRows > 0
+        }catch(err){
+            if (err.code === 'ER_ROW_IS_REFERENCED') {
+                console.error('Cannot delete: Foreign key constraint violation', err.message);
+                throw new Error("FOREIGN_KEY_ERROR");
+              } else if (err.code === 'ER_PARSE_ERROR') {
+                console.error('SQL syntax error in DELETE query:', err.message);
+                throw new Error("SQL_SYNTAX_ERROR");
+              }
+            console.error('Unexpected error while deleting RV:', err);
+            throw new Error("SERVER_ERROR");
+        }
+    }
+}

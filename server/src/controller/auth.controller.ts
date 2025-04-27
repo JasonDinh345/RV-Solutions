@@ -1,7 +1,8 @@
 import { AuthService } from "../service/auth.service.js";
 import jwt from 'jsonwebtoken'
-import { User } from "../types/User.type.js";
+import { Account } from "../types/Account.type.js";
 import { Request, Response } from 'express';
+import { RefreshToken } from "../types/RefreshToken.type.js";
 export class AuthController{
 
     private authService;
@@ -11,20 +12,22 @@ export class AuthController{
     }
 
     /**
-     * Checks if the given username and password are valid
+     * Checks if the given email and password are valid
      * If valid, generates an access and refresh token
      * @param req, contains given fields
      * @param res, sends the tokens
      */
     async authenticateUser(req: Request, res: Response ): Promise<void>{
         try{
-            const user: User = await this.authService.authenticateUser(req.body)
-            if(!user){
-                res.status(400).json({message: "Authorization Failed"})
+            const account: Account = await this.authService.authenticateUser(req.body)
+            if(!account){
+                res.status(401).json({message: "Authorization Failed"})
             }
-            const accessToken = this.generateAccessToken({email: user.email})
-            const refreshToken = jwt.sign({email: user.email}, process.env.REFRESH_TOKEN_SECRET)
-            await this.authService.addRefreshToken({refreshToken: refreshToken, userID: user.userID})
+            const accessToken = this.generateAccessToken({email: account.email})
+            const refreshToken:string = jwt.sign({email: account.email}, process.env.REFRESH_TOKEN_SECRET)
+            if(!(await this.authService.addRefreshToken({token: refreshToken, accountID: account.accountID}))){
+                throw new Error("ACCOUNT_NOT_FOUND")
+            }
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true, // Makes the cookie inaccessible to JavaScript (prevents XSS attacks)
                 secure: process.env.PROJECT_STATUS === 'production', // Ensures cookies are only sent over HTTPS in production
@@ -41,14 +44,20 @@ export class AuthController{
         }catch(err){
             console.error(err)
             switch(err.message){
-                case "INVALID_FIELDS":
-                    res.status(400).json({message: "Username and password cannot be null"})
+                case "NULL_FIELDS":
+                    res.status(400).json({message: "Email and password cannot be null"})
                     break;
-                case "INVALID_USER":
-                    res.status(404).json({message: "User with given username can't be found"})
+                case "ACCOUNT_NOT_FOUND":
+                    res.status(404).json({message: "Account with given username can't be found"})
                     break;
                 case "INCORRECT_PASSWORD":
                     res.status(401).json({message: "Invalid password"})
+                    break;
+                case "DUPLICATE_ENTRY":
+                    res.status(409).json({message: 'User already has a refresh token!'})
+                    break;
+                case "SQL_SYNTAX_ERROR":
+                    res.status(500).json({message: 'SQL syntax error!'})
                     break;
                 default:
                     res.status(500).json({message: "Unexpected Server error has occured"})
@@ -67,12 +76,12 @@ export class AuthController{
         const refreshToken: string = req.body.token
         try{
             if(await this.authService.verifyRefreshToken(refreshToken)){
-                jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err :Error, user: Partial<User>)=>{
+                jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err :Error, account: Partial<Account>)=>{
                     if(err){
-                        res.status(403).json({message:"Refresh token is not valid"})
+                        res.status(401).json({message:"Refresh token is not valid"})
                         return;
                     }
-                    const accessToken = this.generateAccessToken({email: user.email})
+                    const accessToken = this.generateAccessToken({email: account.email})
                     res.cookie('accessToken', accessToken, {
                         httpOnly: true,
                         secure: process.env.NODE_ENV === 'production', // true in prod (HTTPS)
@@ -87,10 +96,13 @@ export class AuthController{
         }catch(err){
             console.error(err)
             switch(err.message){
-                
-                case 'INVALID_TOKEN':
-                    res.status(401).json({message: "Refresh token can't be null or undefined"})
+                case "UNKNOWN_TOKEN":
+                    res.status(404).json({message: "Refresh token unknown in database"})
                     break;
+                case 'INVALID_TOKEN':
+                    res.status(400).json({message: "Refresh token can't be null or undefined"})
+                    break;
+                
                 default:
                     res.status(500).json({message: "Unexpected Server error has occured"})
             }
@@ -121,11 +133,13 @@ export class AuthController{
         }
     }
     /**
-     * Generates an access token based on the user's email
-     * @param user, user with only email
+     * Generates an access token based on the account's email
+     * @param account, account with only email
      * @returns an new access token
      */
-    generateAccessToken(user: Partial<User>): string{
-        return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15min'})
+    generateAccessToken(account: Partial<Account>): string{
+        return jwt.sign(account, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15min'})
     }
+
+    
 }

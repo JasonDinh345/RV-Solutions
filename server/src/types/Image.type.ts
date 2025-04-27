@@ -1,6 +1,6 @@
 
 export interface Image{
-    readonly rvVin: string,
+    readonly vin: string,
     imageURL: string,
     smallImageURL: string,
     imageID: string,
