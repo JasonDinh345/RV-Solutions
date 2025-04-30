@@ -5,8 +5,8 @@ import { AuthService } from '../service/auth.service.js';
 /** Router for auth */
 const authRouter: Router = Router();
 
-const authModel: AuthService = new AuthService(pool)
-const authController: AuthController = new AuthController(authModel)
+const authService: AuthService = new AuthService(pool)
+const authController: AuthController = new AuthController(authService)
 /**
  * POST request to login a user using access tokens
  */

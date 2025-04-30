@@ -29,7 +29,7 @@ export class RVController{
     }
     async getRV(req:Request, res: Response):Promise<void>{
         try{
-            const vin = req.body.vin
+            const vin = req.params.vin
             if(!vin){
                 res.status(400).json({message: `Missing RV VIN!`})
             }
@@ -53,7 +53,7 @@ export class RVController{
     }
     async insertRV(req:Request, res: Response):Promise<void>{
         try{
-            const rvData = req.body
+            const rvData = req.body.rvData
             if(!rvData){
                 res.status(400).json({message: `No data sent to server!: ${rvData}`})
             }
@@ -83,7 +83,7 @@ export class RVController{
     async updateRV(req:Request, res: Response):Promise<void>{
         try{
             const rvData = req.body.rvData
-            const vin = req.body.vin
+            const vin = req.params.vin
             if(!rvData || !vin){
                 res.status(400).json({message:`Missing fields in RV data: ${req.body}`})
                 return;
@@ -111,7 +111,7 @@ export class RVController{
     }
     async deleteRV(req:Request, res: Response):Promise<void>{
         try{
-            const vin = req.body.vin
+            const vin = req.params.vin
             if(!vin){
                 res.status(400).json({ message: `Missing VIN: ${vin}` });
                 return
