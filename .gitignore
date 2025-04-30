@@ -34,3 +34,5 @@ jest-output/
 pids/
 *.pid
 *.seed
+
+route.rest

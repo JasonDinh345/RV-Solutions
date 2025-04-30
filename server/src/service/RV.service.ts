@@ -11,7 +11,7 @@ export class RVService{
     
     async getAllRV():Promise<RVwImage[]>{
         try{
-          const [rows] = await this.pool.query(`SELECT RV.*, Image.smallImageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.rvVin`);
+          const [rows] = await this.pool.query(`SELECT RV.*, Image.smallImageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.vin`);
           return rows;
         }catch(err){
           switch(err.code){
@@ -26,7 +26,7 @@ export class RVService{
     }
     async getRV(vin : String):Promise<RVwImage>{
         try{
-          const [rows] = await this.pool.execute(`SELECT RV.*, Image.imageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.rvVin WHERE vin = ?`, [vin])
+          const [rows] = await this.pool.execute(`SELECT RV.*, Image.imageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.vin WHERE RV.vin = ?`, [vin])
 
           return rows[0];
         }catch(err){

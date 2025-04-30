@@ -1,89 +1,95 @@
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import { Booking } from "../types/Booking.type.js";
+import { DamageReport } from "../types/DamageReport.type.js";
 import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
 
-export class BookingService{
+export class DamageReportService{
     private pool: Pool
-    constructor(pool :Pool){
+
+    constructor(pool: Pool){
         this.pool = pool
     }
-
-    async getAllBookingToVIN(vin: string): Promise<Booking[]>{
+    async getAllDamageReportWithAccount(accountID: number): Promise<DamageReport[]>{
         try{
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM BOOKING WHERE vin = ?`, [vin]);
-            return rows as Booking[];
+            if(!accountID){
+                throw new Error("INVALID_ACCOUNT")
+            }
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM DamageReport JOIN Booking ON DamageReport.BookingID = Booking.BookingID WHERE Booking.accoundID = ?`, [accountID])
+            return rows as DamageReport[];
         }catch(err){
-           
             switch(err.code){
                 case "ER_PARSE_ERROR":
                     console.error('SQL syntax error in SELECT query:', err.message);
                     throw new Error("SQL_SYNTAX_ERROR");
                 default:
                     console.error(err);
-                    throw new Error("SERVER_ERROR");
+                    throw new Error(err.message);
             }
+        }
+    }
+    async getAllDamageReportWithRV(vin: string): Promise<DamageReport[]>{
+        try{
+            if(!vin){
+                throw new Error("INVALID_RV")
+            }
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM DamageReport JOIN Booking ON DamageReport.BookingID = Booking.BookingID WHERE Booking.vin = ?`, [vin])
+            return rows as DamageReport[];
+        }catch(err){
+            switch(err.code){
+                case "ER_PARSE_ERROR":
+                    console.error('SQL syntax error in SELECT query:', err.message);
+                    throw new Error("SQL_SYNTAX_ERROR");
+                default:
+                    console.error(err);
+                    throw new Error(err.message);
+            }
+        }
+    }
+    async getAllDamageReportWithOwner(ownerID: string): Promise<DamageReport[]>{
+        try{
+            if(!ownerID){
+                throw new Error("INVALID_ACCOUNT")
+            }
+            const [rows] = await this.pool.execute<RowDataPacket[]>(
+                `SELECT * FROM DamageReport 
+                    JOIN Booking ON DamageReport.BookingID = Booking.BookingID 
+                    JOIN RV ON Booking.vin = RV.vin WHERE RV.ownerID = ?`, [ownerID])
+            return rows as DamageReport[];
+        }catch(err){
+            switch(err.code){
+                case "ER_PARSE_ERROR":
+                    console.error('SQL syntax error in SELECT query:', err.message);
+                    throw new Error("SQL_SYNTAX_ERROR");
+                default:
+                    console.error(err);
+                    throw new Error(err.message);
+            }
+        }
         
-        }
     }
-    async getAllBookingsToAccount(accountID: number): Promise<Booking[]>{
+    async getDamageReport(reportID: number):Promise<DamageReport>{
         try{
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM BOOKING WHERE accountID = ?`, [accountID])
-            
-            return rows as Booking[];
+            if(!reportID){
+                throw new Error("INVALID_REPORT")
+            }
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM DamageReport WHERE DamageReport.reportID = ?`, [reportID])
+            if(rows.length === 0){
+                return null
+            }
+            return rows[0] as DamageReport
         }catch(err){
-            
             switch(err.code){
                 case "ER_PARSE_ERROR":
                     console.error('SQL syntax error in SELECT query:', err.message);
                     throw new Error("SQL_SYNTAX_ERROR");
                 default:
                     console.error(err);
-                    throw new Error("SERVER_ERROR");
+                    throw new Error(err.message);
             }
         }
     }
-    async getAllBookingsToOwner(ownerID: number): Promise<Booking[]>{
+    async insertDamageReport(reportData: Partial<DamageReport>):Promise<boolean>{
         try{
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM BOOKING WHERE vin IN (SELECT vin FROM RV WHERE ownerID = ?)`, [ownerID])
-            
-            return rows as Booking[];
-        }catch(err){
-           
-            switch(err.code){
-                case "ER_PARSE_ERROR":
-                    console.error('SQL syntax error in SELECT query:', err.message);
-                    throw new Error("SQL_SYNTAX_ERROR");
-                default:
-                    console.error(err);
-                    throw new Error("SERVER_ERROR");
-            }
-        }
-    }
-    async getBooking(bookingID: number): Promise<Booking>{
-        try{
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM BOOKING WHERE bookingID = ?`, [bookingID]) 
-            if (rows.length === 0) {
-                return null; 
-            }
-            const booking = rows[0] as Booking
-            
-            return booking 
-        }catch(err){
-           
-            switch(err.code){
-                case "ER_PARSE_ERROR":
-                    console.error('SQL syntax error in SELECT query:', err.message);
-                    throw new Error("SQL_SYNTAX_ERROR");
-                default:
-                    console.error(err);
-                    throw new Error("SERVER_ERROR");
-            }
-            
-        }
-    }
-    async insertBooking(bookingData: Partial<Booking>):Promise<boolean>{
-        try{
-            const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery(bookingData, 'BOOKING'), Object.values(bookingData)) 
+            const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery(reportData, "DamageReport"), Object.values(reportData))
             return result.affectedRows > 0
         }catch(err){
             switch(err.code){
@@ -91,7 +97,7 @@ export class BookingService{
                     console.error('Unknown field in insert query:', err.message);
                 throw new Error("INVALID_FIELD");
                 case "ER_DUP_ENTRY":
-                    console.error('Duplicate booking error:', err.message);
+                    console.error('Duplicate damage report:', err.message);
                     throw new Error("DUPLICATE_ENTRY");
                 case "ER_BAD_NULL_ERROR":
                     console.error('Missing required field:', err.message);
@@ -108,10 +114,13 @@ export class BookingService{
             }
         }
     }
-    async updateBooking(bookingData: Partial<Booking>, bookingID: number):Promise<boolean>{
-        delete bookingData["vin"]
+    async updateDamageReport(reportData: Partial<DamageReport>, reportID: number):Promise<boolean>{
+        delete reportData["bookingID"]
         try{
-            const [result] = await this.pool.execute<ResultSetHeader>(getUpdateQuery(bookingData,`BOOKING`, `bookingID`), [...Object.values(bookingData), bookingID])
+            if(!reportID){
+                throw new Error("INVALID_REPORT")
+            }
+            const [result] = await this.pool.execute<ResultSetHeader>(getUpdateQuery(reportData, "DamageReport", "reportID"), [...Object.values(reportData), reportID])
             return result.affectedRows > 0
         }catch(err){
             switch(err.code){
@@ -129,26 +138,30 @@ export class BookingService{
                     throw new Error("SQL_SYNTAX_ERROR");
                 default:
                     console.error('Unexpected DB error:', err);
-                    throw new Error("SERVER_ERROR");
+                    throw new Error(err.message);
             }
         }
     }
-    async deleteBooking(bookingID: number):Promise<boolean>{
+    async deleteDamageReport(reportID: number):Promise<boolean>{
         try{
-            const [result] = await this.pool.execute<ResultSetHeader>(`DELETE FROM BOOKING WHERE bookingID = ?`, [bookingID]) 
+            if(!reportID){
+                throw new Error("INVALID_REPORT")
+            }
+            const [result] = await this.pool.execute<ResultSetHeader>(`DELETE FROM DamageReport WHERE reportID = ?`, [reportID])
             return result.affectedRows > 0
         }catch(err){
             switch(err.code){
                 case "ER_ROW_IS_REFERENCED":
-                    console.error('Cannot delete Booking: Foreign key constraint violation', err.message);
+                    console.error('Cannot delete DamageReport: Foreign key constraint violation', err.message);
                     throw new Error("FOREIGN_KEY_ERROR");
                 case "ER_PARSE_ERROR":
                     console.error('SQL syntax error in DELETE query:', err.message);
                     throw new Error("SQL_SYNTAX_ERROR");
                 default:
                     console.error('Unexpected DB error:', err);
-                    throw new Error("SERVER_ERROR");
+                    throw new Error(err.message);
             }
         }
     }
+    
 }

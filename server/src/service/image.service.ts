@@ -1,8 +1,8 @@
-import { Pool, ResultSetHeader } from "mysql2";
+import { Pool, ResultSetHeader } from "mysql2/promise";
 import { Image } from "../types/Image.type.js";
 import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
 export class ImageService{
-    private pool
+    private pool : Pool
 
     constructor(pool : Pool){
         this.pool = pool
@@ -10,7 +10,7 @@ export class ImageService{
 
     async insertImage(imageData: Partial<Image>, vin: string): Promise<number>{
         try{
-            const [result] = await this.pool.execute(getInsertQuery({...imageData, vin: vin} , "image"), [...Object.values(imageData), vin]) as [ResultSetHeader]
+            const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery({...imageData, vin: vin} , "image"), [...Object.values(imageData), vin])
             
             return result.insertId
         }catch(err){
@@ -34,9 +34,7 @@ export class ImageService{
     async updateImage(imageData: Partial<Image>, vin: string):Promise<boolean>{
  
         try{
-            const [result] = await this.pool.execute(
-                getUpdateQuery(imageData, `image`, `vin`),[...Object.values(imageData), vin]
-            ) as [ResultSetHeader]
+            const [result] = await this.pool.execute<ResultSetHeader>(getUpdateQuery(imageData, `image`, `vin`),[...Object.values(imageData), vin])
             return result.affectedRows > 0
         }catch(err){
             if (err.code === 'ER_BAD_FIELD_ERROR') {
@@ -55,10 +53,7 @@ export class ImageService{
     }
     async deleteImage(vin: string):Promise<boolean>{
         try{
-            const [result] = await this.pool.execute(
-                `DELETE FROM Image WHERE vin = ?`, [vin]
-            ) as [ResultSetHeader]
-            
+            const [result] = await this.pool.execute<ResultSetHeader>(`DELETE FROM Image WHERE vin = ?`, [vin]) 
           
             return result.affectedRows >0;
         }catch(err){

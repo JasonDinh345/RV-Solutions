@@ -49,7 +49,7 @@ export class ImageController{
         try{
             const imageData = req.files.img as fileUpload.UploadedFile
             const imageURLData = await uploadBlob(imageData.data, `RV_SOLUTIONS/${imageData.name}`)
-            if(!(await deleteImage(req.body.imageID))){
+            if(!(await deleteImage(req.params.imageID))){
                 res.status(400).json({message:`Delete on Cloudinary image has failed!`})
                 return;
             }
