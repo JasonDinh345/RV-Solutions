@@ -4,7 +4,7 @@ export default function RV({rvData}){
     const navigate = useNavigate();
 
     const handleOnClick = ()=>{
-        navigate("/RV/" + rvData.vin)
+        navigate("/RV/" + rvData.VIN)
     }
     return(
         <>

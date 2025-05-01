@@ -5,7 +5,7 @@
   border: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
   height: 90vh;
   gap:10%
@@ -16,11 +16,11 @@
 #RVSearchBox{
   display: flex;
   flex-direction: row;
-  height: 10%;
+  height: 100px;
   box-shadow: var(--default-box-shadow);
-  width: 25vw;
+  width: 35vw;
   border-radius: 50px;
-  overflow: hidden;
+
   box-sizing: border-box;
   align-items: center;
   justify-content: space-around;
@@ -31,7 +31,7 @@
   box-sizing: border-box;
   border-radius: 50px;
   border: 0;
-  height: 80%;
+  height: 75%;
   padding: 1%;
   font-size: medium;
   transition: all ease-in 0.1s;
@@ -54,7 +54,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 45%;
+  width: 40%;
   
 }
 #RVSearchClass p{
@@ -101,14 +101,16 @@
 .RV{
   display: flex;
   flex-direction: column;
-  width: 15vw;
-  height: 31vh;
+  width: 18.8vw;
+  height: 34vh;
   border: var(--default-color) 5px solid;
   box-sizing: border-box;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: var(--default-box-shadow);
   transition: all ease-in 0.1s;
+  
+  
 }
 .RV:hover{
   box-shadow: 20px 10px #0000006e;
