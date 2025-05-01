@@ -22,5 +22,18 @@ export function getDayDiff(dateInput1, dateInput2){
 
     return Math.ceil(diff/(1000*60*60*24))
 }
+export function getFullYearDiff(startDate, endDate ) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+  
+    let years = end.getFullYear() - start.getFullYear();
+  
+   
+    if (end.getMonth() < start.getMonth() || (end.getMonth() === start.getMonth() && end.getDate() < start.getDate())) {
+      years--;
+    }
+  
+    return years;
+  }
 
  

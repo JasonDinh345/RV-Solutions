@@ -67,8 +67,7 @@ export default function Home(){
             setFilteredRVs(newList)
             
         }
-    console.log(searchValues.class)
-    console.log(filteredRVs)
+    
     return(
         <>
         <div id="homePage">
