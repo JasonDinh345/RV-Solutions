@@ -12,7 +12,7 @@ export default function NavBar(){
                 
                 <h2 onClick={()=>{navigate("/")}} >Rent</h2>
                 <h2>Host</h2>
-                
+                <h2 onClick={()=>{navigate("/login")}}>Login</h2>
             </nav>
         </>
     )

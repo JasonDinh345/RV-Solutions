@@ -15,7 +15,7 @@ export default function CreateAccountForm({handleFormChange}){
             setFormError("Minors are unable to sign up for our service!")
             return
         }
-        console.log("yay")  
+
 
     }
     const handleChange = (e)=>{

@@ -39,9 +39,9 @@ export default function Home(){
         setFilteredRVs(newList)
             
         }
-    console.log(searchValues)
-    console.log(filteredRVs)
+ 
     const isLoading = false
+
     return(
         <>
         <div id="homePage">

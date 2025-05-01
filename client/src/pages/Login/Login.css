@@ -1,0 +1,34 @@
+#loginMain{
+    width: 30%;
+    height: fit-content;
+    
+    border: var(--default-color) 5px solid;
+    border-radius: 20px;
+    box-shadow: var(--default-box-shadow);
+    padding:1%;
+    margin-top: 5%;
+}
+/*LoginForm*/
+#loginForm{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: fit-content;
+    
+}
+#loginForm *{
+    margin: 1%; 
+    
+}
+/*CreateAccountForm*/
+#createAccountForm{
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: fit-content;
+}
+#createAccountForm *{
+    margin: 1%; 
+    
+}

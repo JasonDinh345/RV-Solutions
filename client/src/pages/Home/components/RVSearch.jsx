@@ -19,8 +19,8 @@ export default function RVSearch({ value, onSearchChange, onSearch }) {
     const handleChange = (e, type)=> {
         dispatch({type:type, payload:{value: e.target.value}})
     }
-    const today = getTodayPST();
-    console.log(today)
+    
+    
     useEffect(()=>{
         onSearchChange?.(searchValues)
     },[searchValues, onSearchChange])
