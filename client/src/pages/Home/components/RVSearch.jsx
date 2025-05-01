@@ -7,9 +7,9 @@ export default function RVSearch({ value, onSearchChange, onSearch }) {
         switch(action.type){
             case "change-location":
                 
-                return {...newValues, location: action.payload.value}
+                return {...newValues, Location: action.payload.value}
             case "change-class":
-                return {...newValues, class: action.payload.value}
+                return {...newValues, SizeClass: action.payload.value}
             default:
                 return searchValues;
         }

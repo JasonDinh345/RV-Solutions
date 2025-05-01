@@ -9,12 +9,12 @@ export default function RV({rvData}){
     return(
         <>
         <div className="RV" onClick={handleOnClick}>
-            <img src="/RV.jpg"></img>
+            <img src={rvData.imageURL}></img>
             <div className="rvText">
-                <h3>{rvData.city}</h3>
-                <p>{rvData.make}, {rvData.model}</p>
-                <p>Class: {rvData.class}</p>
-                <p style={{fontWeight: "bold"}}>${rvData.cost_per_day} per day</p>
+                <h3>{rvData.Location}</h3>
+                <p>{rvData.Make}, {rvData.Model}</p>
+                <p>Class: {rvData.SizeClass}</p>
+                <p style={{fontWeight: "bold"}}>${rvData.CostToRent} per day</p>
             </div>
         </div>
         </>

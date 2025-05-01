@@ -11,7 +11,7 @@ import imageRouter from './route/image.route.js';
 import damageReportRouter from './route/damageReport.route.js';
 const app: Express = express();
 dotenv.config()
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(fileUpload());
@@ -28,6 +28,6 @@ app.use('/image', imageRouter)
 app.use('/booking', bookingRouter)
 app.use('/damageReport', damageReportRouter)
 
-app.listen(4000,()=>{
+app.listen(1231,()=>{
     console.log("Server running!")
 })
