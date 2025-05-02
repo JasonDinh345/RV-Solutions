@@ -6,5 +6,5 @@ export interface Account{
     phoneNumber:string 
     insuranceCompany: string,
     dateOfBirth: Date,
-    readonly accountID: number
+    readonly AccountID: number
 }

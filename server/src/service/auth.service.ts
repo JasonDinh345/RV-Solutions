@@ -26,7 +26,7 @@ export class AuthService{
                 throw new Error("INVALID_USER")
             }
             try{
-                if(await bcrypt.compare(accountData.password, account.password)){
+                if(await bcrypt.compare(accountData.password, account.Password)){
                     return account
                 }
                 throw new Error("INCORRECT_PASSWORD")

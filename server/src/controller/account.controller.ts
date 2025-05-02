@@ -60,7 +60,7 @@ export class AccountController{
     }
     async insertAccount(req:Request, res: Response):Promise<void>{
         try{
-            const accountData: Partial<Account> = req.body.accountData;
+            const accountData: Partial<Account> = req.body;
 
             if(await this.accountService.insertAccount(accountData)){
                 res.status(201).json({message:`Sucessfully created account!`})

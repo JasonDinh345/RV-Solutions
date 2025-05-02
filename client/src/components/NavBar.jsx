@@ -1,9 +1,10 @@
+import { useAuth } from "../../context/AuthContext";
 import "./css/NavBar.css"
 import { useNavigate } from "react-router-dom"
 export default function NavBar(){
     const navigate = useNavigate();
-
-    
+    const {account} = useAuth();
+    console.log(account)
     return(
         <>
             <nav id="nav">
@@ -12,7 +13,11 @@ export default function NavBar(){
                 
                 <h2 onClick={()=>{navigate("/")}} >Rent</h2>
                 <h2>Host</h2>
-                <h2 onClick={()=>{navigate("/login")}}>Login</h2>
+                {account ? (
+                    <h2>{account.Name}</h2>
+                ):(
+                    <h2 onClick={()=>{navigate("/login")}}>Login</h2>
+                )}
             </nav>
         </>
     )

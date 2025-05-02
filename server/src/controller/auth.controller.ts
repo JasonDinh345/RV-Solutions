@@ -2,7 +2,7 @@ import { AuthService } from "../service/auth.service.js";
 import jwt from 'jsonwebtoken'
 import { Account } from "../types/Account.type.js";
 import { Request, Response } from 'express';
-import { RefreshToken } from "../types/RefreshToken.type.js";
+
 export class AuthController{
 
     private authService;
@@ -25,7 +25,7 @@ export class AuthController{
             }
             const accessToken = this.generateAccessToken({email: account.email})
             const refreshToken:string = jwt.sign({email: account.email}, process.env.REFRESH_TOKEN_SECRET)
-            if(!(await this.authService.addRefreshToken({token: refreshToken, accountID: account.accountID}))){
+            if(!(await this.authService.addRefreshToken({token: refreshToken, accountID: account.AccountID}))){
                 throw new Error("ACCOUNT_NOT_FOUND")
             }
             res.cookie('refreshToken', refreshToken, {
@@ -40,7 +40,7 @@ export class AuthController{
                 sameSite: 'strict',
                 maxAge: 900 // 15min
               });
-            res.status(201).json({accessToken: accessToken, refreshToken: refreshToken})
+            res.status(201).json({account:account})
         }catch(err){
             console.error(err)
             switch(err.message){

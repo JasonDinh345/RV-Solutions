@@ -7,25 +7,36 @@ import "./RVDescription.css"
 export default function RVDescription(){
     const {vin} = useParams();
     const [RV, setRVData] = useState({})
+    const [isLoading, setLoading] = useState(false)
+    const [dataError, setError] = useState()
+    
     useEffect(() => {
-        console.log("hi")
-         axios.get(`http://localhost:1231/RV/${vin}`).then(res =>{
-            console.log("yo")
-            console.log(res.data)
-            setRVData(res.data);
-        }).catch(err =>{
-            console.log("oy")
-          console.error(err)
-        })
-      },[]);
-      const isLoading = false;  
+        const fetchData = async () => {
+          try {
+            setLoading(true);
+            const res = await axios.get(`http://localhost:1231/RV/${vin}`)
+          
+            setRVData(res.data); 
+            
+          } catch (err) {
+            console.log(err);
+            setError('Error fetching data');
+          } finally {
+            setLoading(false); 
+          }
+        };
+    
+        fetchData(); 
+    
+      }, [vin]); 
+      
+      if(isLoading){
+        return <p>Loading...</p>
+      }else if(dataError){
+        return <p>Error fetching data! {dataError}</p>
+      }
     return(
-        <>
-        {isLoading ? (
-            <>
-            <p>Loading...</p>
-            </>
-        ):(
+        
             <>
             <div id="RVDescprition">
                 
@@ -36,7 +47,7 @@ export default function RVDescription(){
                     
                         <div id="rvSection1">
                             <div className="imgContainer">
-                                <img src={RV.imageURL}></img>
+                                <img src={RV.imageURL} ></img>
                             </div>
                             <BookRVBox costPer={RV.CostToRent}/>
                         </div>
@@ -59,7 +70,6 @@ export default function RVDescription(){
                 
             </div>
             </>
-        )}
-        </>
+        
     )
 }

@@ -28,6 +28,7 @@ p, h2,  h1, h3, ul{
   height: 100vh;
   align-items: center;
   justify-self: center;
+  overflow-x: hidden;
 
 }
 .flexCenter{

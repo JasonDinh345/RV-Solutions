@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { getFullYearDiff, getTodayPST } from "../../../util/dataUtil";
+import axios from "axios";
 
 export default function CreateAccountForm({handleFormChange}){
     const [formData, setFormData] = useState({})
     const [confirmPassword, setConfirmPass] = useState("")
     const [formError, setFormError] = useState("")
-    const handleSubmit = (e)=>{
+    const handleSubmit = async(e)=>{
         e.preventDefault();
         if(formData.password != confirmPassword){
             setFormError("Passwords must match!")
@@ -15,7 +16,16 @@ export default function CreateAccountForm({handleFormChange}){
             setFormError("Minors are unable to sign up for our service!")
             return
         }
-
+        try{
+            const res = await axios.post("http://localhost:1231/account/", formData)
+            if(res.status === 201){
+                console.log("yaya")
+            }else{
+                console.log("nay")
+            }
+        }catch(err){
+            console.error(err)
+        }
 
     }
     const handleChange = (e)=>{
