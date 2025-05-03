@@ -36,3 +36,4 @@ pids/
 *.seed
 
 route.rest
+server/route.rest

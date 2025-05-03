@@ -10,7 +10,7 @@ export class AuthController{
     constructor(authService: AuthService){
         this.authService = authService
     }
-
+    
     /**
      * Checks if the given email and password are valid
      * If valid, generates an access and refresh token
@@ -23,8 +23,8 @@ export class AuthController{
             if(!account){
                 res.status(401).json({message: "Authorization Failed"})
             }
-            const accessToken = this.generateAccessToken({email: account.email})
-            const refreshToken:string = jwt.sign({email: account.email}, process.env.REFRESH_TOKEN_SECRET)
+            const accessToken = this.generateAccessToken({Email: account.Email})
+            const refreshToken:string = jwt.sign({Email: account.Email}, process.env.REFRESH_TOKEN_SECRET)
             if(!(await this.authService.addRefreshToken({token: refreshToken, accountID: account.AccountID}))){
                 throw new Error("ACCOUNT_NOT_FOUND")
             }
@@ -38,7 +38,7 @@ export class AuthController{
                 httpOnly: true,
                 secure: process.env.PROJECT_STATUS === 'production', // true in prod (HTTPS)
                 sameSite: 'strict',
-                maxAge: 900 // 15min
+                maxAge: 15 * 60 * 1000
               });
             res.status(201).json({account:account})
         }catch(err){
@@ -73,7 +73,12 @@ export class AuthController{
      * @param res sends the new access token if valid
      */
     async getNewToken(req: Request, res: Response): Promise<void>{
-        const refreshToken: string = req.body.token
+        console.log("Cookies:", req.cookies);
+        const refreshToken = req.cookies.refreshToken
+        console.log(refreshToken)
+        if(!refreshToken){
+            throw new Error("INVALID_TOKEN")
+        }
         try{
             if(await this.authService.verifyRefreshToken(refreshToken)){
                 jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err :Error, account: Partial<Account>)=>{
@@ -81,12 +86,12 @@ export class AuthController{
                         res.status(401).json({message:"Refresh token is not valid"})
                         return;
                     }
-                    const accessToken = this.generateAccessToken({email: account.email})
+                    const accessToken = this.generateAccessToken({Email: account.Email})
                     res.cookie('accessToken', accessToken, {
                         httpOnly: true,
                         secure: process.env.NODE_ENV === 'production', // true in prod (HTTPS)
                         sameSite: 'strict',
-                        maxAge: 900 // 15min
+                        maxAge: 15 * 60 * 1000
                       });
                     res.status(201).json({accessToken: accessToken})
                 })
@@ -115,7 +120,7 @@ export class AuthController{
      */
     async deleteRefreshToken(req: Request, res: Response): Promise<void>{
         try{
-            const hasDeleted: boolean = await this.authService.deleteRefreshToken(req.body.token)
+            const hasDeleted: boolean = await this.authService.deleteRefreshToken(req.cookies.refreshToken)
             if(hasDeleted){
                 res.clearCookie('accessToken');
                 res.clearCookie('refreshToken', {
@@ -140,6 +145,7 @@ export class AuthController{
     generateAccessToken(account: Partial<Account>): string{
         return jwt.sign(account, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15min'})
     }
+
 
     
 }

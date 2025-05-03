@@ -11,7 +11,10 @@ import imageRouter from './route/image.route.js';
 import damageReportRouter from './route/damageReport.route.js';
 const app: Express = express();
 dotenv.config()
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",  // ✅ must be explicit, not "*"
+    credentials: true,                // ✅ allows cookies to be sent
+  }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(fileUpload());

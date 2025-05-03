@@ -1,10 +1,10 @@
 export interface Account{
-    name: string,
-    email: string,
-    password:string,
-    address: string,
-    phoneNumber:string 
-    insuranceCompany: string,
-    dateOfBirth: Date,
+    Name: string,
+    Email: string,
+    Password:string,
+    Address: string,
+    PhoneNumber:string 
+    InsuranceCompany: string,
+    DateOfBirth: Date,
     readonly AccountID: number
 }

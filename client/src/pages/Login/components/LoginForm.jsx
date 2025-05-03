@@ -10,7 +10,9 @@ export default function LoginForm({handleFormChange}){
     const handleSubmit =async(e)=>{
         e.preventDefault()
         try{
-            const res = await axios.post("http://localhost:1231/auth/login", formData)
+            const res = await axios.post("http://localhost:1231/auth/login", formData, {
+                withCredentials: true 
+              });
             if(res.status === 201){
                 console.log(res.data.account)
                 login(res.data.account)
@@ -29,10 +31,10 @@ export default function LoginForm({handleFormChange}){
     return(
         <>
         <form id="loginForm" onSubmit={handleSubmit}>
-            <label htmlFor="email">Email:</label>
-            <input id="email" name="email" type="email" required onChange={handleChange}></input>
-            <label htmlFor="password" required>Password:</label>
-            <input id="password"name="password" type="password" required onChange={handleChange}></input>
+            <label htmlFor="Email">Email:</label>
+            <input id="Email" name="Email" type="email" required onChange={handleChange}></input>
+            <label htmlFor="Password" required>Password:</label>
+            <input id="Password"name="Password" type="password" required onChange={handleChange}></input>
             <input type="submit" value="Login"/>
             <p onClick={handleFormChange}>New User?</p>
         </form>

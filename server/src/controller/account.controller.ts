@@ -35,22 +35,23 @@ export class AccountController{
                 res.status(401).json({message:"Token can't be verified"})
                 return;
             }
+            console.log("account" ,account)
             req.account = account
             next()
         })
     }
     async getAccount(req:Request, res: Response):Promise<void>{
         try{
-            const account = await this.accountService.getAccount(req.account.email)
+            const account = await this.accountService.getAccount(req.account.Email)
             if(!account){
-                res.status(404).json({message:`Couldn't find account with email: ${req.account.email}`})
+                res.status(404).json({message:`Couldn't find account with email: ${req.account.Email}`})
             }else{
                 res.status(200).json(account)
             }
         }catch(err){
             switch(err.message){
                 case "INVALID_USER":
-                    res.status(404).json({message:`Couldn't find account with email: ${req.account.email}`})
+                    res.status(404).json({message:`Couldn't find account with email: ${req.account.Email}`})
                     break
                 default:
                     res.status(500).json({message:`Unexpected Server Error!`})
@@ -87,7 +88,7 @@ export class AccountController{
     async updateAccount(req:Request, res: Response):Promise<void>{
         try{
             const accountData: Partial<Account> = req.body.accountData
-            if(await this.accountService.updateAccount(accountData, req.account.email)){
+            if(await this.accountService.updateAccount(accountData, req.account.Email)){
                 res.status(204).json({message:`Sucessfully updated account!`})
             }else{
                 res.status(404).json({message:`Unknown account with email: ${req.body.email}`})
@@ -114,10 +115,10 @@ export class AccountController{
     }
     async deleteAccount(req:Request, res: Response):Promise<void>{
         try{
-            if(await this.accountService.deleteAccount(req.account.email)){
+            if(await this.accountService.deleteAccount(req.account.Email)){
                 res.status(204).json({message:`Sucessfully deleted account!`})
             }else{
-                res.status(404).json({message:`Couldn't find account with email: ${req.account.email}`})
+                res.status(404).json({message:`Couldn't find account with email: ${req.account.Email}`})
             }
         }catch(err){
             switch(err.message){
