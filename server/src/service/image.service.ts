@@ -8,11 +8,11 @@ export class ImageService{
         this.pool = pool
     }
 
-    async insertImage(imageData: Partial<Image>, vin: string): Promise<number>{
+    async insertImage(imageData: Partial<Image>, vin: string): Promise<boolean>{
         try{
             const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery({...imageData, vin: vin} , "image"), [...Object.values(imageData), vin])
             
-            return result.insertId
+            return result.affectedRows > 0
         }catch(err){
             if (err.code === 'ER_DUP_ENTRY') {
                 console.error('Duplicate entry error:', err.message);

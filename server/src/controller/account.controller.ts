@@ -35,7 +35,7 @@ export class AccountController{
                 res.status(401).json({message:"Token can't be verified"})
                 return;
             }
-            console.log("account" ,account)
+            
             req.account = account
             next()
         })

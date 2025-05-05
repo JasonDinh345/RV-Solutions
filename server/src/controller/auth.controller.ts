@@ -73,9 +73,9 @@ export class AuthController{
      * @param res sends the new access token if valid
      */
     async getNewToken(req: Request, res: Response): Promise<void>{
-        console.log("Cookies:", req.cookies);
+   
         const refreshToken = req.cookies.refreshToken
-        console.log(refreshToken)
+
         if(!refreshToken){
             throw new Error("INVALID_TOKEN")
         }

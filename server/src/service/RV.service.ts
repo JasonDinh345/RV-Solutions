@@ -11,7 +11,7 @@ export class RVService{
     
     async getAllRV():Promise<RVwImage[]>{
         try{
-          const [rows] = await this.pool.query(`SELECT RV.*, Image.smallImageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.vin`);
+          const [rows] = await this.pool.query(`SELECT RV.*, Image.smallImageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.vin WHERE RV.isAvailable = true`);
           return rows;
         }catch(err){
           switch(err.code){

@@ -5,10 +5,15 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [account, setAccount] = useState(null);
-
- 
+  const [authLoading, setAuthLoading] = useState(true);
+  const login = (accountData) => {
+    if(!account){
+      setAccount(accountData)
+    }
+  };
   useEffect(() => {
     const getUser = async () => {
+      setAuthLoading(true)
       try {
         const res = await axios.get("http://localhost:1231/account/protected", {
           withCredentials: true,
@@ -37,21 +42,19 @@ const AuthProvider = ({ children }) => {
         } else {
           console.error("User fetch failed:", err);
         }
+      } finally{
+        setAuthLoading(false)
       }
     };
   
     getUser();
   }, []);
 
-  const login = (accountData) => {
-    if(!account){
-      setAccount(accountData)
-    }
-  };
+  
   const logout = () => setAccount(null);
 
   return (
-    <AuthContext.Provider value={{ account, login, logout }}>
+    <AuthContext.Provider value={{ account, authLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -8,7 +8,7 @@ import stream from 'stream'
         api_secret: process.env.CLOUDINARY_SECRET 
     });
     // Function to upload an image and return both original and smaller version URLs
-    export const uploadBlob = async (imageBlob: Buffer, publicId: string) => {
+    export const uploadBlob = async (imageBlob: Buffer) => {
         try {
           // Create a readable stream from the Blob (Buffer)
           const bufferStream = new stream.PassThrough();
@@ -17,7 +17,9 @@ import stream from 'stream'
           // Upload the Blob to Cloudinary using the upload_stream method
           const uploadResult = await new Promise<any>((resolve, reject) => {
             cloudinary.uploader.upload_stream(
-              { public_id: publicId },
+              { 
+                folder: process.env.CLOUDINARY_FOLDER,
+               },
               (error, result) => {
                 if (error) {
                   reject(error); // Reject promise if there's an error
@@ -27,12 +29,12 @@ import stream from 'stream'
               }
             ).end(imageBlob); // End the stream by passing the Blob (Buffer)
           });
-      
+          const ImageID = uploadResult.public_id;
           // Original image URL
-          const originalUrl = uploadResult.secure_url;
+          const ImageURL = uploadResult.secure_url;
       
           // Generate the smaller image URL (resize while maintaining aspect ratio)
-          const smallerUrl = cloudinary.url(publicId, {
+          const SmallImageURL = cloudinary.url(ImageID, {
             width: 300,  // Desired width for the smaller version
             height: 199,  // Desired height for the smaller version
             crop: 'fill', // Resize to fit within the given width and height
@@ -43,8 +45,9 @@ import stream from 'stream'
       
           // Return both URLs
           return {
-            originalUrl,
-            smallerUrl
+            ImageURL,
+            SmallImageURL,
+            ImageID
           };
         } catch (error) {
           console.error('Error uploading Blob:', error);

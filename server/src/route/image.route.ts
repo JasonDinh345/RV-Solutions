@@ -10,7 +10,7 @@ const imageController: ImageController = new ImageController(imageService)
 
 imageRouter.post("/", imageController.uploadImage.bind(imageController))
 
-imageRouter.post("/:imageID", imageController.updateImage.bind(imageController))
+imageRouter.patch("/:imageID", imageController.updateImage.bind(imageController))
 
 imageRouter.delete("/:imageID", imageController.deleteImage.bind(imageController))
 

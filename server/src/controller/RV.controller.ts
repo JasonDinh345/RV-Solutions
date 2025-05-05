@@ -53,7 +53,7 @@ export class RVController{
     }
     async insertRV(req:Request, res: Response):Promise<void>{
         try{
-            const rvData = req.body.rvData
+            const rvData = req.body
             if(!rvData){
                 res.status(400).json({message: `No data sent to server!: ${rvData}`})
             }

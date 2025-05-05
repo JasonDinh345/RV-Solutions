@@ -1,40 +1,22 @@
 import { useParams } from "react-router-dom"
-import { useEffect } from "react";
-import { useState } from "react";
-import axios from "axios";
+
 import BookRVBox from "./components/BookRVBox";
 import "./RVDescription.css"
+import useGet from "../../hooks/useGet";
+
 export default function RVDescription(){
+
     const {vin} = useParams();
-    const [RV, setRVData] = useState({})
-    const [isLoading, setLoading] = useState(false)
-    const [dataError, setError] = useState()
     
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            setLoading(true);
-            const res = await axios.get(`http://localhost:1231/RV/${vin}`)
-          
-            setRVData(res.data); 
-            
-          } catch (err) {
-            console.log(err);
-            setError('Error fetching data');
-          } finally {
-            setLoading(false); 
-          }
-        };
+    const { data: RV, isLoading, error} = useGet(`http://localhost:1231/RV/${vin}`, false)
     
-        fetchData(); 
-    
-      }, [vin]); 
-      
-      if(isLoading){
-        return <p>Loading...</p>
-      }else if(dataError){
-        return <p>Error fetching data! {dataError}</p>
-      }
+    if(isLoading){
+      return <p>Loading...</p>
+    }else if(error){
+      return <p>Error fetching data! {error}</p>
+    }else if (!RV){
+      return <p>Could not load RV data.</p>;
+    }
     return(
         
             <>
@@ -47,7 +29,7 @@ export default function RVDescription(){
                     
                         <div id="rvSection1">
                             <div className="imgContainer">
-                                <img src={RV.imageURL} ></img>
+                                <img src={RV.imageURL}></img>
                             </div>
                             <BookRVBox costPer={RV.CostToRent}/>
                         </div>

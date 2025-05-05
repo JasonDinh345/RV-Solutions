@@ -9,7 +9,7 @@ export class AccountService{
         this.pool = pool 
     }
     async getAccount(email: string):Promise<Account>{
-        console.log(email)
+    
         try{
             const [rows] = await this.pool.execute<RowDataPacket[]>("SELECT * FROM Account WHERE email = ?", [email]);
 

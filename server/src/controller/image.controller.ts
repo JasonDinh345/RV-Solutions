@@ -15,12 +15,13 @@ export class ImageController{
                 throw new Error("INVALID_REQUEST")
             }
             const imageData = req.files.img as fileUpload.UploadedFile
-            const imageURLData = uploadBlob(imageData.data, `RV_SOLUTIONS/${imageData.name}`)
-            const imgID: string = await this.imageService.insertImage({...imageURLData, imageID: `RV_SOLUTIONS/${imageData.name}`}, req.body.rvVin);
-            if(imgID){
-                res.status(200).json(imgID)
+         
+            const imageURLData = await uploadBlob(imageData.data)
+            
+            if(await this.imageService.insertImage(imageURLData, req.body.VIN)){
+                res.status(201).json({message:`Sucessfully uploaded RV and Image`})
             }else{
-                res.status(400).json({message: `Couldn't upload image: ${JSON.stringify({...imageURLData, imageID: `RV_SOLUTIONS/${imageData.name}`})}`})
+                res.status(400).json({message: `Couldn't upload image: ${JSON.stringify(imageURLData)}`})
             }
         }catch(err){
             switch(err.message){
@@ -48,7 +49,7 @@ export class ImageController{
     async updateImage(req:Request, res: Response):Promise<void>{
         try{
             const imageData = req.files.img as fileUpload.UploadedFile
-            const imageURLData = await uploadBlob(imageData.data, `RV_SOLUTIONS/${imageData.name}`)
+            const imageURLData = await uploadBlob(imageData.data)
             if(!(await deleteImage(req.params.imageID))){
                 res.status(400).json({message:`Delete on Cloudinary image has failed!`})
                 return;
