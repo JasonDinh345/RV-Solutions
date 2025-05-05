@@ -27,7 +27,7 @@ export default function Rent(){
         );
         setFilteredRVs(newList)
             
-        }
+    }
     if(!rvList  && isLoading){
       return <p>Couldn't load RVs</p>
     }

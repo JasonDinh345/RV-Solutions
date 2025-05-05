@@ -81,7 +81,7 @@ export class BookingService{
             
         }
     }
-    async insertBooking(bookingData: Partial<Booking>):Promise<boolean>{
+    async insertBooking(bookingData: Omit<Booking,'BookingID'>):Promise<boolean>{
         try{
             const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery(bookingData, 'BOOKING'), Object.values(bookingData)) 
             return result.affectedRows > 0

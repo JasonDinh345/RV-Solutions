@@ -87,7 +87,7 @@ export class DamageReportService{
             }
         }
     }
-    async insertDamageReport(reportData: Partial<DamageReport>):Promise<boolean>{
+    async insertDamageReport(reportData: Omit<DamageReport, 'ReportID'>):Promise<boolean>{
         try{
             const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery(reportData, "DamageReport"), Object.values(reportData))
             return result.affectedRows > 0

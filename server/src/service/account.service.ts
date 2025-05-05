@@ -24,7 +24,7 @@ export class AccountService{
             throw new Error("SERVER_ERROR")
         }
     }
-    async insertAccount(accountData: Partial<Account>): Promise<boolean>{
+    async insertAccount(accountData: Omit<Account, 'AccountID'>): Promise<boolean>{
         
         const hashedPass = await bcrypt.hash(accountData.Password!, 10)
         accountData.Password = hashedPass;
@@ -48,12 +48,21 @@ export class AccountService{
         }
     }
     async updateAccount(accountData: Partial<Account>, email: string):Promise<boolean>{
+        if(Object.keys(accountData).length === 0){
+            throw new Error();
+        }
         if(accountData.Password){
             const hashedPass = await bcrypt.hash(accountData.Password, 10)
             accountData.Password = hashedPass;
         }
+        let updateQuery;
+        if(Object.keys(accountData).length > 1){
+            updateQuery = getUpdateQuery(accountData, 'account', 'email')
+        }else{
+            updateQuery = `UPDATE Account SET ${Object.keys(accountData)[0]} = ? WHERE Email = ?`
+        }
         try{
-            const [result] = await this.pool.execute<ResultSetHeader>(getUpdateQuery(accountData, 'account', 'email'), [...Object.values(accountData), email])
+            const [result] = await this.pool.execute<ResultSetHeader>(updateQuery, [...Object.values(accountData), email])
            
             return result.affectedRows > 0
         }catch(err){

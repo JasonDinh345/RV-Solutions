@@ -1,0 +1,48 @@
+#accountInfo{
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    margin: 1%;
+    border: var(--default-color) 5px solid;
+    border-radius: 20px;
+    box-sizing: border-box;
+    box-shadow: var(--default-box-shadow);
+    height: 100%;
+    overflow: hidden;
+}
+#accountInfoSideBar{
+    display: flex;
+    flex-direction: column;
+    width: 15%;
+   
+    border-right: var(--default-color) 5px solid;
+    background-color: rgb(182, 182, 182);
+    
+
+}
+#accountInfoSideBar h3{
+    display: flex;
+    justify-content: center;  /* horizontal center */
+    align-items: center; 
+    height: 10%;
+    transition: all ease-in-out 0.1s;
+    border-bottom: rgb(151, 151, 151) 2px solid;
+   
+}
+#accountInfoSideBar .selected{
+    background-color: rgb(255, 255, 255);
+}
+#accountInfoSideBar h3:not(.logout):hover{
+    background-color: rgb(255, 255, 255);
+}
+
+.logout{
+    border-top: rgb(151, 151, 151) 2px solid;
+    margin-top: auto;
+}
+.logout:hover{
+    background-color: rgb(255, 175, 175);
+}
+.accountInfoContent{
+    width: 85%;
+}

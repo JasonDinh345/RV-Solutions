@@ -8,7 +8,7 @@ export class ImageService{
         this.pool = pool
     }
 
-    async insertImage(imageData: Partial<Image>, vin: string): Promise<boolean>{
+    async insertImage(imageData: Omit<Image,'UploadDate'>, vin: string): Promise<boolean>{
         try{
             const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery({...imageData, vin: vin} , "image"), [...Object.values(imageData), vin])
             

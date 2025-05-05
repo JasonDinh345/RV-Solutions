@@ -1,10 +1,10 @@
 export interface DamageReport{
-    damages: string,
-    deduction: number,
-    description: string,
-    policeReportID: string,
-    readonly reportID: number, // primary key
-    incidentNum: string,
-    bookingID: number
+    Damages: string,
+    Deduction: number,
+    Description: string,
+    OoliceReportID: string,
+    readonly ReportID: number, // primary key
+    IncidentNum: string,
+    BookingID: number
 
 }

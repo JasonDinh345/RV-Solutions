@@ -40,7 +40,7 @@ export class RVService{
         }
         }
     }
-    async insertRV(RV: Partial<RV>): Promise<boolean> {
+    async insertRV(RV: RV): Promise<boolean> {
         try {
           const [result] = await this.pool.execute(getInsertQuery(RV, 'RV'), Object.values(RV)) as [ResultSetHeader];
       

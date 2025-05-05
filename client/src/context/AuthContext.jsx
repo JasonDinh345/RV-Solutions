@@ -1,9 +1,12 @@
 import { createContext, useContext, useState } from "react";
 import { useEffect } from "react";
 import axios from 'axios';
+
+
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
+
   const [account, setAccount] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const login = (accountData) => {
@@ -51,7 +54,19 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   
-  const logout = () => setAccount(null);
+  const logout = async() => {
+    try{
+      const res = await axios.delete("http://localhost:1231/auth/logout",{
+        withCredentials: true,
+      })
+      if(res.status === 204){
+        setAccount(null)
+      }
+    }catch(err){
+      console.error(err)
+      alert("Failed to logout")
+    }
+  };
 
   return (
     <AuthContext.Provider value={{ account, authLoading, login, logout }}>
