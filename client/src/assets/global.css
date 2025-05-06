@@ -78,3 +78,11 @@ p, h2,  h1, h3, ul{
   border: var(--default-color) 2px solid;
   box-shadow: var(--default-box-shadow);
 }
+.defaultBorder-thick{
+  border-radius: 20px;
+  border: var(--default-color) 5px solid;
+  box-shadow: var(--default-box-shadow);
+}
+.exitButton{
+  margin-left:auto;
+}

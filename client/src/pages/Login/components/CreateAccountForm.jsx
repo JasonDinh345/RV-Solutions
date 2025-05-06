@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getFullYearDiff, getTodayPST } from "../../../util/dataUtil";
+import {LabelInput} from "../../../components/LabelInput"
 import axios from "axios";
 
 export default function CreateAccountForm({handleFormChange}){
@@ -8,7 +9,8 @@ export default function CreateAccountForm({handleFormChange}){
     const [formError, setFormError] = useState("")
     const handleSubmit = async(e)=>{
         e.preventDefault();
-        if(formData.password != confirmPassword){
+        if(formData.Password !== confirmPassword){
+
             setFormError("Passwords must match!")
             return
         }
@@ -48,7 +50,7 @@ export default function CreateAccountForm({handleFormChange}){
 
             <label htmlFor="confirmPassword">Confirm Password:</label>
                 <input id="confirmPassword"name="confirmPassword" type="password" required onChange={(e)=>{setConfirmPass(e.target.value)}}></input>
-
+            <LabelInput type="text" fieldName="Address" label="Address:" onChange={handleChange}/>
             <label htmlFor="DateOfBirth">Date of Birth:</label>
                 <input id="DateOfBirth"name="DateOfBirth" type="date" required onChange={handleChange}></input>
 

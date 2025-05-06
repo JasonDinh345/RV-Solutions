@@ -8,9 +8,7 @@
 .labelInput[type=number]{
     width: 20%;
 }
-.labelInput[type=text]{
-    width: 50%;
-}
+
 .labelInput[type=select]{
     width: 20%;
 }
