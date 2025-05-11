@@ -120,7 +120,7 @@
   margin-bottom: 2%;
 }
 .RV:hover{
-  box-shadow: 20px 10px #0000006e;
+  box-shadow: 20px 15px 10px #0000006e, -10px -10px 5px white;
 }
 .RV p, h3{
   margin: 0;

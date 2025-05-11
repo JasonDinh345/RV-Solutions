@@ -5,9 +5,12 @@ export default function useGet(url, sendCredentials = false) {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  
   useEffect(() => {
     let isMounted = true; 
+    if(!url){
+      return 
+    }
     const fetchData = async()=>{
         setIsLoading(true);
 
@@ -18,7 +21,7 @@ export default function useGet(url, sendCredentials = false) {
       })
       .catch((err) => {
         if (isMounted) {
-          setError(err.message);
+          setError(err);
           console.error(err);
         }
       })

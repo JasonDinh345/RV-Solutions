@@ -3,7 +3,7 @@ import { RV, RVwImage } from "../types/RV.type.js";
 import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
 
 export class RVService{
-    private pool;
+    private pool: Pool;
     
     constructor(pool : Pool){
         this.pool = pool;
@@ -11,8 +11,8 @@ export class RVService{
     
     async getAllRV():Promise<RVwImage[]>{
         try{
-          const [rows] = await this.pool.query(`SELECT RV.*, Image.smallImageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.vin WHERE RV.isAvailable = true`);
-          return rows;
+          const [rows] = await this.pool.query<RowDataPacket[]>(`SELECT RV.*, Image.smallImageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.vin WHERE RV.isAvailable = true`);
+          return rows as RVwImage[] ;
         }catch(err){
           switch(err.code){
             case "ER_PARSE_ERROR":
@@ -24,11 +24,29 @@ export class RVService{
           }
         }
     }
+    async getAllRVwOwner(ownerID: number):Promise<RVwImage[]>{
+      if(!ownerID || ownerID < 0){
+        throw new Error("INVALID_ID");
+      }
+        try{
+          const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT RV.*, Image.smallImageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.vin WHERE RV.ownerID = ?`,[ownerID] );
+          return rows as RVwImage[] ;
+        }catch(err){
+          switch(err.code){
+            case "ER_PARSE_ERROR":
+                console.error('SQL syntax error in DELETE query:', err.message);
+                throw new Error("SQL_SYNTAX_ERROR");
+            default:
+                console.error(err);
+                throw new Error(err.message);
+          }
+        }
+    }
     async getRV(vin : String):Promise<RVwImage>{
         try{
-          const [rows] = await this.pool.execute(`SELECT RV.*, Image.imageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.vin WHERE RV.vin = ?`, [vin])
+          const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT RV.*, Image.imageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.vin WHERE RV.vin = ?`, [vin])
 
-          return rows[0];
+          return rows[0] as RVwImage;
         }catch(err){
           switch(err.code){
             case "ER_PARSE_ERROR":
@@ -42,7 +60,7 @@ export class RVService{
     }
     async insertRV(RV: RV): Promise<boolean> {
         try {
-          const [result] = await this.pool.execute(getInsertQuery(RV, 'RV'), Object.values(RV)) as [ResultSetHeader];
+          const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery(RV, 'RV'), Object.values(RV));
       
          
           return result.affectedRows > 0;
@@ -64,7 +82,7 @@ export class RVService{
     async updateRV(rvData: Partial<RV>, vin: string): Promise<boolean>{
 
         try{
-            const [result] = await this.pool.execute(getUpdateQuery(rvData, 'RV', 'vin'), [...Object.values(rvData), vin])
+            const [result] = await this.pool.execute<ResultSetHeader>(getUpdateQuery(rvData, 'RV', 'vin'), [...Object.values(rvData), vin])
             return result.affectedRows > 0;
         }catch(err){
           switch(err.code){
@@ -85,7 +103,7 @@ export class RVService{
     }
     async deleteRV(vin: String):Promise<boolean>{
         try{
-            const [result] = await this.pool.execute('DELETE FROM RV WHERE vin = ?', [vin]) as [ResultSetHeader];
+            const [result] = await this.pool.execute<ResultSetHeader>('DELETE FROM RV WHERE vin = ?', [vin]);
           
             return result.affectedRows > 0;
         }catch(err){

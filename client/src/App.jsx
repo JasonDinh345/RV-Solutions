@@ -16,7 +16,7 @@ function App() {
         <Route path="/RV/:vin" element={<RVDescription/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/host" element={<Host/>}/>
-        <Route path="/accountInfo" element={<AccountInfo/>}/>
+        <Route path="/accountInfo/:tab?" element={<AccountInfo/>}/>
       </Routes>
      </div>
     </>

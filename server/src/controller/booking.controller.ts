@@ -101,7 +101,7 @@ export class BookingController{
     }
     async insertBooking(req:Request, res: Response):Promise<void>{
         try{
-            const bookingData = req.body.bookingData
+            const bookingData = req.body
             if(await this.bookingService.insertBooking(bookingData)){
                 res.status(201).json({message: "Successfully inserted booking!"})
             }else{

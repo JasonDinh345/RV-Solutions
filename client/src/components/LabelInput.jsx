@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import "./css/LabelInput.css"
 export function LabelInput({type, onChange, label,value}){
     const fieldName = label.replace(/\s/g,'')
+
     return(
         <>
         <div className="labelInputContainer">
@@ -11,7 +12,7 @@ export function LabelInput({type, onChange, label,value}){
                     name={fieldName} 
                     type={type} 
                     onChange={onChange} 
-                    value={value ?? ""}
+                    defaultValue={value ?? ""}
                     required>
             </input>
         </div>
@@ -42,7 +43,7 @@ export function InputPass({ onChange, label,value, setValid}){
             setValid((prev)=>({...prev, password:true}))
     
         }
-    },[confirmPass])
+    },[confirmPass, setValid, value])
     return(
         <>
         <LabelInput type="password" onChange={onChange} label={label} value={value}/>

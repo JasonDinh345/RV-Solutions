@@ -87,7 +87,9 @@ export class AccountController{
     }
     async updateAccount(req:Request, res: Response):Promise<void>{
         try{
+            
             const accountData: Partial<Account> = req.body
+            console.log(accountData)
             if(await this.accountService.updateAccount(accountData, req.account.Email)){
                 res.status(204).json({message:`Sucessfully updated account!`})
             }else{

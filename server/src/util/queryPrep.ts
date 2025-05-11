@@ -21,5 +21,5 @@ export function getUpdateQuery(object:any, tableName: string, identifier: any): 
   delete object[identifier]
   const clause = createClause(object)
 
-  return `UPDATE ${tableName} SET (${clause}) WHERE ${identifier} = ?`;
+  return `UPDATE ${tableName} SET ${clause} WHERE ${identifier} = ?`;
 }

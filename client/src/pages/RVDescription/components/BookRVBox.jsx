@@ -1,41 +1,68 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { getDatePST, getDayDiff, getTodayPST } from "../../../util/dataUtil";
-
+import {useNavigate, useParams} from "react-router-dom"
 import feesInfo from "../../../assets/feesInfo";
-
+import {useAuth} from "../../../context/AuthContext"
+import axios from "axios";
 export default function BookRVBox({costPer}){
+    const {vin} = useParams();
+    const navigate = useNavigate();
     const [bookingInfo, setBookingInfo] = useState({
-        startDate: getDatePST(),
-        endDate: getTodayPST(),
+        StartDate: getDatePST(),
+        EndDate: getTodayPST(),
     })
     const fees = feesInfo;
-    const handleSubmit = (e)=>{
+    const totalDays = useMemo(() => 
+        getDayDiff(bookingInfo.StartDate, bookingInfo.EndDate) + 1, 
+        [bookingInfo.StartDate, bookingInfo.EndDate]
+      );
+    const flatCost = useMemo(()=>{
+        return (totalDays * costPer)
+    }, [totalDays, costPer])
+    const taxCost = useMemo(()=>{
+        return (fees.taxRate * flatCost)
+    },[fees.taxRate,flatCost])
+       
+    const totalCost = useMemo(()=>{
+        return parseFloat((taxCost + flatCost).toFixed(2));
+    },[taxCost, flatCost])
+    const {account} = useAuth();
+    const handleSubmit = async(e)=>{
         e.preventDefault();
-        console.log("hji")
+        
+        try{
+            
+            const res = await axios.post("http://localhost:1231/booking", {...bookingInfo, VIN: vin, AccountID: account.AccountID, TotalCost: totalCost})
+            if(res.status === 201){
+                navigate("/accountInfo/bookings")
+            }
+        }catch(err){
+            console.error(err)
+            alert(err.response.data.message)
+        }
     }
+   
     const handleChange = (e)=>{
-        if(e.target.name === "startDate"){
-            if(e.target.value > bookingInfo.endDate){
-                return setBookingInfo({...bookingInfo, [e.target.name]: e.target.value, endDate: e.target.value})
+        if(e.target.name === "StartDate"){
+            if(e.target.value > bookingInfo.EndDate){
+                return setBookingInfo({...bookingInfo, [e.target.name]: e.target.value, EndDate: e.target.value})
             }
         }
         return setBookingInfo({...bookingInfo, [e.target.name]: e.target.value})
     }
-    const totalDays = getDayDiff(bookingInfo.startDate, bookingInfo.endDate) + 1;
-    const flatCost = totalDays * costPer;
-    const taxCost = (fees.taxRate * flatCost);
-    const totalCost = (taxCost + flatCost).toFixed(2);
+    
+
     return(
         <>
         <form onSubmit={handleSubmit} id="bookRVBox">
             <div id="bookingContainer">
                 <div className="bookingDate">
                     <p>Start Date</p>
-                    <input name="startDate" value={bookingInfo.startDate} onChange={handleChange} min={getTodayPST()}type="date"></input>
+                    <input name="StartDate" value={bookingInfo.StartDate} onChange={handleChange} min={getTodayPST()}type="date"></input>
                 </div>
                 <div className="bookingDate">
                     <p>End Date</p>
-                    <input name="endDate" value={bookingInfo.endDate} onChange={handleChange} min={bookingInfo.startDate}type="date"></input>
+                    <input name="EndDate" value={bookingInfo.EndDate} onChange={handleChange} min={bookingInfo.StartDate}type="date"></input>
                 </div>
             </div>
             <div id="costContainer" >
@@ -47,7 +74,7 @@ export default function BookRVBox({costPer}){
                 <ul>Sales Tax: ${taxCost.toFixed(2)}</ul>
                 
             </div>
-            <input type="submit" value={"Book Now"} className="bookingSubmit"></input>
+            <input type="submit" value={"Book Now"} className="bookingSubmit" disabled={account  ? false: true}></input>
         </form>
         </>
     )

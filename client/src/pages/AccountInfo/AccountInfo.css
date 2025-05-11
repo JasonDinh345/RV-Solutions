@@ -46,3 +46,32 @@
 .accountInfoContent{
     width: 85%;
 }
+
+
+/*Tabs*/
+.accountTable{
+    width: 100%;
+    border-collapse: collapse;
+    overflow-y: auto;
+}
+.accountTable th{
+    border: var(--default-color) 2px solid;
+    padding: 2%;
+    
+}
+.accountTable td{
+    text-align: center;
+    border: var(--default-color) 2px solid;
+    font-size: large;
+}
+
+.accountTable .tableImage{
+   width: 20%;
+    
+}
+.accountTable img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* or 'contain' depending on your goal */
+    display: block;
+}

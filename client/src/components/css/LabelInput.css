@@ -1,9 +1,19 @@
 .labelInputContainer{
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 50%;
     gap: 1vh;
+    
 
+}
+.labelInput{
+    border: var(--default-color) 2px solid;
+  
+    height: 18%;
+    box-sizing: border-box;
+    border-radius: 20px;
+    padding:3%;
+    box-shadow: var(--default-box-shadow);
 }
 .labelInput[type=number]{
     width: 20%;
@@ -14,6 +24,5 @@
 }
 .labelSelect{
     width: 20%;
-    
-    
+
 }

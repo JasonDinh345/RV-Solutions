@@ -8,6 +8,8 @@ const rvController: RVController = new RVController(rvService)
 
 rvRouter.get("/", rvController.getAllRV.bind(rvController))
 
+rvRouter.get("/owner/:ownerID", rvController.getAllRVwOwner.bind(rvController))
+
 rvRouter.get("/:vin", rvController.getRV.bind(rvController))
 
 rvRouter.post("/", rvController.insertRV.bind(rvController))

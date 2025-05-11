@@ -27,7 +27,8 @@ export default function UpdateAccountForm({children}){
                 setUpdateStatus("Updated Successfully")
             }
         }catch(err){
-
+            console.error(err)
+            setError(error.response.data.message)
         }
         
 

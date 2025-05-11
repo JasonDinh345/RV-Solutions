@@ -1,14 +1,13 @@
-import { useAuth } from "../../../context/AuthContext"
+import { useAuth } from "../../../hooks/useAuth";
 import { reformatDate } from "../../../util/dataUtil";
-import { useState } from "react";
-import UpdateAccountForm from "./componets/UpdateAccountForm";
+
 
 import "./MyAccount.css"
 import UpdateAccount from "./componets/UpdateAccount";
 export default function MyAccount(){
     const {account, authLoading} = useAuth();
-    const [isEditing, setIsEditing] = useState(false)
-    if(authLoading &&  !account){
+    
+    if(authLoading && !account){
         return <p>Loading...</p>
     }
     return(

@@ -27,6 +27,29 @@ export class RVController{
             }
         }
     }
+    async getAllRVwOwner(req:Request, res: Response):Promise<void>{
+        try{
+            const ownerID : number = Number(req.params.ownerID)
+            const allRVs = await this.rvService.getAllRVwOwner(ownerID)
+            if(allRVs.length > 0){
+                res.status(200).json(allRVs)
+            }else{
+                res.status(404).json({message:"No RVs Found"})
+            }
+        }catch(err){
+            switch(err.message){
+                case "INVALID_ID":
+                    res.status(400).json({message: `Invalid ID`})
+                    break
+                case "SQL_SYNTAX_ERROR":
+                    res.status(500).json({message: `SQL syntax error!`})
+                    break;
+                default:
+                    res.status(500).json({message: `Server error occured!`})
+                    break;
+            }
+        }
+    }
     async getRV(req:Request, res: Response):Promise<void>{
         try{
             const vin = req.params.vin
