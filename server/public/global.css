@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;300;400;600;700&display=swap');
+
+*{
+    box-sizing: border-box;
+    font-family: "Josefin Sans", sans-serif;
+    background-color: rgb(255, 247, 237);
+    
+    
+}
+#homePage{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#purpose, #projectInfo, #queries{
+    display: flex;
+    margin: 2%;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+}
+#purpose #purposeContent{
+    width: 50%;
+    font-size: x-large;
+    border: rgb(155, 155, 155) 5px solid;
+    padding: 2vh;
+    background-color: white;
+    box-shadow: 10px 10px rgba(0, 0, 0, 0.301);
+}
+#teamInfo{
+   width:50%; 
+}
+h1, h2{
+    background-color: black;
+    color:white;
+    padding: 5vh;
+    width: fit-content;
+    white-space: nowrap;
+    box-shadow: 10px 10px rgba(0, 0, 0, 0.301);
+    
+}
+h2{
+    padding: 2vh;
+    
+}
+h2 a{
+    background-color: black;
+}
+h2 a:visited, h2 a:link{
+    color: white;
+}
+table{
+    width:80%;
+    border-collapse: collapse;
+    border: rgb(155, 155, 155) 5px solid;
+    box-shadow: 20px 20px rgba(0, 0, 0, 0.301);
+    
+}
+th{
+    font-size: xx-large;
+    padding: 2%;
+    border: rgb(155, 155, 155) 5px solid;
+    padding: 2%;
+ 
+    background-color: rgb(255, 231, 200);
+
+}
+td{
+    text-align: center;
+    padding: 2%;
+    border: rgb(155, 155, 155) 5px solid;
+    font-size: large;
+    border-radius: 20px;
+    background-color: white;
+}
+
+
