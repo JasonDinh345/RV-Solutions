@@ -9,19 +9,16 @@
             <ul>
                 <li><code>assets</code>: global files
                 <li><code>components</code>: global components
-                <li><code>context</code>: custom context for components
-                <li><code>provder</code>: context provider for components
                 <li><code>hooks</code>: custom React hooks
                 <li><code>pages</code>: folder containing each page for the site
                 <li><code>util</code>: functions to be imported from to keep things organized
             </ul>
         </ul>
-    <li><code>server (Class Project Portion)</code>: Folder containing all backend components using Express in TS</li>
+    <li><code>server</code>: Folder containing all backend components using Express in TS</li>
         <ul>
             <li><code>src</code>: Folder containing files for backend
             <ul>
                 <li><code>types</code>: Folder containing defined types describing the relational schema
-                <li><code>public</code>: Folder containing interface for API
                 <li><code>route</code>: Folder containing the route layer for each table that contains the path that the frontend needs to visit in order to manipute/get data
                 <li><code>controller</code>: Folder containing the controller layer for each table that recieves data from the route layer/frontend to be sent to the service layer and sends data back to the frontend
                 <li><code>service</code>: Folder containing the service layer for each table that recieves data from the controller data and sends queries to the database

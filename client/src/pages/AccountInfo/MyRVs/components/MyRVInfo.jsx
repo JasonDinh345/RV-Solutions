@@ -1,16 +1,19 @@
 import { useState } from "react"
+import { useRV } from "../../../../hooks/useRV"
 
 export default function MyRVInfo({rvData}){
     const [currentTab, setCurrentTab] = useState("Info")
+    const {RV , setRV} = useRV();
     return(
-        <div className="darkBG">
-            <div>
-                <div className="rvInfoSideBar">
-                    <h3>Info</h3>
-                    <h3>Bookings</h3>
-                    <h3>Damage Reports</h3>
+        <div className="blackBG" style={{display: RV  ? "flex" : "none"}}>
+            <div id="myRVInfo" className="defaultBorder-thick">
+                <div className="accountInfoSideBar">
+                    <h3 className={currentTab === "Info"  ? "selected" : undefined}>Info</h3>
+                    <h3 className={currentTab === "Booking"  ? "selected" : undefined}>Bookings</h3>
+                    <h3 className={currentTab === "DamageReport"  ? "selected" : undefined}>Damage Reports</h3>
+                    <h3 className="logout" onClick={()=>setRV(null)}>Exit</h3>
                 </div>
-                <div>
+                <div id="rvInfoMain">
                     
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import useGet from "../../../../hooks/useGet"
-import { reformatDate } from "../../../../util/dataUtil"
+import useGet from "../../../hooks/useGet"
+import {reformatDate} from "../../../util/dataUtil"
 import { useNavigate } from "react-router-dom"
 
 export default function Booking({bookingData}){

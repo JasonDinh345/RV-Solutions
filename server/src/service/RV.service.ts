@@ -60,6 +60,7 @@ export class RVService{
     }
     async insertRV(RV: RV): Promise<boolean> {
         try {
+          console.log((getInsertQuery(RV, 'RV')))
           const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery(RV, 'RV'), Object.values(RV));
       
          

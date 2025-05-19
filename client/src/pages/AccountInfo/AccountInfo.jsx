@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import MyAccount from "./MyAccount/MyAccount"
 import "./AccountInfo.css"
-import { useAuth } from "../../context/AuthContext"
+import { useAuth } from "../../hooks/useAuth"
 
 import { useNavigate, useParams } from "react-router-dom"
 import MyBookings from "./MyBookings/MyBookings"
+import MyRVs from "./MyRVs/MyRVs"
 export default function AccountInfo(){
     const navigate = useNavigate();
     
@@ -24,7 +25,7 @@ export default function AccountInfo(){
     return(
         <>
         <div id="accountInfo">
-            <div id="accountInfoSideBar">
+            <div className="accountInfoSideBar">
                 <h3 onClick={()=>navigate("/accountInfo/Account")} className={currentTab === "Account"  ? "selected" : undefined}>My Account</h3>
                 <h3 onClick={()=>navigate("/accountInfo/Bookings")} className={currentTab === "Bookings"  ? "selected" : undefined}>My Bookings</h3>
                 <h3 onClick={()=>navigate("/accountInfo/RVs")} className={currentTab === "RVs"  ? "selected" : undefined}>My RVs</h3>
@@ -36,6 +37,8 @@ export default function AccountInfo(){
                     <MyAccount/>
                 ):currentTab === "Bookings" ? (
                     <MyBookings/>
+                ):currentTab === "RVs" ? (
+                    <MyRVs/>
                 ):(<></>)}
             </div>
         </div>

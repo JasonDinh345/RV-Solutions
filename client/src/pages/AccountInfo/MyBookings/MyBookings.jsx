@@ -1,7 +1,7 @@
 
 import useGet from "../../../hooks/useGet";
 import { useAuth } from "../../../hooks/useAuth";
-import Booking from "./components/Booking";
+import Booking from "../components/Booking";
 
 export default function MyBookings(){
     const {account, authLoading, error: authError} = useAuth();

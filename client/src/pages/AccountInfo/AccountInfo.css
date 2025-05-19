@@ -10,17 +10,17 @@
     height: 100%;
     overflow: hidden;
 }
-#accountInfoSideBar{
+.accountInfoSideBar{
     display: flex;
     flex-direction: column;
     width: 15%;
-   
+    height: 100%;
     border-right: var(--default-color) 5px solid;
     background-color: rgb(182, 182, 182);
     
 
 }
-#accountInfoSideBar h3{
+.accountInfoSideBar h3{
     display: flex;
     justify-content: center;  /* horizontal center */
     align-items: center; 
@@ -29,10 +29,10 @@
     border-bottom: rgb(151, 151, 151) 2px solid;
    
 }
-#accountInfoSideBar .selected{
+.accountInfoSideBar .selected{
     background-color: rgb(255, 255, 255);
 }
-#accountInfoSideBar h3:not(.logout):hover{
+.accountInfoSideBar h3:not(.logout):hover{
     background-color: rgb(255, 255, 255);
 }
 
@@ -74,4 +74,35 @@
     height: 100%;
     object-fit: cover; /* or 'contain' depending on your goal */
     display: block;
+}
+#myRVInfo{
+    background-color: white;
+    width: 65%;
+    height: 70svh;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    overflow: hidden;
+}
+#rvInfoSideBar{
+    width: 15%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+#rvInfoSideBar h3{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 10%;
+}
+#rvInfoMain{
+    width: 85%;
+    height: 100%;
+}
+.infoExit{
+    margin-top: auto;
+    border-top: ;
 }

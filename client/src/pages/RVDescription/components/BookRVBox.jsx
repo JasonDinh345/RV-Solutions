@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { getDatePST, getDayDiff, getTodayPST } from "../../../util/dataUtil";
 import {useNavigate, useParams} from "react-router-dom"
 import feesInfo from "../../../assets/feesInfo";
-import {useAuth} from "../../../context/AuthContext"
+import { useAuth } from "../../../hooks/useAuth";
 import axios from "axios";
 export default function BookRVBox({costPer}){
     const {vin} = useParams();

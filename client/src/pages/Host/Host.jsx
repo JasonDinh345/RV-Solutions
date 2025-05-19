@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import { useEffect, useState } from "react";
 import {LabelInput, LabelSelect} from "../../components/LabelInput";
 import "./Host.css"
@@ -65,30 +65,31 @@ export default function Host(){
         }
         
     }
+    console.log(formData)
     return(
         <>
         <form id="hostRVForm" onSubmit={handleSubmit}>
             <label><h3>RV Image:</h3></label>
             <input type="file" accept="image/*" onChange={handleImageChange} required></input>
             {rvImage && <img src={URL.createObjectURL(rvImage)} alt="Image preview" style={{  width:"30vw" }} />}
-            <div className="hostFormSection1">
-                <LabelInput type="text" fieldName={"Make"} onChange={handleChange} label="Make:"></LabelInput>
+            
+            <LabelInput type="text" fieldName={"Make"} onChange={handleChange} label="Make"></LabelInput>
                 
-                <LabelInput type="text" fieldName={"Model"} onChange={handleChange} label="Model:"></LabelInput>
+            <LabelInput type="text" fieldName={"Model"} onChange={handleChange} label="Model"></LabelInput>
                 
-                <LabelSelect fieldName={"SizeClass"} label="RV Class:" onChange={handleChange}>
-                            <option>A</option>
-                            <option>B</option>
-                            <option>C</option>
-                </LabelSelect>
+            <LabelSelect fieldName={"SizeClass"} label="RV Class:" onChange={handleChange}>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+            </LabelSelect>
                 
-                <LabelInput type="text" fieldName={"VIN"} onChange={handleChange} label="VIN:"></LabelInput>
-            </div>
-            <LabelInput type="text" fieldName={"Location"} onChange={handleChange} label="Location:"></LabelInput>
-            <LabelInput type="number" fieldName={"CostToRent"} onChange={handleChange} label="Cost To Rent:"></LabelInput>
+            <LabelInput type="text" fieldName={"VIN"} onChange={handleChange} label="VIN"></LabelInput>
+            
+            <LabelInput type="text" fieldName={"Location"} onChange={handleChange} label="Location"></LabelInput>
+            <LabelInput type="number" fieldName={"CostToRent"} onChange={handleChange} label="Cost To Rent"></LabelInput>
             <label htmlFor="Description"><h3>Description:</h3></label>
             <textarea id="Description" name="Description"type="text" onChange={handleChange}  rows={4}  style={{ width: '100%', resize: 'vertical' }}required></textarea>
-            <LabelInput type="number" fieldName={"Mileage"} onChange={handleChange} label="Current Mileage:"></LabelInput>
+            <LabelInput type="number" fieldName={"Mileage"} onChange={handleChange} label="Mileage"></LabelInput>
             <label htmlFor="isAvailable" style={{fontWeight:"bolder", fontSize:"2vh"}}>Set Immediately Available:
                 <input id="isAvailable" type="checkbox" name="isAvailable"defaultValue={true} onChange={handleChange}></input>
             </label>

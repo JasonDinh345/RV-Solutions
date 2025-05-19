@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
-import { useAuth } from "../../../../context/AuthContext";
+import { useAuth } from "../../../../hooks/useAuth";
 import { InputPass, LabelInput } from "../../../../components/LabelInput";
 export default function UpdateAccountForm({children}){
     const {account, authLoading} = useAuth();
