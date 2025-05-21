@@ -29,7 +29,7 @@ export class RVService{
         throw new Error("INVALID_ID");
       }
         try{
-          const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT RV.*, Image.smallImageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.vin WHERE RV.ownerID = ?`,[ownerID] );
+          const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT RV.*, Image.smallImageURL AS "ImageURL", Image.ImageID FROM RV JOIN Image ON RV.vin = Image.vin WHERE RV.ownerID = ?`,[ownerID] );
           return rows as RVwImage[] ;
         }catch(err){
           switch(err.code){
@@ -44,7 +44,7 @@ export class RVService{
     }
     async getRV(vin : String):Promise<RVwImage>{
         try{
-          const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT RV.*, Image.imageURL AS "imageURL" FROM RV JOIN Image ON RV.vin = Image.vin WHERE RV.vin = ?`, [vin])
+          const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT RV.*, Image.imageURL AS "ImageURL", Image.ImageID FROM RV JOIN Image ON RV.vin = Image.vin WHERE RV.vin = ?`, [vin])
 
           return rows[0] as RVwImage;
         }catch(err){

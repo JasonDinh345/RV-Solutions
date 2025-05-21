@@ -16,7 +16,7 @@ export default function MyRV({rvData}){
     return(
          <>
          <tr>
-            <td className="tableImage"><img src={rvData.imageURL} onClick={()=>setRV(rvData)}></img></td>
+            <td className="tableImage"><img src={rvData.ImageURL} onClick={()=>setRV(rvData)}></img></td>
             <td>{rvData.Make}</td>
             <td>{rvData.Model}</td>
             <td>{rvData.SizeClass}</td>

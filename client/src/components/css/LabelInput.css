@@ -16,7 +16,7 @@
     box-shadow: var(--default-box-shadow);
 }
 .labelInput[type=number]{
-    width: 20%;
+    width: fit-content;
 }
 
 .labelInput[type=select]{

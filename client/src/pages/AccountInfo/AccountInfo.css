@@ -22,6 +22,7 @@
 }
 .accountInfoSideBar h3{
     display: flex;
+    text-align: center;
     justify-content: center;  /* horizontal center */
     align-items: center; 
     height: 10%;
@@ -75,34 +76,4 @@
     object-fit: cover; /* or 'contain' depending on your goal */
     display: block;
 }
-#myRVInfo{
-    background-color: white;
-    width: 65%;
-    height: 70svh;
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    overflow: hidden;
-}
-#rvInfoSideBar{
-    width: 15%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-#rvInfoSideBar h3{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 10%;
-}
-#rvInfoMain{
-    width: 85%;
-    height: 100%;
-}
-.infoExit{
-    margin-top: auto;
-    border-top: ;
-}
+

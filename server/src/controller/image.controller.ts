@@ -46,56 +46,26 @@ export class ImageController{
             }
         }
     }
-    async updateImage(req:Request, res: Response):Promise<void>{
-        try{
-            const imageData = req.files.img as fileUpload.UploadedFile
-            const imageURLData = await uploadBlob(imageData.data)
-            if(!(await deleteImage(req.params.imageID))){
-                res.status(400).json({message:`Delete on Cloudinary image has failed!`})
-                return;
-            }
-            if(await this.imageService.updateImage({...imageURLData, imageID: `RV_SOLUTIONS/${imageData.name}`}, req.body.rvVin)){
-                res.status(201).json({message:"Sucessfully updated image"})
-            }else{
-                res.status(404).json({message: `Couldn't update Image: ${JSON.stringify({...imageURLData, imageID: `RV_SOLUTIONS/${imageData.name}`})}`})
-            }
-        }catch(err){
-            switch(err.message){
-                case "INVALID_FIELD":
-                    res.status(400).json({ message: `Unknown field in update query: ${JSON.stringify(req.files.img)}` });
-                    break;
-                case "NULL_FIELD":
-                    res.status(409).json({message: `Fields can't be null!`})
-                    break
-                case "FOREIGN_KEY_ERROR":
-                    res.status(409).json({ message: `RV doesn't exist with vin: ${req.body.vin}!`});
-                    break;
-                case "SQL_SYNTAX_ERROR":
-                    res.status(500).json({message:`SQL syntax invalid!`})
-                    break
-                default:
-                    res.status(500).json({message:`Unexpected Server Error!`})
-                    break
-            }
-        }
-    }
+   
     async deleteImage(req:Request, res: Response):Promise<void>{
         try{
-            const imageID = req.body.imageID
+            const imageID = req.params.imageID
             if(!imageID){
                 res.status(400).json({message: `Missing image ID!`})
+                return;
             }
             
-            if(await this.imageService.deleteImage(imageID)){
-                res.status(204).json({message:`Successfully deleted image!`})
-            }else{
-                res.status(404).json({message:`Couldn't find image with id: ${imageID}`})
+            if(!(await this.imageService.deleteImage(imageID))){
+                 res.status(404).json({message:`Couldn't find image with id: ${imageID}`})
                 return
             }
-            if(!(await deleteImage(imageID))){
+            const result = await deleteImage(imageID)
+            console.log(result)
+            if(!(result)){
                 res.status(400).json({message:`Delete on Cloudinary image has failed!`})
                 return;
             }
+             res.status(204).json({message:`Successfully deleted image!`})
         }catch(err){
             switch(err.message){
                 case "IMAGE_NOT_FOUND":

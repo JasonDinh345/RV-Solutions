@@ -29,7 +29,7 @@ export default function RVDescription(){
                     
                         <div id="rvSection1">
                             <div className="imgContainer">
-                                <img src={RV.imageURL}></img>
+                                <img src={RV.ImageURL}></img>
                             </div>
                             <BookRVBox costPer={RV.CostToRent}/>
                         </div>

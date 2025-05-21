@@ -8,7 +8,7 @@
 
   --default-box-shadow: 10px 10px 5px #0000006e;
   --default-box-shadow-small:5px 3px 10px #0000006e;
-  --hover-box-shadow-small:7px 5px 10px #0000006e;
+  --hover-box-shadow-small:7px 5px 5px #0000006e;
   --default-color : #1c75b2;
   --default-subColor:  #b6d8ffda;
     height: fit-content;
@@ -70,10 +70,12 @@ input{
   min-height: 100vh;
   height: fit-content;
   background-color: rgba(0, 0, 0, 0.541);
-  position: absolute;
-  top:50%;
-  left:50%;
-  transform: translate(-50%, -50%);
+    position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  overflow-y: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,4 +93,22 @@ input{
 }
 .exitButton{
   margin-left:auto;
+}
+select{
+  border-radius: 20px;
+  height: 40px;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: larger;
+  border: var(--default-color) 2px solid;
+  box-shadow: var(--default-box-shadow);
+}
+textarea{
+  border-radius: 20px;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: larger;
+  border: var(--default-color) 2px solid;
+  box-shadow: var(--default-box-shadow);
+  padding: 1%;
+  resize:none;
+  
 }

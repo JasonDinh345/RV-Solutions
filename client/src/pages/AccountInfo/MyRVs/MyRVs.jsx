@@ -3,12 +3,12 @@ import { useAuth } from "../../../hooks/useAuth";
 import MyRV from "./components/MyRV";
 import { RVProvider } from "../../../provider/RVProvider";
 import MyRVInfo from "./components/MyRVInfo";
-
+import "./MyRVs.css"
 export default function MyRVs(){
     const {account, authLoading, error: authError} = useAuth();
     const {data: RVs, isLoading, error} = useGet(account?.AccountID ? `http://localhost:1231/RV/owner/${account.AccountID}`: null)
 
-
+    console.log(RVs)
     if(isLoading || authLoading){
         return <p className="flexCenter">Loading...</p>
     }

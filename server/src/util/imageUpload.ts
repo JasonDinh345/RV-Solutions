@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
 import stream from 'stream'
 
+
     // Configuration
     cloudinary.config({ 
         cloud_name:  process.env.CLOUDINARY_NAME, 
@@ -29,12 +30,12 @@ import stream from 'stream'
               }
             ).end(imageBlob); // End the stream by passing the Blob (Buffer)
           });
-          const ImageID = uploadResult.public_id;
+          const ImageID = uploadResult.public_id.split('/').slice(1).join('/');
           // Original image URL
           const ImageURL = uploadResult.secure_url;
       
           // Generate the smaller image URL (resize while maintaining aspect ratio)
-          const SmallImageURL = cloudinary.url(ImageID, {
+          const SmallImageURL = cloudinary.url(process.env.CLOUDINARY_FOLDER+ImageID, {
             width: 300,  // Desired width for the smaller version
             height: 199,  // Desired height for the smaller version
             crop: 'fill', // Resize to fit within the given width and height
@@ -43,7 +44,7 @@ import stream from 'stream'
             quality: 'auto', // Auto-quality for efficient delivery
           });
       
-          // Return both URLs
+          
           return {
             ImageURL,
             SmallImageURL,
@@ -54,12 +55,17 @@ import stream from 'stream'
           throw new Error("CLOUDINARY_ERROR");
         }
       };
-      export async function deleteImage(imageID: string): Promise<boolean>{
-        await cloudinary.uploader.destroy(imageID, (error, result) => {
-            if (error) {
-              console.error('Error deleting image:', error);
-            } 
-            return result === 'ok'
-          });
-          return false
-      }
+      export async function deleteImage(imageID: string): Promise<boolean> {
+    try {
+        const publicId = process.env.CLOUDINARY_FOLDER + imageID;
+        console.log("Attempting to delete:", publicId);
+
+        const result = await cloudinary.uploader.destroy(publicId); 
+        console.log("Cloudinary delete result:", result);
+
+        return result.result === 'ok';
+    } catch (error) {
+        console.error('Error deleting image:', error);
+        return false;
+    }
+}

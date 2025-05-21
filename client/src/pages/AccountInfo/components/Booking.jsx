@@ -32,7 +32,7 @@ export default function Booking({bookingData}){
             <>
             
             <tr>
-                <td className="tableImage"><img src={RV.imageURL} onClick={()=>navigate(`/RV/${RV.VIN}`)}></img></td>
+                <td className="tableImage"><img src={RV.ImageURL} onClick={()=>navigate(`/RV/${RV.VIN}`)}></img></td>
                 <td>{RV.Make}</td>
                 <td>{RV.Model}</td>
                 <td style={{color: statusColor}}>{bookingData.Status}</td>

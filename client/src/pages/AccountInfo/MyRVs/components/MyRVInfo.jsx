@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { useRV } from "../../../../hooks/useRV"
+import MyRVDescription from "./MyRVDescription";
 
-export default function MyRVInfo({rvData}){
+export default function MyRVInfo(){
     const [currentTab, setCurrentTab] = useState("Info")
     const {RV , setRV} = useRV();
     return(
@@ -14,7 +15,9 @@ export default function MyRVInfo({rvData}){
                     <h3 className="logout" onClick={()=>setRV(null)}>Exit</h3>
                 </div>
                 <div id="rvInfoMain">
-                    
+                    {currentTab === "Info" ? (
+                        <MyRVDescription/>
+                    ):(<></>)}
                 </div>
             </div>
         </div>

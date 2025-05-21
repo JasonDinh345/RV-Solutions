@@ -51,9 +51,10 @@ export class ImageService{
             throw new Error("SERVER_ERROR");
         }
     }
-    async deleteImage(vin: string):Promise<boolean>{
+    async deleteImage(ImageID: string):Promise<boolean>{
+      console.log("yo")
         try{
-            const [result] = await this.pool.execute<ResultSetHeader>(`DELETE FROM Image WHERE vin = ?`, [vin]) 
+            const [result] = await this.pool.execute<ResultSetHeader>(`DELETE FROM Image WHERE ImageID = ?`, [ImageID]) 
           
             return result.affectedRows >0;
         }catch(err){

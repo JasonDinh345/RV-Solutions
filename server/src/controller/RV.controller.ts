@@ -105,7 +105,7 @@ export class RVController{
     }
     async updateRV(req:Request, res: Response):Promise<void>{
         try{
-            const rvData = req.body.rvData
+            const rvData = req.body
             const vin = req.params.vin
             if(!rvData || !vin){
                 res.status(400).json({message:`Missing fields in RV data: ${req.body}`})
