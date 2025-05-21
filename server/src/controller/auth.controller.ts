@@ -23,9 +23,9 @@ export class AuthController{
             if(!account){
                 res.status(401).json({message: "Authorization Failed"})
             }
-            const accessToken = this.generateAccessToken({Email: account.Email})
-            const refreshToken:string = jwt.sign({Email: account.Email}, process.env.REFRESH_TOKEN_SECRET)
-            if(!(await this.authService.addRefreshToken({token: refreshToken, accountID: account.AccountID}))){
+            const accessToken = this.generateAccessToken({AccountID: account.AccountID})
+            const refreshToken:string = jwt.sign({AccountID: account.AccountID}, process.env.REFRESH_TOKEN_SECRET)
+            if(!(await this.authService.addRefreshToken({token: refreshToken, AccountID: account.AccountID}))){
                 throw new Error("ACCOUNT_NOT_FOUND")
             }
             res.cookie('refreshToken', refreshToken, {
@@ -86,7 +86,7 @@ export class AuthController{
                         res.status(401).json({message:"Refresh token is not valid"})
                         return;
                     }
-                    const accessToken = this.generateAccessToken({Email: account.Email})
+                    const accessToken = this.generateAccessToken({AccountID: account.AccountID})
                     res.cookie('accessToken', accessToken, {
                         httpOnly: true,
                         secure: process.env.NODE_ENV === 'production', // true in prod (HTTPS)

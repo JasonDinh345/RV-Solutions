@@ -43,7 +43,9 @@ export class AuthService{
         async addRefreshToken(refreshTokenData: RefreshToken): Promise<boolean>{
             
             try{
-                const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery(refreshTokenData, "refreshToken"), Object.values(refreshTokenData))
+                const query = getInsertQuery(refreshTokenData, "refreshToken") + " ON DUPLICATE KEY UPDATE Token = VALUES(Token)"
+                console.log(query)
+                const [result] = await this.pool.execute<ResultSetHeader>(query, Object.values(refreshTokenData))
                 return result.affectedRows > 0
             }catch(err){
                 switch(err.code){

@@ -8,10 +8,10 @@ export class AccountService{
     constructor(pool: Pool){
         this.pool = pool 
     }
-    async getAccount(email: string):Promise<Account>{
+    async getAccount(AccountID: number):Promise<Account>{
     
         try{
-            const [rows] = await this.pool.execute<RowDataPacket[]>("SELECT * FROM Account WHERE email = ?", [email]);
+            const [rows] = await this.pool.execute<RowDataPacket[]>("SELECT * FROM Account WHERE AccountID = ?", [AccountID]);
 
             // Check if any rows were returned
             if (rows.length === 0) {
@@ -47,7 +47,7 @@ export class AccountService{
             throw new Error("SERVER_ERROR");  
         }
     }
-    async updateAccount(accountData: Partial<Account>, email: string):Promise<boolean>{
+    async updateAccount(accountData: Partial<Account>, AccountID: number):Promise<boolean>{
         
         if(accountData.Password){
             const hashedPass = await bcrypt.hash(accountData.Password, 10)
@@ -55,7 +55,7 @@ export class AccountService{
         }
        
         try{
-            const [result] = await this.pool.execute<ResultSetHeader>(getUpdateQuery(accountData, 'account', 'email'), [...Object.values(accountData), email])
+            const [result] = await this.pool.execute<ResultSetHeader>(getUpdateQuery(accountData, 'account', 'AccountID'), [...Object.values(accountData), AccountID])
            
             return result.affectedRows > 0
         }catch(err){
@@ -80,9 +80,9 @@ export class AccountService{
             
         }
     }
-    async deleteAccount(email: string): Promise<boolean>{
+    async deleteAccount(AccountID: number): Promise<boolean>{
         try{
-            const [result] = await this.pool.execute<ResultSetHeader>(`DELETE FROM account WHERE email = ?`, [email])
+            const [result] = await this.pool.execute<ResultSetHeader>(`DELETE FROM account WHERE AccountID = ?`, [AccountID])
             return result.affectedRows > 0
         }catch(err){
             if (err.code === 'ER_ROW_IS_REFERENCED') {
