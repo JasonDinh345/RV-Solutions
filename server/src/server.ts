@@ -7,7 +7,7 @@ import authRouter from './route/auth.route.js';
 import bookingRouter from './route/booking.route.js';
 import accountRouter from './route/account.route.js';
 import rvRouter from './route/RV.route.js';
-import imageRouter from './route/image.route.js';
+
 import damageReportRouter from './route/damageReport.route.js';
 import path from 'path';
 const app: Express = express();
@@ -29,7 +29,6 @@ app.get("/", (req : Request, res: Response)=>{
 app.use('/auth', authRouter);
 app.use('/account', accountRouter)
 app.use('/RV', rvRouter)
-app.use('/image', imageRouter)
 app.use('/booking', bookingRouter)
 app.use('/damageReport', damageReportRouter)
 

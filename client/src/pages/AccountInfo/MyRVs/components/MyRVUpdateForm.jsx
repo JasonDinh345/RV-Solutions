@@ -1,6 +1,6 @@
 import { useRV } from "../../../../hooks/useRV"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+
 import axios from "axios"
 import { LabelInput, LabelSelect } from "../../../../components/LabelInput"
 import { removeKeys } from "../../../../util/removeKeys"
@@ -8,7 +8,7 @@ export default function MyRVUpdateForm(){
     
     const [rvImage, setRVImage] = useState()
     const [error, setError] = useState()
-    const navigate = useNavigate();
+    
     
     const [uploadStatus, setUploadStatus] = useState()
     const {RV, setRV} = useRV();
@@ -26,48 +26,37 @@ export default function MyRVUpdateForm(){
         }
         
     }
-   console.log(RV)
+   
     const handleSubmit = async(e)=>{
         e.preventDefault()
         setError(null)
         setUploadStatus("Updating RV...")
         setFormData((prev)=>({...prev, Mileage: +formData.Mileage, CostToRent: +formData.CostToRent }))
         try{
-            const res = await axios.patch(`http://localhost:1231/RV/${RV.VIN}`, formData)
-           
-            if(res.status === 204){
-                if(rvImage){
-                    setUploadStatus("Deleting image...")
-                    const imgDelete = await axios.delete(`http://localhost:1231/image/${RV.ImageID}`)
-                    if(imgDelete.status === 204){
-                        setUploadStatus("Uploading image...")
-                        const imageForm = new FormData();
-                        imageForm.append("img", rvImage)
-                        imageForm.append("VIN", formData.VIN)
-                        const imgRes = await axios.post("http://localhost:1231/image", imageForm, {
-                            headers: {
-                            "Content-Type": "multipart/form-data",  
-                            }
-                        })
-                        
-                        if(imgRes.status === 201){
-                          
-                            setUploadStatus("Upload Complete")
-                        }
-                    }
-                    
-                }
-                setUploadStatus("Upload Complete")
-                
+            const requestBody = new FormData();
+            if(rvImage){
+                requestBody.append("img", rvImage)
             }
-            window.location.reload();
+            requestBody.append("RV", JSON.stringify(formData))
+            const res = await axios.patch(`http://localhost:1231/RV/${RV.VIN}/${RV.ImageID}`, requestBody,{
+                    headers: {
+                      "Content-Type": "multipart/form-data",  
+                    }
+                })
+                
+            if(res.status == 204){
+                setUploadStatus("Updating Complete")
+                window.location.reload();
+            }
+                
+            
         }catch(err){
             console.error(err)
             setError(err.message)
         }
         
     }
-    console.log(formData)
+    
     
     return(
            <div className="blackBG">

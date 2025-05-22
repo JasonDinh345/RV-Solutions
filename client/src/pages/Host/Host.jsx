@@ -41,31 +41,26 @@ export default function Host(){
         setUploadStatus("Uploading RV...")
         setFormData((prev)=>({...prev, Mileage: +formData.Mileage, CostToRent: +formData.CostToRent }))
         try{
-            const res = await axios.post("http://localhost:1231/RV", formData)
-           
-            if(res.status === 201){
-                setUploadStatus("Uploading image...")
-                const imageForm = new FormData();
-                imageForm.append("img", rvImage)
-                imageForm.append("VIN", formData.VIN)
-                const imgRes = await axios.post("http://localhost:1231/image", imageForm, {
+            const requestBody = new FormData();
+            requestBody.append("img", rvImage)
+            requestBody.append("RV", JSON.stringify(formData))
+            const res = await axios.post("http://localhost:1231/RV", requestBody,{
                     headers: {
                       "Content-Type": "multipart/form-data",  
                     }
                 })
-                
-                if(imgRes.status === 201){
-                    //redirect when implemented
-                    setUploadStatus("Upload Complete")
-                }
-            }
+           if(res.status === 201){
+            setUploadStatus("Successfully Added RV!")
+            navigate("/accountInfo/RVs")
+           }
+            
         }catch(err){
             console.error(err)
             setError(err.message)
         }
         
     }
-    console.log(formData)
+    
     return(
         <>
         <form id="hostRVForm" onSubmit={handleSubmit}>

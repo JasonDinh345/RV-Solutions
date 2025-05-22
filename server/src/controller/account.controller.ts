@@ -89,7 +89,7 @@ export class AccountController{
         try{
             
             const accountData: Partial<Account> = req.body
-            console.log(accountData)
+          
             if(await this.accountService.updateAccount(accountData, Number(req.account.AccountID))){
                 res.status(204).json({message:`Sucessfully updated account!`})
             }else{

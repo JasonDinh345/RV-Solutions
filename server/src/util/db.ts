@@ -1,4 +1,4 @@
-import mysql, {Pool} from 'mysql2/promise';
+import mysql, {Pool, PoolConnection} from 'mysql2/promise';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -9,4 +9,21 @@ const pool: Pool = mysql.createPool({
   database: process.env.DB_NAME,
 });
 
+export async function withTransaction<T>(
+  pool: Pool,
+  fn: (conn: PoolConnection) => Promise<T>
+): Promise<T> {
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+    const result = await fn(conn);
+    await conn.commit();
+    return result;
+  } catch (err) {
+    await conn.rollback();
+    throw err;
+  } finally {
+    conn.release();
+  }
+}
 export default pool;

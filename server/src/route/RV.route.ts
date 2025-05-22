@@ -14,8 +14,8 @@ rvRouter.get("/:vin", rvController.getRV.bind(rvController))
 
 rvRouter.post("/", rvController.insertRV.bind(rvController))
 
-rvRouter.patch("/:vin", rvController.updateRV.bind(rvController))
+rvRouter.patch("/:vin/:imageID", rvController.updateRV.bind(rvController))
 
-rvRouter.delete("/:vin", rvController.deleteRV.bind(rvController))
+rvRouter.delete("/:vin/:imageID", rvController.deleteRV.bind(rvController))
 
 export default rvRouter

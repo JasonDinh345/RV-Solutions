@@ -1,6 +1,8 @@
 import { RVService } from "../service/RV.service.js";
 import { Request, Response } from 'express';
 import { RVwImage } from "../types/RV.type.js";
+import fileUpload from "express-fileupload";
+import { uploadBlob } from "../util/imageUpload.js";
 export class RVController{
     private rvService: RVService
 
@@ -76,11 +78,19 @@ export class RVController{
     }
     async insertRV(req:Request, res: Response):Promise<void>{
         try{
-            const rvData = req.body
+            if(!req.files){
+                throw new Error("INVALID_REQUEST")
+            }
+            
+            const rvData = JSON.parse(req.body.RV)
+           
+            const imageData = req.files.img as fileUpload.UploadedFile
+            const imageURLData = await uploadBlob(imageData.data)
+          
             if(!rvData){
                 res.status(400).json({message: `No data sent to server!: ${rvData}`})
             }
-            if(await this.rvService.insertRV(rvData)){
+            if(await this.rvService.insertRVwImage(rvData, imageURLData)){
                 res.status(201).json({message:`Sucessfully created RV!`})
             }else{
                 res.status(400).json({message: `Could't insert RV with data: ${rvData}`}) 
@@ -94,6 +104,9 @@ export class RVController{
                 case "DUPLICATE_ENTRY":
                     res.status(409).json({message: `RV already exists with VIN: ${req.body.vin}`})
                     break;
+                case "INSERT_FAILED":
+                    res.status(400).json({message: `Part of the transaction has failed`})
+                    break;
                 case "SQL_SYNTAX_ERROR":
                     res.status(500).json({message: `SQL syntax error!`})
                     break;
@@ -105,13 +118,29 @@ export class RVController{
     }
     async updateRV(req:Request, res: Response):Promise<void>{
         try{
-            const rvData = req.body
+            
+            if(!req.files){
+                throw new Error("INVALID_REQUEST")
+            }
+            
+            const rvData = JSON.parse(req.body.RV)
+           
+            const imageData = req.files.img as fileUpload.UploadedFile
+            const imageURLData = await uploadBlob(imageData.data)
+            
             const vin = req.params.vin
+            const imageID = req.params.imageID
             if(!rvData || !vin){
                 res.status(400).json({message:`Missing fields in RV data: ${req.body}`})
                 return;
             }
-            if(await this.rvService.updateRV(rvData, vin)){
+            let result;
+            if(!req.files){
+                result = await this.rvService.updateRV(rvData, vin)
+            }else{
+                result = await this.rvService.updateRVwImage(rvData, imageURLData, vin,imageID)
+            }
+            if(result){
                 res.status(204).json({message:`Successfully updated RV`})
             }else{
                 res.status(404).json({message:`Couldn't find RV`})
@@ -134,12 +163,16 @@ export class RVController{
     }
     async deleteRV(req:Request, res: Response):Promise<void>{
         try{
-            const vin = req.params.vin
+            const  {vin, imageID} = req.params
+            
             if(!vin){
                 res.status(400).json({ message: `Missing VIN: ${vin}` });
                 return
+            }else if(!imageID){
+                 res.status(400).json({ message: `Missing ImageID: ${imageID}` });
+                return
             }
-            if(await this.rvService.deleteRV(vin)){
+            if(await this.rvService.deleteRV(vin, imageID)){
                 res.status(204).json({message: `Successfully deleted RV`})
             }else{
                 res.status(404).json({message:`Couldn't find RV with VIN: ${vin}`})

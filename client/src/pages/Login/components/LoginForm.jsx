@@ -14,7 +14,7 @@ export default function LoginForm({handleFormChange}){
                 withCredentials: true 
               });
             if(res.status === 201){
-                console.log(res.data.account)
+                
                 login(res.data.account)
                 navigate("/")
             }else{
