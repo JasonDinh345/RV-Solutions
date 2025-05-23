@@ -10,6 +10,7 @@ import rvRouter from './route/RV.route.js';
 
 import damageReportRouter from './route/damageReport.route.js';
 import path from 'path';
+
 const app: Express = express();
 dotenv.config()
 app.use(cors({
@@ -31,6 +32,7 @@ app.use('/account', accountRouter)
 app.use('/RV', rvRouter)
 app.use('/booking', bookingRouter)
 app.use('/damageReport', damageReportRouter)
+
 
 app.listen(1231,()=>{
     console.log("Server running!")

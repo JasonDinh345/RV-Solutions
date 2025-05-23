@@ -1,5 +1,5 @@
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import { Booking } from "../types/Booking.type.js";
+import { Booking, BookingwRV } from "../types/Booking.type.js";
 import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
 
 export class BookingService{
@@ -8,10 +8,10 @@ export class BookingService{
         this.pool = pool
     }
 
-    async getAllBookingToVIN(vin: string): Promise<Booking[]>{
+    async getAllBookingToVIN(vin: string): Promise<Partial<Booking>[]>{
         try{
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM BOOKING WHERE vin = ?`, [vin]);
-            return rows as Booking[];
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT BookingID FROM BOOKING WHERE vin = ?`, [vin]);
+            return rows as Partial<Booking>[];
         }catch(err){
            
             switch(err.code){
@@ -25,11 +25,11 @@ export class BookingService{
         
         }
     }
-    async getAllBookingsToAccount(accountID: number): Promise<Booking[]>{
+    async getAllBookingsToAccount(accountID: number): Promise<Partial<Booking>[]>{
         try{
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM BOOKING WHERE accountID = ?`, [accountID])
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT BookingID FROM BOOKING WHERE accountID = ?`, [accountID])
             
-            return rows as Booking[];
+            return rows as Partial<Booking>[];
         }catch(err){
             
             switch(err.code){
@@ -42,11 +42,11 @@ export class BookingService{
             }
         }
     }
-    async getAllBookingsToOwner(ownerID: number): Promise<Booking[]>{
+    async getAllBookingsToOwner(ownerID: number): Promise<Partial<Booking>[]>{
         try{
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM BOOKING WHERE vin IN (SELECT vin FROM RV WHERE ownerID = ?)`, [ownerID])
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT BookingID FROM BOOKING WHERE vin IN (SELECT vin FROM RV WHERE ownerID = ?)`, [ownerID])
             
-            return rows as Booking[];
+            return rows as Partial<Booking>[]
         }catch(err){
            
             switch(err.code){
@@ -59,13 +59,22 @@ export class BookingService{
             }
         }
     }
-    async getBooking(bookingID: number): Promise<Booking>{
+    async getBookingDetails(bookingID: number): Promise<BookingwRV>{
         try{
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM BOOKING WHERE bookingID = ?`, [bookingID]) 
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`
+                SELECT b.*,
+                r.Make,
+                r.Model,
+                i.SmallImageURL AS ImageURL
+                FROM BOOKING b 
+                JOIN RV r ON r.VIN = b.VIN
+                JOIN Image i on i.VIN = r.VIN
+                WHERE bookingID = ?`, 
+                [bookingID]) 
             if (rows.length === 0) {
                 return null; 
             }
-            const booking = rows[0] as Booking
+            const booking = rows[0] as BookingwRV
             
             return booking 
         }catch(err){

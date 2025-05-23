@@ -1,6 +1,6 @@
 import { DamageReportService } from "../service/damageReport.service.js";
 import { Request, Response } from 'express';
-import { DamageReport } from "../types/DamageReport.type.js";
+import { DamageReport, DamageReportwRV } from "../types/DamageReport.type.js";
 export class DamageReportController{
     private damageReportService: DamageReportService
 
@@ -11,7 +11,7 @@ export class DamageReportController{
     async getAllDamageReportWithAccount(req:Request, res: Response):Promise<void>{
         try{
             const accoundID = Number(req.params.accountID);
-            const damageReports: DamageReport[] = await this.damageReportService.getAllDamageReportWithAccount(accoundID)
+            const damageReports: Partial<DamageReport>[] = await this.damageReportService.getAllDamageReportWithAccount(accoundID)
             if(damageReports.length === 0){
                 res.status(404).json({message:`No damage reports found`})
             }else{
@@ -34,7 +34,7 @@ export class DamageReportController{
     async getAllDamageReportWithRV(req:Request, res: Response):Promise<void>{
         try{
             const vin = req.params.vin;
-            const damageReports: DamageReport[] = await this.damageReportService.getAllDamageReportWithRV(vin)
+            const damageReports: Partial<DamageReport>[] = await this.damageReportService.getAllDamageReportWithRV(vin)
             if(damageReports.length === 0){
                 res.status(404).json({message:`No damage reports found`})
             }else{
@@ -57,7 +57,7 @@ export class DamageReportController{
     async getAllDamageReportWithOwner(req:Request, res: Response):Promise<void>{
         try{
             const ownerID = req.params.ownerID;
-            const damageReports: DamageReport[] = await this.damageReportService.getAllDamageReportWithOwner(ownerID)
+            const damageReports: Partial<DamageReport>[] = await this.damageReportService.getAllDamageReportWithOwner(ownerID)
             if(damageReports.length === 0){
                 res.status(404).json({message:`No damage reports found`})
             }else{
@@ -77,10 +77,11 @@ export class DamageReportController{
             }
         }
     }
-    async getDamageReport(req:Request, res: Response):Promise<void>{
+    
+    async getDamageReportwRV(req:Request, res: Response):Promise<void>{
         try{
             const reportID = Number(req.params.reportID);
-            const damageReport: DamageReport = await this.damageReportService.getDamageReport(reportID)
+            const damageReport: DamageReportwRV = await this.damageReportService.getDamageReportwRV(reportID)
             if(damageReport){
                 res.status(200).json(damageReport)
             }else{

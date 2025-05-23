@@ -4,7 +4,7 @@ import MyRVUpdateForm from "./MyRVUpdateForm";
 export default function MyRVDescription(){
     const [isUpdating, setIsUpdating] = useState(false)
     const {RV} = useRV();
-    console.log(RV)
+  
     return(
         <>
         {RV && 

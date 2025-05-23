@@ -59,6 +59,11 @@ input{
   font-style: italic;
   font-weight: bold;
 }
+.header{
+  display: flex;
+  justify-content: center;
+  margin-top: 1%;
+}
 .success{
   color:rgb(0, 199, 0);
   font-style: italic;

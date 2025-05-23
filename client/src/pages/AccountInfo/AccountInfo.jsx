@@ -4,12 +4,13 @@ import "./AccountInfo.css"
 import { useAuth } from "../../hooks/useAuth"
 
 import { useNavigate, useParams } from "react-router-dom"
-import MyBookings from "./MyBookings/MyBookings"
 import MyRVs from "./MyRVs/MyRVs"
+import BookingsTable from "./components/BookingsTable"
+import DamageReportTable from "./components/DamageReportTable"
 export default function AccountInfo(){
     const navigate = useNavigate();
     
-    const {logout} = useAuth();
+    const { account, logout} = useAuth();
     const [currentTab, setCurrentTab] = useState("Account")
     
     const handleLogout = ()=>{
@@ -20,7 +21,9 @@ export default function AccountInfo(){
     useEffect(()=>{
         if(tab){
             setCurrentTab(tab)
+            
         }
+        
     },[tab])
     return(
         <>
@@ -32,15 +35,20 @@ export default function AccountInfo(){
                 <h3 onClick={()=>navigate("/accountInfo/Damages")} className={currentTab === "Damages"  ? "selected" : undefined}>My Damages</h3>
                 <h3 className="logout" onClick={handleLogout}>Logout</h3>
             </div>
-            <div className="accountInfoContent">
+            {account &&
+             <div className="accountInfoContent">
                 {currentTab === "Account" ? (
                     <MyAccount/>
                 ):currentTab === "Bookings" ? (
-                    <MyBookings/>
+                    <BookingsTable URL={`http://localhost:1231/booking/account/${account.AccountID}`} />
                 ):currentTab === "RVs" ? (
                     <MyRVs/>
+                ):currentTab === "Damages" ? (
+                    <DamageReportTable URL={`http://localhost:1231/damageReport/account/${account.AccountID}`}/>
                 ):(<></>)}
             </div>
+
+            }
         </div>
         </>
     )

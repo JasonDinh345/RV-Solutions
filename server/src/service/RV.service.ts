@@ -45,6 +45,7 @@ export class RVService{
           }
         }
     }
+    
     async getRV(vin : String):Promise<RVwImage>{
         try{
           const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT RV.*, Image.imageURL AS "ImageURL", Image.ImageID FROM RV JOIN Image ON RV.vin = Image.vin WHERE RV.vin = ?`, [vin])
@@ -119,8 +120,8 @@ export class RVService{
         const result = await withTransaction(this.pool, async(conn)=>{
           const [rvResult] = await this.pool.execute<ResultSetHeader>(getUpdateQuery(rvData, 'RV', 'VIN'), [...Object.values(rvData), VIN])
           if(rvResult.affectedRows >0){
-          
-            const [imageResult] = await conn.execute<ResultSetHeader>(getUpdateQuery(imageData, 'Image', "VIN"), Object.values({...imageData, VIN: VIN}));
+            const updatedImageData = {...imageData, UploadDate: Date.now()}
+            const [imageResult] = await conn.execute<ResultSetHeader>(getUpdateQuery(updatedImageData, 'Image', "VIN"), Object.values({...updatedImageData, VIN: VIN}));
             if(imageResult.affectedRows !== 1 ){
               throw new Error('INSERT_FAILED');
             }

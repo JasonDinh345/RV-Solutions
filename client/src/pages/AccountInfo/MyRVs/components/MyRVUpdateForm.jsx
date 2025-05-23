@@ -11,7 +11,7 @@ export default function MyRVUpdateForm(){
     
     
     const [uploadStatus, setUploadStatus] = useState()
-    const {RV, setRV} = useRV();
+    const {RV} = useRV();
     const [formData, setFormData] = useState(removeKeys(RV, ['ImageID','ImageURL']))
     const handleImageChange = (e)=>{
         setRVImage(e.target.files[0])
@@ -90,7 +90,7 @@ export default function MyRVUpdateForm(){
                 <textarea id="Description" name="Description"type="text" onChange={handleChange}  rows={4}  style={{ width: '100%', resize: 'vertical' }}required value={formData.Description}></textarea>
                 <LabelInput type="number" fieldName={"Mileage"} onChange={handleChange} label="Mileage" value={formData.Mileage}></LabelInput>
                 <label htmlFor="isAvailable" style={{fontWeight:"bolder", fontSize:"2vh"}}>Set Immediately Available:
-                    <input id="isAvailable" type="checkbox" name="isAvailable" defaultValue={formData.isAvailable} onChange={handleChange} ></input>
+                    <input id="isAvailable" type="checkbox" name="isAvailable" checked={formData.isAvailable || formData.isAvailable === 1} onChange={handleChange} ></input>
                 </label>
                 <input type="submit" value="Update RV"></input>
     
