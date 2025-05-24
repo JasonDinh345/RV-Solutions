@@ -13,7 +13,7 @@ damageReportRouter.get("/RV/:vin", damageReportController.getAllDamageReportWith
 
 damageReportRouter.get("/owner/:ownerID", damageReportController.getAllDamageReportWithOwner.bind(damageReportController))
 
-damageReportRouter.get("/:reportID", damageReportController.getDamageReport.bind(damageReportController))
+damageReportRouter.get("/:reportID", damageReportController.getDamageReportwRV.bind(damageReportController))
 
 damageReportRouter.post("/", damageReportController.insertDamageReport.bind(damageReportController))
 

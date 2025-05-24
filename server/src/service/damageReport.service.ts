@@ -1,5 +1,5 @@
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import { DamageReport } from "../types/DamageReport.type.js";
+import { DamageReport, DamageReportwRV } from "../types/DamageReport.type.js";
 import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
 
 export class DamageReportService{
@@ -8,13 +8,13 @@ export class DamageReportService{
     constructor(pool: Pool){
         this.pool = pool
     }
-    async getAllDamageReportWithAccount(accountID: number): Promise<DamageReport[]>{
+    async getAllDamageReportWithAccount(accountID: number): Promise<Partial<DamageReport>[]>{
         try{
             if(!accountID){
                 throw new Error("INVALID_ACCOUNT")
             }
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM DamageReport JOIN Booking ON DamageReport.BookingID = Booking.BookingID WHERE Booking.accoundID = ?`, [accountID])
-            return rows as DamageReport[];
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT ReportID FROM DamageReport JOIN Booking ON DamageReport.BookingID = Booking.BookingID WHERE Booking.AccountID = ?`, [accountID])
+            return rows as Partial<DamageReport>[];
         }catch(err){
             switch(err.code){
                 case "ER_PARSE_ERROR":
@@ -26,13 +26,13 @@ export class DamageReportService{
             }
         }
     }
-    async getAllDamageReportWithRV(vin: string): Promise<DamageReport[]>{
+    async getAllDamageReportWithRV(vin: string): Promise<Partial<DamageReport>[]>{
         try{
             if(!vin){
                 throw new Error("INVALID_RV")
             }
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM DamageReport JOIN Booking ON DamageReport.BookingID = Booking.BookingID WHERE Booking.vin = ?`, [vin])
-            return rows as DamageReport[];
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT ReportID FROM DamageReport JOIN Booking ON DamageReport.BookingID = Booking.BookingID WHERE Booking.vin = ?`, [vin])
+            return rows as Partial<DamageReport>[];
         }catch(err){
             switch(err.code){
                 case "ER_PARSE_ERROR":
@@ -44,16 +44,16 @@ export class DamageReportService{
             }
         }
     }
-    async getAllDamageReportWithOwner(ownerID: string): Promise<DamageReport[]>{
+    async getAllDamageReportWithOwner(ownerID: string): Promise<Partial<DamageReport>[]>{
         try{
             if(!ownerID){
                 throw new Error("INVALID_ACCOUNT")
             }
             const [rows] = await this.pool.execute<RowDataPacket[]>(
-                `SELECT * FROM DamageReport 
+                `SELECT ReportID FROM DamageReport 
                     JOIN Booking ON DamageReport.BookingID = Booking.BookingID 
                     JOIN RV ON Booking.vin = RV.vin WHERE RV.ownerID = ?`, [ownerID])
-            return rows as DamageReport[];
+            return rows as Partial<DamageReport>[];
         }catch(err){
             switch(err.code){
                 case "ER_PARSE_ERROR":
@@ -66,16 +66,28 @@ export class DamageReportService{
         }
         
     }
-    async getDamageReport(reportID: number):Promise<DamageReport>{
+    
+    async getDamageReportwRV(reportID: number):Promise<DamageReportwRV>{
         try{
             if(!reportID){
                 throw new Error("INVALID_REPORT")
             }
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT * FROM DamageReport WHERE DamageReport.reportID = ?`, [reportID])
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`
+                SELECT d.*,
+                i.SmallImageURL AS ImageURL,
+                r.Make AS Make,
+                r.Model AS Model,
+                r.VIN AS VIN
+                FROM DamageReport d 
+                JOIN Booking b ON b.BookingID = d.BookingID
+                JOIN RV r ON b.VIN = r.VIN
+                JOIN Image i ON r.VIN = i.VIN
+                WHERE DamageReport.reportID = ?`,
+                 [reportID])
             if(rows.length === 0){
                 return null
             }
-            return rows[0] as DamageReport
+            return rows[0] as DamageReportwRV
         }catch(err){
             switch(err.code){
                 case "ER_PARSE_ERROR":
@@ -87,7 +99,7 @@ export class DamageReportService{
             }
         }
     }
-    async insertDamageReport(reportData: Partial<DamageReport>):Promise<boolean>{
+    async insertDamageReport(reportData: Omit<DamageReport, 'ReportID'>):Promise<boolean>{
         try{
             const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery(reportData, "DamageReport"), Object.values(reportData))
             return result.affectedRows > 0

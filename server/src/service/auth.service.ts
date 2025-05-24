@@ -17,16 +17,16 @@ export class AuthService{
          * passed or not, passes the account if successful
          */
         async authenticateUser(accountData: Partial<Account>): Promise<Account>{
-            if(!accountData.email || !accountData.password){
+            if(!accountData.Email || !accountData.Password){
                 throw new Error("NULL_FIELDS")
             }
-            const [rows] = await this.pool.execute("SELECT * FROM account WHERE email = ?",[accountData.email]);
+            const [rows] = await this.pool.execute("SELECT * FROM account WHERE email = ?",[accountData.Email]);
             const account = rows[0];
             if(!account){
                 throw new Error("INVALID_USER")
             }
             try{
-                if(await bcrypt.compare(accountData.password, account.password)){
+                if(await bcrypt.compare(accountData.Password, account.Password)){
                     return account
                 }
                 throw new Error("INCORRECT_PASSWORD")
@@ -35,6 +35,7 @@ export class AuthService{
                 throw new Error(err.message)
             }
         }
+   
         /**
          * Adds the newly generated refresh token in the db
          * @param refreshToken, token to generate a new access token
@@ -42,7 +43,9 @@ export class AuthService{
         async addRefreshToken(refreshTokenData: RefreshToken): Promise<boolean>{
             
             try{
-                const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery(refreshTokenData, "refreshToken"), Object.values(refreshTokenData))
+                const query = getInsertQuery(refreshTokenData, "refreshToken") + " ON DUPLICATE KEY UPDATE Token = VALUES(Token)"
+              
+                const [result] = await this.pool.execute<ResultSetHeader>(query, Object.values(refreshTokenData))
                 return result.affectedRows > 0
             }catch(err){
                 switch(err.code){
@@ -63,14 +66,15 @@ export class AuthService{
          * @param refreshToken , token to generate a new access token
          * @returns true if in the db, false if not
          */
-        async verifyRefreshToken(refreshToken: Partial<RefreshToken>): Promise<boolean>{
+        async verifyRefreshToken(refreshToken: string): Promise<boolean>{
             try{
                 if(!refreshToken){
                     throw new Error("INVALID_TOKEN")
                 }
-                const [result] = await this.pool.execute("SELECT * FROM refreshToken WHERE token = ?", [refreshToken.token])
-                if(!result[0]){
-                    throw new Error("UNKNOWN_TOKEN")
+                
+                const [rows] = await this.pool.execute("SELECT * FROM refreshToken WHERE token = ?", [refreshToken])
+                if ((rows as any[]).length === 0) {
+                    throw new Error("UNKNOWN_TOKEN");
                 }
                 return true
             }catch(err){
@@ -85,14 +89,14 @@ export class AuthService{
          * @returns true if delete, false if else
          */
         /** Delete a refresh token by its raw value */
-        async deleteRefreshToken(refreshToken: Partial<RefreshToken>): Promise<boolean> {
+        async deleteRefreshToken(refreshToken: string): Promise<boolean> {
             try{
                 if (!refreshToken) {
                     throw new Error("INVALID_TOKEN");
                     }
             
                     const [result] = await this.pool.execute<ResultSetHeader>(
-                        'DELETE FROM refreshToken WHERE token = ?',[refreshToken.token]);
+                        'DELETE FROM refreshToken WHERE token = ?',[refreshToken]);
             
                     return result.affectedRows > 0;
             }catch(err){

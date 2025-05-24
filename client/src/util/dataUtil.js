@@ -10,9 +10,12 @@ export function getDatePST(offsetDays = 0) {
 }
 
 export function reformatDate(dateStr) {
-    const [year, month, day] = dateStr.split('-');
+    const date = new Date(dateStr);
+
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+ 
     
-    return `${month}-${day}-${year}`;
+    return date.toLocaleDateString('en-US', options);
 }
 export function getDayDiff(dateInput1, dateInput2){
     const date1 = new Date(dateInput1);

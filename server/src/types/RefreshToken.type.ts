@@ -1,4 +1,4 @@
 export interface RefreshToken{
-    readonly token: String,
-    readonly accountID: Number,  
+    readonly Token: String,
+    readonly AccountID: Number,  
 }

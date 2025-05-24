@@ -1,6 +1,6 @@
 import { BookingService } from "../service/booking,service.js";
 import { Request, Response } from 'express';
-import { Booking } from "../types/Booking.type.js";
+import { Booking, BookingwRV } from "../types/Booking.type.js";
 
 export class BookingController{
     private bookingService : BookingService
@@ -15,7 +15,7 @@ export class BookingController{
             if(!vin){
                 throw new Error("INVALID_VIN")
             }
-            const bookings : Booking[] = await this.bookingService.getAllBookingToVIN(vin)
+            const bookings : Partial<Booking>[] = await this.bookingService.getAllBookingToVIN(vin)
             if(bookings.length > 0){
                 res.status(200).json(bookings)
             }else{
@@ -38,7 +38,7 @@ export class BookingController{
             if(!accountID){
                 throw new Error("INVALID_ACCOUNT")
             }
-            const bookings : Booking[] = await this.bookingService.getAllBookingsToAccount(accountID)
+            const bookings : Partial<Booking>[] = await this.bookingService.getAllBookingsToAccount(accountID)
             if(bookings.length > 0){
                 res.status(200).json(bookings)
             }else{
@@ -61,7 +61,7 @@ export class BookingController{
             if(!ownerID){
                 throw new Error("INVALID_OWNER")
             }
-            const bookings : Booking[] = await this.bookingService.getAllBookingsToOwner(ownerID)
+            const bookings : Partial<Booking>[] = await this.bookingService.getAllBookingsToOwner(ownerID)
             if(bookings.length > 0){
                 res.status(200).json(bookings)
             }else{
@@ -81,8 +81,8 @@ export class BookingController{
     async getBooking(req:Request, res: Response):Promise<void>{
         try{
             const bookingID = Number(req.params.bookingID)
-            const booking: Booking = await this.bookingService.getBooking(bookingID)
-
+            const booking: BookingwRV = await this.bookingService.getBookingDetails(bookingID)
+            
             if(booking){
                 res.status(200).json(booking)
             }else{
@@ -101,7 +101,7 @@ export class BookingController{
     }
     async insertBooking(req:Request, res: Response):Promise<void>{
         try{
-            const bookingData = req.body.bookingData
+            const bookingData = req.body
             if(await this.bookingService.insertBooking(bookingData)){
                 res.status(201).json({message: "Successfully inserted booking!"})
             }else{

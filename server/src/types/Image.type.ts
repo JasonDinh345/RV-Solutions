@@ -1,10 +1,10 @@
 
 export interface Image{
-    readonly vin: string,
-    imageURL: string,
-    smallImageURL: string,
-    imageID: string,
-    uploadDate: Date
+    readonly VIN: string,
+    ImageURL: string,
+    SmallImageURL: string,
+    ImageID: string,
+    UploadDate: Date
 }
 
 

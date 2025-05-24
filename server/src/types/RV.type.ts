@@ -1,28 +1,28 @@
 export interface RV{
-    make: string,
-    model: string,
-    sizeClass : string,
-    description: string,
-    costToRent : Number,
-    readonly vin: string,
-    mileage: number,
+    Make: string,
+    Model: string,
+    SizeClass : string,
+    Description: string,
+    CostToRent : Number,
+    readonly VIN: string,
+    Mileage: number,
     isAvailable: Boolean,
-    location:String,
-    ownerID: number
+    Location:String,
+    OwnerID: number
 
 }
 
 export interface RVwImage{
-    make: String,
-    model: String,
-    sizeClass : String,
-    description: String,
-    costToRent : Number,
-    readonly  vin: String,
-    mileage: number,
+    Make: string,
+    Model: string,
+    SizeClass : string,
+    Description: string,
+    CostToRent : Number,
+    readonly VIN: string,
+    Mileage: number,
     isAvailable: Boolean,
-    location:String,
-    ownerID: Number
+    Location:String,
+    OwnerID: number
     imageURL: String
 
 }

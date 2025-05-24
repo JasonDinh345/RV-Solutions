@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken"
 declare global {
     namespace Express {
       interface Request {
-        account?: Partial<Account>; // or 'account: Account' if it's always set
+        account?: Partial<Account>; 
       }
     }
   }
@@ -19,7 +19,7 @@ export class AccountController{
     }
      /**
      * Middleware to authenicate the current accessToken
-     * @param req, Request containing the token, adds a email to the request if authenticated
+     * @param req, Request containing the token, adds a accoundID to the request if authenticated
      * @param res, Sends 400s codes if error is found, else used in other requests
      * @param next continues to other requests
      */
@@ -35,22 +35,23 @@ export class AccountController{
                 res.status(401).json({message:"Token can't be verified"})
                 return;
             }
+            
             req.account = account
             next()
         })
     }
     async getAccount(req:Request, res: Response):Promise<void>{
         try{
-            const account = await this.accountService.getAccount(req.account.email)
+            const account = await this.accountService.getAccount( Number(req.account.AccountID))
             if(!account){
-                res.status(404).json({message:`Couldn't find account with email: ${req.account.email}`})
+                res.status(404).json({message:`Couldn't find account with ID: ${req.account.AccountID}`})
             }else{
                 res.status(200).json(account)
             }
         }catch(err){
             switch(err.message){
                 case "INVALID_USER":
-                    res.status(404).json({message:`Couldn't find account with email: ${req.account.email}`})
+                    res.status(404).json({message:`Couldn't find account with ID: ${req.account.AccountID}`})
                     break
                 default:
                     res.status(500).json({message:`Unexpected Server Error!`})
@@ -60,7 +61,7 @@ export class AccountController{
     }
     async insertAccount(req:Request, res: Response):Promise<void>{
         try{
-            const accountData: Partial<Account> = req.body.accountData;
+            const accountData: Partial<Account> = req.body;
 
             if(await this.accountService.insertAccount(accountData)){
                 res.status(201).json({message:`Sucessfully created account!`})
@@ -86,11 +87,13 @@ export class AccountController{
     }
     async updateAccount(req:Request, res: Response):Promise<void>{
         try{
-            const accountData: Partial<Account> = req.body.accountData
-            if(await this.accountService.updateAccount(accountData, req.account.email)){
+            
+            const accountData: Partial<Account> = req.body
+          
+            if(await this.accountService.updateAccount(accountData, Number(req.account.AccountID))){
                 res.status(204).json({message:`Sucessfully updated account!`})
             }else{
-                res.status(404).json({message:`Unknown account with email: ${req.body.email}`})
+                res.status(404).json({message:`Unknown account with ID: ${req.account.AccountID}`})
             }
         }catch(err){
             switch(err.message){
@@ -114,10 +117,10 @@ export class AccountController{
     }
     async deleteAccount(req:Request, res: Response):Promise<void>{
         try{
-            if(await this.accountService.deleteAccount(req.account.email)){
+            if(await this.accountService.deleteAccount( Number(req.account.AccountID))){
                 res.status(204).json({message:`Sucessfully deleted account!`})
             }else{
-                res.status(404).json({message:`Couldn't find account with email: ${req.account.email}`})
+                res.status(404).json({message:`Couldn't find account with ID: ${req.account.AccountID}`})
             }
         }catch(err){
             switch(err.message){

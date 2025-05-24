@@ -1,28 +1,35 @@
-import { Pool, ResultSetHeader } from "mysql2/promise";
+import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { Account } from "../types/Account.type.js";
 import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
 import bcrypt from 'bcrypt'
 export class AccountService{
-    private pool;
+    private pool :Pool;
 
     constructor(pool: Pool){
         this.pool = pool 
     }
-    async getAccount(email: string):Promise<Account>{
+    async getAccount(AccountID: number):Promise<Account>{
+    
         try{
-            const [rows] = await this.pool.execute("SELECT * FROM ACCOOUNT WHERE email = ?", [email])
-            return rows[0]
+            const [rows] = await this.pool.execute<RowDataPacket[]>("SELECT * FROM Account WHERE AccountID = ?", [AccountID]);
+
+            // Check if any rows were returned
+            if (rows.length === 0) {
+            throw new Error("ACCOUNT_NOT_FOUND"); // Account doesn't exist
+            }
+
+            return rows[0] as Account; // Return the first account if it exists
         }catch(err){
             console.error("Unexpected server error has occured!")
             throw new Error("SERVER_ERROR")
         }
     }
-    async insertAccount(accountData: Partial<Account>): Promise<boolean>{
+    async insertAccount(accountData: Omit<Account, 'AccountID'>): Promise<boolean>{
         
-        const hashedPass = await bcrypt.hash(accountData.password!, 10)
-        accountData.password = hashedPass;
+        const hashedPass = await bcrypt.hash(accountData.Password!, 10)
+        accountData.Password = hashedPass;
         try{
-            const [result] = await this.pool.execute(getInsertQuery(accountData, "Account"),Object.values(accountData)) as [ResultSetHeader];
+            const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery(accountData, "Account"),Object.values(accountData));
 
             return result.affectedRows > 0;
         }catch(err){
@@ -40,13 +47,15 @@ export class AccountService{
             throw new Error("SERVER_ERROR");  
         }
     }
-    async updateAccount(accountData: Partial<Account>, email: number):Promise<boolean>{
-        if(accountData.password){
-            const hashedPass = await bcrypt.hash(accountData.password, 10)
-            accountData.password = hashedPass;
+    async updateAccount(accountData: Partial<Account>, AccountID: number):Promise<boolean>{
+        
+        if(accountData.Password){
+            const hashedPass = await bcrypt.hash(accountData.Password, 10)
+            accountData.Password = hashedPass;
         }
+       
         try{
-            const [result] = await this.pool.execute(getUpdateQuery(accountData, 'account', 'email'), [...Object.values(accountData), email]) as [ResultSetHeader]
+            const [result] = await this.pool.execute<ResultSetHeader>(getUpdateQuery(accountData, 'account', 'AccountID'), [...Object.values(accountData), AccountID])
            
             return result.affectedRows > 0
         }catch(err){
@@ -71,9 +80,9 @@ export class AccountService{
             
         }
     }
-    async deleteAccount(email: string): Promise<boolean>{
+    async deleteAccount(AccountID: number): Promise<boolean>{
         try{
-            const [result] = await this.pool.execute(`DELETE FROM account WHERE email = ?`, [email]) as [ResultSetHeader]
+            const [result] = await this.pool.execute<ResultSetHeader>(`DELETE FROM account WHERE AccountID = ?`, [AccountID])
             return result.affectedRows > 0
         }catch(err){
             if (err.code === 'ER_ROW_IS_REFERENCED') {
