@@ -145,19 +145,19 @@
           <mxGeometry x="165" y="60" width="110" height="30" as="geometry" />
         </mxCell>
         <mxCell id="UZMCwY883td22Gfu0i2W-38" value="Address" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="357.5" y="60" width="65" height="30" as="geometry" />
+          <mxGeometry x="340" y="60" width="65" height="30" as="geometry" />
         </mxCell>
         <mxCell id="UZMCwY883td22Gfu0i2W-39" value="DateOfBirth" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="487.5" y="60" width="75" height="30" as="geometry" />
+          <mxGeometry x="470" y="60" width="75" height="30" as="geometry" />
         </mxCell>
         <mxCell id="UZMCwY883td22Gfu0i2W-40" value="Account" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="50" y="30" width="70" height="30" as="geometry" />
         </mxCell>
         <mxCell id="UZMCwY883td22Gfu0i2W-41" value="PhoneNumber" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="562.5" y="60" width="90" height="30" as="geometry" />
+          <mxGeometry x="545" y="60" width="90" height="30" as="geometry" />
         </mxCell>
         <mxCell id="UZMCwY883td22Gfu0i2W-42" value="Password" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="422.5" y="60" width="65" height="30" as="geometry" />
+          <mxGeometry x="405" y="60" width="65" height="30" as="geometry" />
         </mxCell>
         <mxCell id="UZMCwY883td22Gfu0i2W-43" value="" style="group" parent="1" connectable="0" vertex="1">
           <mxGeometry x="50" y="290" width="500" height="80" as="geometry" />
