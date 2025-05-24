@@ -102,8 +102,8 @@
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="300" y="380" />
-              <mxPoint x="600" y="380" />
-              <mxPoint x="600" y="280" />
+              <mxPoint x="630" y="380" />
+              <mxPoint x="630" y="280" />
               <mxPoint x="80" y="280" />
             </Array>
           </mxGeometry>
@@ -181,13 +181,16 @@
           <mxGeometry x="190" y="30" width="65" height="30" as="geometry" />
         </mxCell>
         <mxCell id="UZMCwY883td22Gfu0i2W-49" value="PoliceReportID" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="UZMCwY883td22Gfu0i2W-43">
-          <mxGeometry x="255" y="30" width="90" height="30" as="geometry" />
+          <mxGeometry x="310" y="30" width="90" height="30" as="geometry" />
         </mxCell>
         <mxCell id="UZMCwY883td22Gfu0i2W-50" value="IncidentNumber" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="UZMCwY883td22Gfu0i2W-43">
-          <mxGeometry x="345" y="30" width="90" height="30" as="geometry" />
+          <mxGeometry x="400" y="30" width="90" height="30" as="geometry" />
         </mxCell>
         <mxCell id="UZMCwY883td22Gfu0i2W-51" value="&lt;u&gt;BookingID&lt;/u&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="UZMCwY883td22Gfu0i2W-43">
-          <mxGeometry x="435" y="30" width="65" height="30" as="geometry" />
+          <mxGeometry x="490" y="30" width="65" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UZMCwY883td22Gfu0i2W-56" value="&lt;u&gt;IsPaid&lt;/u&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="UZMCwY883td22Gfu0i2W-43">
+          <mxGeometry x="250" y="30" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="UZMCwY883td22Gfu0i2W-52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.871;entryY=1.067;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
@@ -207,7 +210,7 @@
         <mxCell id="UZMCwY883td22Gfu0i2W-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="UZMCwY883td22Gfu0i2W-51" target="UZMCwY883td22Gfu0i2W-1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="518" y="290" />
+              <mxPoint x="573" y="290" />
               <mxPoint x="40" y="290" />
               <mxPoint x="40" y="210" />
               <mxPoint x="66" y="210" />
