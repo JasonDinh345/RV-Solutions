@@ -82,7 +82,7 @@ export class DamageReportService{
                 JOIN Booking b ON b.BookingID = d.BookingID
                 JOIN RV r ON b.VIN = r.VIN
                 JOIN Image i ON r.VIN = i.VIN
-                WHERE DamageReport.reportID = ?`,
+                WHERE d.reportID = ?`,
                  [reportID])
             if(rows.length === 0){
                 return null

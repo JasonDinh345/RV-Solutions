@@ -4,6 +4,7 @@ import { useRV } from "../../../../hooks/useRV"
 import MyRVDescription from "./MyRVDescription";
 import BookingsTable from "../../components/BookingsTable";
 import DamageReportTable from "../../components/DamageReportTable";
+import RVDamagesInfo from "./RVDamages/RVDamagesInfo";
 
 export default function MyRVInfo(){
     const [currentTab, setCurrentTab] = useState("Info")
@@ -22,12 +23,9 @@ export default function MyRVInfo(){
                     {currentTab === "Info" ? (
                         <MyRVDescription/>
                     ): currentTab === "Booking" ?(
-                         <BookingsTable URL={`http://localhost:1231/booking/RV/${RV.VIN}`}/>
+                        <BookingsTable URL={`http://localhost:1231/booking/RV/${RV.VIN}`}/>
                     ):currentTab === "DamageReport" ?(
-                         <div>
-                            <DamageReportTable URL={`http://localhost:1231/damageReport/RV/${RV.VIN}`}/>
-                            <div><button>Add Report</button></div>
-                        </div>
+                        <RVDamagesInfo/>
                     ):(<></>)}
                 </div>
             </div>

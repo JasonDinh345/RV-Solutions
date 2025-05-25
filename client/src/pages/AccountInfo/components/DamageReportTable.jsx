@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react"
+
 import useGet from "../../../hooks/useGet"
-export default function DamageReportTable({URL}){
-      const {data: reportList, isLoading, error} = useGet(URL)
+export default function DamageReportTable({URL, onClick}){
+    const {data: reportList, isLoading, error} = useGet(URL)
+    console.log(reportList)
     if(error && error.status === 404){
         return <h2 className="error header">No reports found!</h2>
     }
@@ -11,7 +12,7 @@ export default function DamageReportTable({URL}){
     }
     return(
         <>
-        {reportList && isLoading &&
+        {reportList && !isLoading &&
             <table className="accountTable">
                 <thead>
                     <tr>
@@ -28,7 +29,7 @@ export default function DamageReportTable({URL}){
                 </thead>
                 <tbody>
                     {reportList.map((report,i)=>
-                        <DamageReport reportID={report.ReportID} key={i+1}/>
+                        <DamageReport reportID={report.ReportID} onClick={onClick}key={i+1}/>
                     )}
                 </tbody>
             </table>
@@ -36,32 +37,30 @@ export default function DamageReportTable({URL}){
         </>
     )
 }
-function DamageReport({reportID}){
-    const [statusColor, setStatusColor] = useState("green")
+function DamageReport({reportID, onClick}){
     const {data: damageReport, isLoading} = useGet(`http://localhost:1231/damageReport/${reportID}`)
-    useEffect(()=>{
-        if(!damageReport || !damageReport.IsPaid){
-            return
-        }
-        if(damageReport.IsPaid === 1){
-            setStatusColor("green")
-        }else{
-            setStatusColor("red")
-        }
-    },[damageReport])
+    console.log(damageReport)
+    
     return(
         <>
         {damageReport && !isLoading &&
         
             <tr>
-                <td className="tableImage"><img src={damageReport.ImageURL}></img></td>
+                <td className="tableImage"><img src={damageReport.ImageURL} onClick={onClick}></img></td>
+                <td>{damageReport.Make}</td>
+                <td>{damageReport.Model}</td>
                 <td>{damageReport.Damages}</td>
-                <td>${damageReport.Deductions}</td>
+                <td>${damageReport.Deduction}</td>
                 <td>{damageReport.Description}</td>
-                <td style={{color: statusColor}}>{damageReport.IsPaid === 1 ? "Yes": "No"}</td>
+                {damageReport.IsPaid === 1 ? 
+                    <td style={{color: "green"}}>Yes</td>
+                : 
+                    <td style={{color: "red"}}>No</td>
+                }
                 <td>{damageReport.PoliceReportID || "N/A"}</td>
                 <td>{damageReport.IncidentNumber || "N/A"}</td>
             </tr>
+            
         
         }
         </>

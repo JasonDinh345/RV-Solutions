@@ -46,6 +46,7 @@
 }
 .accountInfoContent{
     width: 85%;
+    overflow-y: auto;
 }
 
 
@@ -54,16 +55,19 @@
     width: 100%;
     border-collapse: collapse;
     overflow-y: auto;
+   
 }
 .accountTable th{
     border: var(--default-color) 2px solid;
-    padding: 2%;
-    
+
+    padding-bottom: 2%;
+    padding-top: 2%;
+    text-align: center;
 }
 .accountTable td{
     text-align: center;
     border: var(--default-color) 2px solid;
-    font-size: large;
+    font-size:large
 }
 
 .accountTable .tableImage{
