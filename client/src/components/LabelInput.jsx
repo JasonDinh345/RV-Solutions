@@ -24,7 +24,7 @@ export function LabelSelect({fieldName, onChange, label, children, value}){
     return(
         <>
         <div className="labelInputContainer">
-            <label htmlFor={fieldName}><h3>{label}</h3></label>
+            <label htmlFor={fieldName}><h3>{label}:</h3></label>
             <select className="labelSelect" id={fieldName} name={fieldName} onChange={onChange} defaultValue={value ?? ""} required>
                 {children}
             </select>

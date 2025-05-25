@@ -133,3 +133,20 @@ textarea{
   top:0;
   background-image: linear-gradient(rgba(255, 255, 255, 0), rgb(255, 255, 255));
 }
+form{
+  display: flex;
+  flex-direction: column;
+  width: clamp(350px, 50%, 100%);
+  padding:1%;
+  margin: 1%;
+  border: var(--default-color) 5px solid;
+  border-radius: 20px;
+  box-sizing: border-box;
+  box-shadow: var(--default-box-shadow);
+  background-color: white;
+}
+form *{
+  margin-bottom: 2%;
+  box-sizing: border-box;
+    
+}
