@@ -1,6 +1,6 @@
 #myRVInfo{
     background-color: white;
-    width: 65%;
+    width: clamp(400px, 70%, 85%);
     height: 70svh;
     
     display: flex;

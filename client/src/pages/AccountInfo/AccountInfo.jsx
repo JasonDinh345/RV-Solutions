@@ -21,9 +21,7 @@ export default function AccountInfo(){
     useEffect(()=>{
         if(tab){
             setCurrentTab(tab)
-            
         }
-        
     },[tab])
     return(
         <>
@@ -44,7 +42,7 @@ export default function AccountInfo(){
                 ):currentTab === "RVs" ? (
                     <MyRVs/>
                 ):currentTab === "Damages" ? (
-                    <DamageReportTable URL={`http://localhost:1231/damageReport/account/${account.AccountID}`}/>
+                   <DamageReportTable URL={`http://localhost:1231/damageReport/account/${account.AccountID}`} forMe={true}/>
                 ):(<></>)}
             </div>
 

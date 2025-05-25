@@ -20,9 +20,10 @@
 }
 
 .labelInput[type=select]{
-    width: 20%;
+    width: clamp(300px, 50%, 100%);
 }
+
 .labelSelect{
-    width: 20%;
+   width: min(fit-content, 100%)
 
 }

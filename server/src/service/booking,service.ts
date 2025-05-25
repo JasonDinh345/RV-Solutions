@@ -10,7 +10,11 @@ export class BookingService{
 
     async getAllBookingToVIN(vin: string): Promise<Partial<Booking>[]>{
         try{
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT BookingID FROM BOOKING WHERE vin = ?`, [vin]);
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`
+                SELECT BookingID, StartDate, EndDate, a.Name 
+                FROM BOOKING
+                JOIN Account a ON Booking.AccountID = a.AccountID 
+                WHERE vin = ?`, [vin]);
             return rows as Partial<Booking>[];
         }catch(err){
            

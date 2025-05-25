@@ -31,7 +31,12 @@ export class DamageReportService{
             if(!vin){
                 throw new Error("INVALID_RV")
             }
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT ReportID FROM DamageReport JOIN Booking ON DamageReport.BookingID = Booking.BookingID WHERE Booking.vin = ?`, [vin])
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`
+                SELECT ReportID, b.StartDate, b.EndDate, a.Name
+                FROM DamageReport 
+                JOIN Booking b ON DamageReport.BookingID = b.BookingID 
+                JOIN Account a ON b.AccountID = a.AccountID
+                WHERE b.vin = ?`, [vin])
             return rows as Partial<DamageReport>[];
         }catch(err){
             switch(err.code){
@@ -77,12 +82,14 @@ export class DamageReportService{
                 i.SmallImageURL AS ImageURL,
                 r.Make AS Make,
                 r.Model AS Model,
-                r.VIN AS VIN
+                r.VIN AS VIN,
+                a.Name
                 FROM DamageReport d 
                 JOIN Booking b ON b.BookingID = d.BookingID
+                JOIN Account a on B.AccountID = a.AccountID
                 JOIN RV r ON b.VIN = r.VIN
                 JOIN Image i ON r.VIN = i.VIN
-                WHERE DamageReport.reportID = ?`,
+                WHERE d.reportID = ?`,
                  [reportID])
             if(rows.length === 0){
                 return null
