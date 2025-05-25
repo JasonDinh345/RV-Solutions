@@ -1,7 +1,7 @@
 #accountInfo{
     display: flex;
     flex-direction: row;
-    width: 80%;
+    width: clamp(400px, 80%,80%);
     margin: 1%;
     border: var(--default-color) 5px solid;
     border-radius: 20px;

@@ -4,7 +4,7 @@ import { useState } from "react"
 import axios from "axios"
 import { LabelInput, LabelSelect } from "../../../../components/LabelInput"
 import { removeKeys } from "../../../../util/removeKeys"
-export default function MyRVUpdateForm(){
+export default function MyRVUpdateForm({onExit}){
     
     const [rvImage, setRVImage] = useState()
     const [error, setError] = useState()
@@ -26,7 +26,7 @@ export default function MyRVUpdateForm(){
         }
         
     }
-   
+    
     const handleSubmit = async(e)=>{
         e.preventDefault()
         setError(null)
@@ -62,6 +62,7 @@ export default function MyRVUpdateForm(){
            <div className="blackBG">
              <>
             <form id="updateMyRVForm" className="defaultBorder-thick" onSubmit={handleSubmit}>
+                <h3 className="exitButton" onClick={onExit}>X</h3>
                 <label><h3>RV Image:</h3></label>
                 <input type="file" accept="image/*" onChange={handleImageChange} ></input>
                 {rvImage ? <img src={URL.createObjectURL(rvImage)} alt="Image preview" style={{  width:"30vw" }} />  
@@ -90,7 +91,7 @@ export default function MyRVUpdateForm(){
                 <textarea id="Description" name="Description"type="text" onChange={handleChange}  rows={4}  style={{ width: '100%', resize: 'vertical' }}required value={formData.Description}></textarea>
                 <LabelInput type="number" fieldName={"Mileage"} onChange={handleChange} label="Mileage" value={formData.Mileage}></LabelInput>
                 <label htmlFor="isAvailable" style={{fontWeight:"bolder", fontSize:"2vh"}}>Set Immediately Available:
-                    <input id="isAvailable" type="checkbox" name="isAvailable" checked={formData.isAvailable || formData.isAvailable === 1} onChange={handleChange} ></input>
+                    <input id="isAvailable" type="checkbox" name="isAvailable" checked={Boolean(formData.isAvailable)} onChange={handleChange} ></input>
                 </label>
                 <input type="submit" value="Update RV"></input>
     

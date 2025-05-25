@@ -1,20 +1,24 @@
 import { useState } from "react";
 import { useRV } from "../../../../../hooks/useRV"
 import DamageReportTable from "../../../components/DamageReportTable"
-import { AddDamageReportForm } from "../../../components/DamageReportForm";
+import { AddDamageReportForm, EditDamageReportForm } from "../../../components/DamageReportForm";
 export default function RVDamagesInfo(){
-    const [isAdding, setIsAdding] = useState(false)
+    const [formType, setFormType] = useState(null)
     const {RV} = useRV();
     return(
         <>
         <div style={{height:"100%"}}>
-             <DamageReportTable URL={`http://localhost:1231/damageReport/RV/${RV.VIN}`}/>
+            <DamageReportTable URL={`http://localhost:1231/damageReport/RV/${RV.VIN}`} forMe={false}/>
         </div>
         <div className="tableFooter">
-            <button onClick={()=>setIsAdding(true)}>Add Damages</button>
+            <button onClick={()=>setFormType("add")}>Add Damages</button>
+            <button onClick={()=>setFormType("edit")}>Edit Damages</button>
         </div>
-        {isAdding &&
-            <AddDamageReportForm/>
+        {formType === "add" ?
+            <AddDamageReportForm onExit={()=>setFormType(null)}/>
+        : formType === "edit" ? 
+            <EditDamageReportForm onExit={()=>setFormType(null)}/>  
+        : <></>  
         }
         </>
     )

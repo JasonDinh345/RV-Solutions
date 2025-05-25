@@ -22,7 +22,7 @@ export default function MyRVDescription(){
                 <button className="myRVUpdateButton defaultBorder-thin" onClick={()=> setIsUpdating(true)}>Update</button>
             </div>
             {isUpdating &&
-                <MyRVUpdateForm/>
+                <MyRVUpdateForm onExit={()=>setIsUpdating(false)}/>
             }
             </>
         }

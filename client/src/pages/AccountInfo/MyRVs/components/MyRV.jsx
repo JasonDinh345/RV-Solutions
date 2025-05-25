@@ -1,22 +1,23 @@
 import { useState, useEffect } from "react"
-import { useRV } from "../../../../hooks/useRV"
 
+import { useRV } from "../../../../hooks/useRV";
 
 export default function MyRV({rvData}){
     const [statusColor, setStatusColor] = useState("green")
-    const {setRV} = useRV();
+    const {handleSetRV} = useRV();
     
-        useEffect(()=>{
-            if(rvData.isAvailable === 1){
-                setStatusColor("green")
-            }else{
-                setStatusColor("red")
-            }
-        },[rvData.isAvailable])
+    useEffect(()=>{
+        if(rvData.isAvailable === 1){
+            setStatusColor("green")
+        }else{
+            setStatusColor("red")
+        }
+    },[rvData.isAvailable])
+    
     return(
          <>
          <tr>
-            <td className="tableImage"><img src={rvData.ImageURL} onClick={()=>setRV(rvData)}></img></td>
+            <td className="tableImage"><img src={rvData.ImageURL} onClick={()=>handleSetRV(rvData.VIN)}></img></td>
             <td>{rvData.Make}</td>
             <td>{rvData.Model}</td>
             <td>{rvData.SizeClass}</td>

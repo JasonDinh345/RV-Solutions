@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import "./css/LabelInput.css"
-export function LabelInput({type, onChange, label,value}){
-    const fieldName = label.replace(/\s/g,'')
+export function LabelInput({type, onChange, label,value, fieldName}){
+    
 
     return(
         <>

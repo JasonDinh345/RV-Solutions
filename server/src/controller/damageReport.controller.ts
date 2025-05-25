@@ -104,7 +104,7 @@ export class DamageReportController{
     }
     async insertDamageReport(req:Request, res: Response):Promise<void>{
         try{
-            const reportData = req.body.reportData
+            const reportData = req.body
             if(await this.damageReportService.insertDamageReport(reportData)){
                 res.status(201).json({message: `Successfully inserted damage report!`})
             }else{
@@ -135,7 +135,7 @@ export class DamageReportController{
     }
     async updateDamageReport(req:Request, res: Response):Promise<void>{
         try{
-            const reportData = req.body.reportData
+            const reportData = req.body
             const reportID = Number(req.params.reportID);
             if(await this.damageReportService.updateDamageReport(reportData, reportID)){
                 res.status(204).json({message: `Successfully updated damage report!`})
