@@ -11,8 +11,8 @@ export default function RVDamagesInfo(){
             <DamageReportTable URL={`http://localhost:1231/damageReport/RV/${RV.VIN}`} forMe={false}/>
         </div>
         <div className="tableFooter">
-            <button onClick={()=>setFormType("add")}>Add Damages</button>
-            <button onClick={()=>setFormType("edit")}>Edit Damages</button>
+            <button className="defaultBorder-thin" onClick={()=>setFormType("add")}>Add Damages</button>
+            <button className="defaultBorder-thin" onClick={()=>setFormType("edit")}>Edit Damages</button>
         </div>
         {formType === "add" ?
             <AddDamageReportForm onExit={()=>setFormType(null)}/>

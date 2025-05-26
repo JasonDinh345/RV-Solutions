@@ -22,7 +22,8 @@ export default function Rent(){
     const handleSearch = ()=>{
             
     const newList = rvList.filter(rv =>
-        (!searchValues.Location || rv.Location.includes(searchValues.Location)) &&
+        (!searchValues.City || rv.City.includes(searchValues.City)) &&
+        (!searchValues.State || rv.State.includes(searchValues.State)) &&
         (!searchValues.SizeClass || rv.SizeClass ===  searchValues.SizeClass) 
         );
         setFilteredRVs(newList)

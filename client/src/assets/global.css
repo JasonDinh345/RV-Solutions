@@ -126,13 +126,15 @@ textarea{
   background-color: rgb(196, 196, 196);
   box-sizing: border-box;
   border-top: 2px rgb(124, 123, 123) solid;
+  display: flex;
+  align-items: center;
 }
-.tableOverlayWFooter{
-  position: sticky;
-  height: 40vh;
-  width: 100%;
-  top:0;
-  background-image: linear-gradient(rgba(255, 255, 255, 0), rgb(255, 255, 255));
+.tableFooter button{
+  height: 70%;
+  margin-left: 1%;
+}
+.tableFooter button:hover{
+  background-color: rgb(197, 197, 197);
 }
 form{
   display: flex;
