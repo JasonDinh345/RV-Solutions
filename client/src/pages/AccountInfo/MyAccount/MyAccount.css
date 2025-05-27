@@ -32,7 +32,7 @@
 /*update form*/
 .updateForm{
     margin-top: 5%;
-    width: 40%;
+    width: max(350px, 40%);
     height: fit-content;
     background-color: white;
     z-index: 10;

@@ -7,7 +7,8 @@ export interface RV{
     readonly VIN: string,
     Mileage: number,
     isAvailable: Boolean,
-    Location:String,
+    City:string,
+    State:string,
     OwnerID: number
 
 }
@@ -21,7 +22,8 @@ export interface RVwImage{
     readonly VIN: string,
     Mileage: number,
     isAvailable: Boolean,
-    Location:String,
+    City:string,
+    State:string,
     OwnerID: number
     imageURL: String
 

@@ -44,7 +44,7 @@
 .myRVUpdateButton{
     margin-left: auto;
     height: 5vh;
-    width: 5vw;
+    width: fit-content;
     font-weight: bold;
     transition: all ease-in-out 0.1s;
 }
@@ -54,7 +54,7 @@
 }
 #updateMyRVForm{
     background-color: white;
-    width: 50%;
+    width: max(350px, 50%);
     height: fit-content;
     padding: 2%;
     box-sizing: border-box;

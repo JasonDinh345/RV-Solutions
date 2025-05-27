@@ -1,6 +1,4 @@
-#rentPage{
-   
- 
+#rentPage {
   padding: 20px;
   border: 0;
   display: flex;
@@ -8,123 +6,165 @@
   justify-content: flex-start;
   flex-direction: column;
   height: 90vh;
-  gap:10%
+  gap: 10%;
 }
 
-
-/*RVSearch Component*/
-#RVSearchBox{
+/* RVSearch Component */
+#RVSearchBox {
   display: flex;
   flex-direction: row;
-  height: 100px;
-  box-shadow: var(--default-box-shadow);
-  width: 35vw;
-  border-radius: 50px;
-
-  box-sizing: border-box;
   align-items: center;
   justify-content: space-around;
-  border: lightgray 2px solid;
+  height: clamp(20px, 100px, 100px);
+  width: clamp(380px, 40vw, 40vw);
   padding: 1%;
-}
-#RVSearchBox *{
-  
+  border: lightgray 2px solid;
+  border-radius: 50px;
+  box-shadow: var(--default-box-shadow);
   box-sizing: border-box;
+}
+
+#RVSearchBox input,#RVSearchClass {
+  box-sizing: border-box;
+  width: 30%;
+  height: 50%;
+  padding: 3%;
+  font-size: large;
   border-radius: 50px;
   border: 0;
-  height: 100%;
-  padding: 1%;
-  font-size: medium;
   transition: all ease-in 0.1s;
+}
 
- 
-}
-#RVSearchBox *:hover{
-  
+#RVSearchBox *:hover {
   background-color: rgb(214, 214, 214);
-  
 }
-#RVSearchBox input{
-  
-  width: 40%;
-  font-size: large;
-  padding: 3%;
- 
-}
-#RVSearchClass{
+
+#RVSearchClass {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 40%;
-  
+  width: 30%;
 }
-#RVSearchClass p{
- text-align: center;
- width: 100%;
- height: auto;
- 
+
+#RVSearchClass p {
+  text-align: center;
+  width: 100%;
+  height: auto;
 }
-#RVSearchClass *{
- border: 0;
- font-size: large;
- font-family: Arial, Helvetica, sans-serif;
-  
- }
-.searchButton{
-  
-  height: 50px;
+
+#RVSearchClass * {
+  border: 0;
+  font-size: large;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Search Button */
+.searchButton {
+  width: 50px;        /* fixed width */
+  height: 50px;       /* fixed height */
+  border-radius: 50%; /* makes it circular */
   background-color: rgb(0, 162, 255);
   display: flex;
   align-items: center;
   justify-content: center;
-  object-fit: contain;
-  transition: all ease-in 0.1s;
+  transition: background-color 0.1s ease-in;
+  padding: 0;
+  border: none;
+  cursor: pointer;    /* optional: makes it clear it's clickable */
+}
 
-}
-.searchButton:hover{
-  
+.searchButton:hover {
   background-color: rgb(0, 128, 202);
-  
 }
-.searchButton img{
-  width: 100%;
-  height: 100%;
-  object-fit: contain; 
-  
+
+.searchButton img {
+  width: 60%;     /* scale icon/image inside the circle */
+  height: 60%;
+  object-fit: contain;
 }
-/*RVListContainer*/
-#rvListContainer{
+
+/* RV List Container */
+#rvListContainer {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  width: 80vw;
-  
-  height: 100%;
+  width: clamp(90vw, 80vw, 80vw);
+  height: fit-content;
   gap: 2%;
-  
 }
-/*RV*/
-.RV{
+
+/* RV Card */
+.RV {
   display: flex;
   flex-direction: column;
-  width: 18.8vw;
+  width: 21.1vw;
   height: fit-content;
+  margin-bottom: 2%;
   border: var(--default-color) 5px solid;
-  box-sizing: border-box;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: var(--default-box-shadow);
+  box-sizing: border-box;
   transition: all ease-in 0.1s;
-  
-  margin-bottom: 2%;
+  white-space: nowrap;
 }
-.RV:hover{
+
+.RV:hover {
   box-shadow: 20px 15px 10px #0000006e, -10px -10px 5px white;
 }
-.RV p, h3{
+
+.rvText p, h3 {
   margin: 0;
+  font-size: clamp(0.5rem, 1rem, 3rem);
 }
-.rvText{
+
+.rvText {
   padding: 2%;
+}
+
+/* Tablet (768px–1023px) */
+@media (max-width: 1023.98px) {
+  #RVSearchBox {
+    flex-wrap: wrap;
+    width: 80vw;
+  }
+
+  #RVSearchBox input  {
+    width: 20%;
+  }
+
+  #RVSearchClass {
+    width: 30%;
+  }
+}
+
+/* Mobile (<768px) */
+@media (max-width: 767.98px) {
+  #RVSearchBox {
+    flex-wrap: wrap;
+    width: 80vw;
+  }
+
+  #RVSearchBox input  {
+    width: 20%;
+  }
+
+  #RVSearchClass {
+    width: 30%;
+  }
+
+  #rvListContainer {
+    display: grid;
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2%; /* space between items */
+    align-items: start;
+    justify-items: center; /* horizontal alignment */
+    row-gap: 5vh;
+  }
+
+  .RV {
+    width: 40vw;
+    grid-column: span 1;
+  }
 }

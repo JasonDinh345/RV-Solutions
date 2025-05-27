@@ -85,7 +85,9 @@ export default function MyRVUpdateForm({onExit}){
                     
                 <LabelInput type="text" fieldName={"VIN"} onChange={handleChange} label="VIN" value={formData.VIN}></LabelInput>
                 
-                <LabelInput type="text" fieldName={"Location"} onChange={handleChange} label="Location"  value={formData.Location}></LabelInput>
+                <LabelInput type="text" fieldName={"City"} onChange={handleChange} label="City"  value={formData.City}></LabelInput>
+                <LabelInput type="text" fieldName={"State"} onChange={handleChange} label="State"  value={formData.State}></LabelInput>
+                <p className="hint">Example: WA</p>
                 <LabelInput type="number" fieldName={"CostToRent"} onChange={handleChange} label="Cost To Rent" value={formData.CostToRent}></LabelInput>
                 <label htmlFor="Description"><h3>Description:</h3></label>
                 <textarea id="Description" name="Description"type="text" onChange={handleChange}  rows={4}  style={{ width: '100%', resize: 'vertical' }}required value={formData.Description}></textarea>

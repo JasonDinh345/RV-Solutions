@@ -11,7 +11,7 @@ export default function RV({rvData}){
         <div className="RV" onClick={handleOnClick}>
             <img src={rvData.imageURL}></img>
             <div className="rvText">
-                <h3>{rvData.Location}</h3>
+                <h3>{rvData.City}, {rvData.State}</h3>
                 <p>{rvData.Make}, {rvData.Model}</p>
                 <p>Class: {rvData.SizeClass}</p>
                 <p style={{fontWeight: "bold"}}>${rvData.CostToRent} per day</p>

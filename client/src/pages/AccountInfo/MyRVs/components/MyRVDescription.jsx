@@ -13,7 +13,7 @@ export default function MyRVDescription(){
                 <h1>{RV.Make}, {RV.Model}</h1>
 
                 <img className="defaultBorder-thick"src={RV.ImageURL}></img>
-                <h3>Location: <span>{RV.Location}</span></h3>
+                <h3>Location: <span>{RV.City}, {RV.State}</span></h3>
                 <h3>VIN: <span>{RV.VIN}</span></h3>
                 <h3>Size Class: <span>{RV.SizeClass}</span></h3>
                 <h3>Cost to Rent: <span>${RV.CostToRent}</span></h3>

@@ -24,7 +24,7 @@ export default function RVDescription(){
                 
                     <div className="rvHeader">
                         <h1>{RV.Make}, {RV.Model}</h1>
-                        <h2>{RV.Location}, WA</h2>
+                        <h2>{RV.City}, {RV.State}</h2>
                     </div>
                     
                         <div id="rvSection1">

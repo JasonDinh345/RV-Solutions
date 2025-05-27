@@ -1,36 +1,19 @@
-import {useEffect, useReducer } from 'react';
+
 
 export default function RVSearch({ value, onSearchChange, onSearch }) {
     
-    const searchReducer = (searchValues, action)=>{
-        let newValues = {...searchValues};
-        switch(action.type){
-            case "change-location":
-                
-                return {...newValues, Location: action.payload.value}
-            case "change-class":
-                return {...newValues, SizeClass: action.payload.value}
-            default:
-                return searchValues;
-        }
+    const handleChange = (e)=>{
+        const {name, value}  = e.target;
+        onSearchChange?.({...value, [name]:value})
     }
-    const [searchValues, dispatch] = useReducer(searchReducer, value)
-    
-    const handleChange = (e, type)=> {
-        dispatch({type:type, payload:{value: e.target.value}})
-    }
-    
-    
-    useEffect(()=>{
-        onSearchChange?.(searchValues)
-    },[searchValues, onSearchChange])
     return(
         <>
         <div id='RVSearchBox'>
-            <input type='text' value={searchValues.location} onChange={(e)=>handleChange(e, "change-location")} placeholder={"City"}/>
+            <input type='text' value={value.City} name="City"onChange={handleChange} placeholder={"City"}/>
+            <input type='text' value={value.State} name="State"onChange={handleChange} placeholder={"State"}/>
             <div id="RVSearchClass">
                 <p>RV Class:</p>
-                <select defaultValue="" onChange={(e)=>{handleChange(e, "change-class")}}>
+                <select defaultValue="" onChange={handleChange}>
                         <option value="" >None</option>
                         <option>A</option>
                         <option>B</option>

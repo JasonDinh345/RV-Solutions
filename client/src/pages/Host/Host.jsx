@@ -80,7 +80,8 @@ export default function Host(){
                 
             <LabelInput type="text" fieldName={"VIN"} onChange={handleChange} label="VIN"></LabelInput>
             
-            <LabelInput type="text" fieldName={"Location"} onChange={handleChange} label="Location"></LabelInput>
+            <LabelInput type="text" fieldName={"City"} onChange={handleChange} label="City"  value={formData.City}></LabelInput>
+            <LabelInput type="text" fieldName={"State"} onChange={handleChange} label="State"  value={formData.State}></LabelInput>
             <LabelInput type="number" fieldName={"CostToRent"} onChange={handleChange} label="Cost To Rent"></LabelInput>
             <label htmlFor="Description"><h3>Description:</h3></label>
             <textarea id="Description" name="Description"type="text" onChange={handleChange}  rows={4}  style={{ width: '100%', resize: 'vertical' }}required></textarea>
