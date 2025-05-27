@@ -1,7 +1,7 @@
 #hostRVForm{
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: clamp(350px, 50%, 50%);
     padding:1%;
     margin: 1%;
     border: var(--default-color) 5px solid;

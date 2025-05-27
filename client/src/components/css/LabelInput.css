@@ -1,7 +1,7 @@
 .labelInputContainer{
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 60%;
     gap: 1vh;
     
 
@@ -9,7 +9,7 @@
 .labelInput{
     border: var(--default-color) 2px solid;
   
-    height: 18%;
+    height: clamp(50px, 18%, 18%);
     box-sizing: border-box;
     border-radius: 20px;
     padding:3%;

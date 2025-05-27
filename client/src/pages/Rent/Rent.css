@@ -89,8 +89,8 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  width: 80vw;
-  height: 100%;
+  width: clamp(90vw, 80vw, 80vw);
+  height: fit-content;
   gap: 2%;
 }
 
@@ -98,7 +98,7 @@
 .RV {
   display: flex;
   flex-direction: column;
-  width: 18.8vw;
+  width: 21.1vw;
   height: fit-content;
   margin-bottom: 2%;
   border: var(--default-color) 5px solid;
@@ -107,15 +107,16 @@
   box-shadow: var(--default-box-shadow);
   box-sizing: border-box;
   transition: all ease-in 0.1s;
+  white-space: nowrap;
 }
 
 .RV:hover {
   box-shadow: 20px 15px 10px #0000006e, -10px -10px 5px white;
 }
 
-.RV p,
-.RV h3 {
+.rvText p, h3 {
   margin: 0;
+  font-size: clamp(0.5rem, 1rem, 3rem);
 }
 
 .rvText {
@@ -129,45 +130,41 @@
     width: 80vw;
   }
 
-  #RVSearchBox input {
-    width: 60%;
+  #RVSearchBox input  {
+    width: 20%;
   }
 
   #RVSearchClass {
-    width: 60%;
+    width: 30%;
   }
 }
 
 /* Mobile (<768px) */
 @media (max-width: 767.98px) {
   #RVSearchBox {
-    flex-direction: column;
-    align-items: stretch;
-    width: 90vw;
-    height: auto;
-    gap: 10px;
+    flex-wrap: wrap;
+    width: 80vw;
   }
 
-  #RVSearchBox input {
-    width: 100%;
-    font-size: medium;
-  }
-
-  .searchButton {
-    width: 100%;
-    height: 40px;
+  #RVSearchBox input  {
+    width: 20%;
   }
 
   #RVSearchClass {
-    width: 100%;
+    width: 30%;
   }
 
   #rvListContainer {
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2%; /* space between items */
+    align-items: start;
+    justify-items: center; /* horizontal alignment */
+    row-gap: 5vh;
   }
 
   .RV {
-    width: 90vw;
+    width: 40vw;
+    grid-column: span 1;
   }
 }
