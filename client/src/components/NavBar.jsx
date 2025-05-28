@@ -11,7 +11,7 @@ export default function NavBar(){
                 <img src="/logo.png" height='80%' onClick={()=>{navigate("/")}}></img>
                 <h1>RV Solutions</h1>
                 
-                <h2 onClick={()=>{navigate("/")}} >Rent</h2>
+                <h2 onClick={()=>{navigate("/rent")}} >Rent</h2>
                 <h2 onClick={()=>{navigate("/host")}}>Host</h2>
                 {account ? (
                     <h2 onClick={()=>{navigate("/accountInfo")}}>{account.Name}</h2>

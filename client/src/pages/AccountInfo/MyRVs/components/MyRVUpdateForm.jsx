@@ -52,7 +52,7 @@ export default function MyRVUpdateForm({onExit}){
             
         }catch(err){
             console.error(err)
-            setError(err.message)
+            setError(err.response.data.message)
         }
         
     }

@@ -63,6 +63,68 @@ export class BookingService{
             }
         }
     }
+    async getAllBookingsToAccountHTML(accountID: number): Promise<any>{
+        try{
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`
+                SELECT b.*,
+                r.Make,
+                r.Model,
+                i.SmallImageURL AS ImageURL
+                FROM BOOKING b 
+                JOIN RV r ON r.VIN = b.VIN
+                JOIN Image i on i.VIN = r.VIN 
+                WHERE b.AccountID = ?
+                ORDER BY b.StartDate ASC`, [accountID])
+            let html =``;
+            
+            if (rows.length === 0) {
+                html += `<p>No results found.</p>`;
+            } else {    
+                html = 
+                `<table class="accountTable">
+                    <thead>
+                        <tr>
+                            <th>RV</th>
+                            <th>Model</th>
+                            <th>Make</th>
+                            <th>Status</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Total Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>`
+                rows.forEach(bookingData =>{
+                    html += `
+                    <tr>
+                        <td class="tableImage"><img src=${bookingData.ImageURL} ></img></td>
+                        <td>${bookingData.Make}</td>
+                        <td>${bookingData.Model}</td>
+                        <td>${bookingData.Status}</td>
+                        <td>${bookingData.StartDate}</td>
+                        <td>${bookingData.EndDate}</td>
+                        <td>${bookingData.TotalCost}</td>
+                    </tr>
+                    `
+                })
+                html += `
+                </tbody>
+                </table>
+                `;
+            }
+            return html
+        }catch(err){
+            console.log(err)
+            switch(err.code){
+                case "ER_PARSE_ERROR":
+                    console.error('SQL syntax error in SELECT query:', err.message);
+                    throw new Error("SQL_SYNTAX_ERROR");
+                default:
+                    console.error(err);
+                    throw new Error("SERVER_ERROR");
+            }
+        }
+    }
     async getBookingDetails(bookingID: number): Promise<BookingwRV>{
         try{
             const [rows] = await this.pool.execute<RowDataPacket[]>(`

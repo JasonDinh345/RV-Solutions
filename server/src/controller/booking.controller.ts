@@ -55,6 +55,30 @@ export class BookingController{
             }
         }
     }
+    async getAllBookingsToAccountHTML(req:Request, res: Response):Promise<void>{
+        try{
+            const accountID = Number(req.params.accountID)
+            if(!accountID){
+                throw new Error("INVALID_ACCOUNT")
+            }
+            const bookings = await this.bookingService.getAllBookingsToAccountHTML(accountID)
+        
+          
+                res.status(200).send(bookings)
+           
+                
+           
+        }catch(err){
+            switch(err.message){
+                case "SQL_SYNTAX_ERROR":
+                    res.status(500).json({message: `SQL syntax error!`})
+                    break;
+                default:
+                    res.status(500).json({message: `Server error occured!`})
+                    break;
+            }
+        }
+    }
     async getAllBookingsToOwner(req:Request, res: Response):Promise<void>{
         try{
             const ownerID = Number(req.params.ownerID)
@@ -78,6 +102,7 @@ export class BookingController{
             }
         }
     }
+   
     async getBooking(req:Request, res: Response):Promise<void>{
         try{
             const bookingID = Number(req.params.bookingID)

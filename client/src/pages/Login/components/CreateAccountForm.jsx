@@ -1,18 +1,19 @@
 import { useState } from "react";
 import { getFullYearDiff, getTodayPST } from "../../../util/dataUtil";
-import {LabelInput} from "../../../components/LabelInput"
+import {InputPass, LabelInput} from "../../../components/LabelInput"
 import axios from "axios";
-
+import { useAuth } from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 export default function CreateAccountForm({handleFormChange}){
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({})
-    const [confirmPassword, setConfirmPass] = useState("")
+    const {login} = useAuth();
     const [formError, setFormError] = useState("")
+    const [isValid, setValid] = useState(false);
     const handleSubmit = async(e)=>{
         e.preventDefault();
-        if(formData.Password !== confirmPassword){
-
+         if(!isValid?.password){
             setFormError("Passwords must match!")
-            return
         }
         if(getFullYearDiff(formData.dateOfBirth, getTodayPST()) < 18){
             setFormError("Minors are unable to sign up for our service!")
@@ -21,12 +22,17 @@ export default function CreateAccountForm({handleFormChange}){
         try{
             const res = await axios.post("http://localhost:1231/account/", formData)
             if(res.status === 201){
-                console.log("yaya")
-            }else{
-                console.log("nay")
+                const loginRes = await axios.post("http://localhost:1231/auth/login", {Email: formData.Email, Password: formData.Password}, {
+                withCredentials: true 
+                });
+                if(loginRes.status === 201){
+                    login(loginRes.data.account)
+                    navigate("/")
+                }
             }
         }catch(err){
             console.error(err)
+            setFormError(err.response.data.message)
         }
 
     }
@@ -39,23 +45,15 @@ export default function CreateAccountForm({handleFormChange}){
     return(
         <>
         <form id="createAccountForm" onSubmit={handleSubmit}>
-            <label htmlFor="Name">Name:</label>
-                <input id="Name" name="Name" type="text" required onChange={handleChange}></input>
+            <LabelInput fieldName="Name" label="Name" value={formData.Name} onChange={handleChange}/>
+            <LabelInput type="email" onChange={handleChange} label="Email" value={formData.Email} />
 
-            <label htmlFor="Email">Email:</label>
-                <input id="Email" name="Email" type="email" required onChange={handleChange}></input>
-
-            <label htmlFor="Password">Password:</label>
-                <input id="Password"name="Password" type="password" required onChange={handleChange}></input>
-
-            <label htmlFor="confirmPassword">Confirm Password:</label>
-                <input id="confirmPassword"name="confirmPassword" type="password" required onChange={(e)=>{setConfirmPass(e.target.value)}}></input>
-            <LabelInput type="text" fieldName="Address" label="Address:" onChange={handleChange}/>
-            <label htmlFor="DateOfBirth">Date of Birth:</label>
-                <input id="DateOfBirth"name="DateOfBirth" type="date" required onChange={handleChange}></input>
-
-            <label htmlFor="PhoneNumber">Phone Number:</label>
-            <input id="PhoneNumber"name="PhoneNumber" type="tel" pattern="\([0-9]{3}\)-[0-9]{3}-[0-9]{4}" required onChange={handleChange}></input>
+    
+            <InputPass onChange={handleChange} value={formData.Password} label="Password" setValid={setValid}/>
+            <LabelInput type="text" label="Address" onChange={handleChange}/>
+            <LabelInput type="date" onChange={handleChange} label="Date of Birth" value={formData.DateOfBirth}/>
+            <LabelInput type="tel" onChange={handleChange} label="Phone Number" value={formData.PhoneNumber} pattern="\([0-9]{3}\)-[0-9]{3}-[0-9]{4}"/>
+            
 
             <p className="hint">Format like: (111)-111-1111</p>
             <label htmlFor="InsuranceCompany">Insurance Company:</label>

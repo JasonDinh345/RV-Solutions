@@ -128,7 +128,7 @@ export function EditDamageReportForm({onExit}){
         ...prev, [name]: type === "checkbox" ? checked : value,
         }));
     };
-    console.log(formData)
+    
     return(
         
             reportList && (

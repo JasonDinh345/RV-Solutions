@@ -6,7 +6,7 @@ import "./MyAccount.css"
 import UpdateAccount from "./componets/UpdateAccount";
 export default function MyAccount(){
     const {account, authLoading} = useAuth();
-    
+   
     if(authLoading && !account){
         return <p>Loading...</p>
     }
@@ -19,6 +19,8 @@ export default function MyAccount(){
             <h3>Phone Number: <span>{account.PhoneNumber}</span></h3>
             <h3>Date of Birth: <span>{reformatDate(account.DateOfBirth)}</span></h3>
             <h3>Insurance Company: <span>{account.InsuranceCompany}</span></h3>
+            <h3>Total Owned RVs: <span>{account.TotalRVCount}</span></h3>
+            <h3>Total Number of Bookings: <span>{account.TotalBookingCount}</span></h3>
             <UpdateAccount/>
             
         </div>

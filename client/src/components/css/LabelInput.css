@@ -3,7 +3,7 @@
     flex-direction: column;
     width: 60%;
     gap: 1vh;
-    
+    margin-bottom: 2vh;
 
 }
 .labelInput{
@@ -14,6 +14,7 @@
     border-radius: 20px;
     padding:3%;
     box-shadow: var(--default-box-shadow);
+    
 }
 .labelInput[type=number]{
     width: fit-content;

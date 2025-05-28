@@ -2,12 +2,12 @@
 import useGet from "../../../hooks/useGet"
 export default function DamageReportTable({URL, forMe}){
     const {data: reportList, isLoading, error} = useGet(URL)
-    console.log(reportList)
+   
     if(error && error.status === 404){
         return <h2 className="error header">No reports found!</h2>
     }
     if(error){
-        console.log(error)
+        
         return <h2 className="error header">Error getting reports!</h2>
     }
     return(

@@ -6,13 +6,15 @@ import RVDescription from "./pages/RVDescription/RVDescription"
 import Login from "./pages/Login/Login"
 import Host from "./pages/Host/Host"
 import AccountInfo from "./pages/AccountInfo/AccountInfo"
+import Home from "./pages/Home/Home"
 function App() {
   return (
     <>
      <div id="wholePage">
       <NavBar/>
       <Routes>
-        <Route path="/" element={<Rent/>}/>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/rent" element={<Rent/>}/>
         <Route path="/RV/:vin" element={<RVDescription/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/host" element={<Host/>}/>

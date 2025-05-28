@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react"
 import "./css/LabelInput.css"
-export function LabelInput({type, onChange, label,value, fieldName}){
+export function LabelInput({type, onChange, label,value, fieldName, pattern }){
     
-
+    const updatedFieldName = fieldName || label.replace(/\s+/g, "");
     return(
         <>
         <div className="labelInputContainer">
-            <label htmlFor={fieldName}><h3>{label}:</h3></label>
+            <label htmlFor={updatedFieldName}><h3>{label}:</h3></label>
             <input className="labelInput" 
-                    id={fieldName} 
-                    name={fieldName} 
+                    id={updatedFieldName} 
+                    name={updatedFieldName} 
                     type={type} 
                     onChange={onChange} 
                     defaultValue={value ?? ""}
+                     {...(pattern ? { pattern } : {})}
                     required>
             </input>
         </div>
@@ -21,11 +22,12 @@ export function LabelInput({type, onChange, label,value, fieldName}){
 }
 
 export function LabelSelect({fieldName, onChange, label, children, value}){
+    const updatedFieldName = fieldName || label.replace(/\s+/g, "");
     return(
         <>
         <div className="labelInputContainer">
-            <label htmlFor={fieldName}><h3>{label}:</h3></label>
-            <select className="labelSelect" id={fieldName} name={fieldName} onChange={onChange} defaultValue={value ?? ""} required>
+            <label htmlFor={updatedFieldName}><h3>{label}:</h3></label>
+            <select className="labelSelect" id={updatedFieldName} name={updatedFieldName} onChange={onChange} defaultValue={value ?? ""} required>
                 {children}
             </select>
         </div>
@@ -48,7 +50,7 @@ export function InputPass({ onChange, label,value, setValid}){
         <>
         <LabelInput type="password" onChange={onChange} label={label} value={value}/>
         <div className="labelInputContainer">
-            <label htmlFor="confirmPass">Confirm Password:</label>
+            <label htmlFor="confirmPass"><h3>Confirm Password:</h3></label>
             <input className="labelInput" 
                 type="password" 
                 id="confirmPass" 
