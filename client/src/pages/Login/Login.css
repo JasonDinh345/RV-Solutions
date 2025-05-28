@@ -1,12 +1,12 @@
 #loginMain{
-    width: 30%;
+    width: 50%;
     height: fit-content;
     
-    border: var(--default-color) 5px solid;
-    border-radius: 20px;
-    box-shadow: var(--default-box-shadow);
-    padding:1%;
-    margin-top: 5%;
+    display: flex;
+    align-items: flex-start;
+   
+    
+   
 }
 /*LoginForm*/
 #loginForm{
@@ -14,12 +14,9 @@
     flex-direction: column;
     width: 100%;
     height: fit-content;
-    
+    padding:5%;
 }
-#loginForm *{
-    margin: 1%; 
-    
-}
+
 /*CreateAccountForm*/
 #createAccountForm{
     display: flex;
@@ -35,4 +32,19 @@
 #createAccountForm input[type = text]{
     width: 100%;
     
+}
+/* Tablet (768px–1023px) */
+@media (max-width: 1023.98px) {
+  #loginMain{
+    width: 80%;
+  
+}
+}
+
+/* Mobile (<768px) */
+@media (max-width: 767.98px) {
+  #loginMain{
+    width: 80%;
+  
+}
 }

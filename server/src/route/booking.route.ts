@@ -10,7 +10,11 @@ bookingRouter.get("/RV/:vin", bookingController.getAllBookingToVIN.bind(bookingC
 
 bookingRouter.get("/account/:accountID", bookingController.getAllBookingsToAccount.bind(bookingController))
 
-bookingRouter.get("/owner/:ownerID", bookingController.getAllBookingsToAccount.bind(bookingController))
+bookingRouter.get("/account/HTML/:accountID", bookingController.getAllBookingsToAccountHTML.bind(bookingController))
+
+bookingRouter.get("/owner/:ownerID", bookingController.getAllBookingsToOwner.bind(bookingController))
+
+
 
 bookingRouter.get("/:bookingID", bookingController.getBooking.bind(bookingController))
 

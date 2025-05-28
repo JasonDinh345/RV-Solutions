@@ -2,17 +2,17 @@ import { useEffect, useState } from "react"
 import MyAccount from "./MyAccount/MyAccount"
 import "./AccountInfo.css"
 import { useAuth } from "../../hooks/useAuth"
-
+import axios from "axios"
 import { useNavigate, useParams } from "react-router-dom"
 import MyRVs from "./MyRVs/MyRVs"
-import BookingsTable from "./components/BookingsTable"
+
 import DamageReportTable from "./components/DamageReportTable"
 export default function AccountInfo(){
     const navigate = useNavigate();
-    
+    const [html, setHtml] = useState('');
     const { account, logout} = useAuth();
     const [currentTab, setCurrentTab] = useState("Account")
-    
+   
     const handleLogout = ()=>{
         logout();
         navigate("/")
@@ -23,6 +23,18 @@ export default function AccountInfo(){
             setCurrentTab(tab)
         }
     },[tab])
+    useEffect(() => {
+        if(account){
+            axios.get(`http://localhost:1231/booking/account/HTML/${account.AccountID}`, { responseType: 'text' }) // important: response as text
+            .then(response => {
+                setHtml(response.data);
+            })
+            .catch(error => {
+                console.error('Error loading snippet:', error);
+            });
+                }
+            }
+    , [account]);
     return(
         <>
         <div id="accountInfo">
@@ -38,7 +50,7 @@ export default function AccountInfo(){
                 {currentTab === "Account" ? (
                     <MyAccount/>
                 ):currentTab === "Bookings" ? (
-                    <BookingsTable URL={`http://localhost:1231/booking/account/${account.AccountID}`} />
+                     <div dangerouslySetInnerHTML={{ __html: html }} />
                 ):currentTab === "RVs" ? (
                     <MyRVs/>
                 ):currentTab === "Damages" ? (

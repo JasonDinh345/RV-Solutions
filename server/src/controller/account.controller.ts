@@ -71,7 +71,7 @@ export class AccountController{
         }catch(err){
             switch(err.message){
                 case "DUPLICATE_ENTRY":
-                    res.status(409).json({ message: `Email already exists: ${req.body.email}` });
+                    res.status(409).json({ message: `Email already exists: ${req.body.Email}` });
                     break;
                 case "MISSING_FIELD":
                     res.status(400).json({ message: `Missing fields: ${JSON.stringify(req.body)}` });

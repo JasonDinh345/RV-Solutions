@@ -11,7 +11,12 @@ export class AccountService{
     async getAccount(AccountID: number):Promise<Account>{
     
         try{
-            const [rows] = await this.pool.execute<RowDataPacket[]>("SELECT * FROM Account WHERE AccountID = ?", [AccountID]);
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`
+                SELECT a.*, COUNT(DISTINCT r.VIN) AS "TotalRVCount", COUNT(DISTINCT b.BookingID) AS "TotalBookingCount" 
+                FROM Account a 
+                JOIN RV r ON a.AccountID = r.OwnerID 
+                JOIN Booking b on a.AccountID = b.AccountID
+                WHERE a.AccountID = ?`, [AccountID]);
 
             // Check if any rows were returned
             if (rows.length === 0) {
@@ -20,6 +25,7 @@ export class AccountService{
 
             return rows[0] as Account; // Return the first account if it exists
         }catch(err){
+            console.log(err)
             console.error("Unexpected server error has occured!")
             throw new Error("SERVER_ERROR")
         }
