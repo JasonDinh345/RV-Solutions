@@ -28,3 +28,9 @@ export interface RVwImage{
     imageURL: String
 
 }
+export interface SearchOptions{
+    City? : string,
+    State?: string,
+    SizeClass?: string
+    AccountID?:string
+}

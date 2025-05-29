@@ -16,13 +16,17 @@ export class RVController{
      */
     async getAllRV(req:Request, res: Response):Promise<void>{
         try{
-            const allRVs = await this.rvService.getAllRV()
+            
+            const searchOptions = {...req.query}
+           
+            const allRVs = await this.rvService.getAllRV(searchOptions)
             if(allRVs.length > 0){
                 res.status(200).json(allRVs)
             }else{
                 res.status(404).json({message:"No RVs Found"})
             }
         }catch(err){
+            console.log(err)
             switch(err.message){
                 case "SQL_SYNTAX_ERROR":
                     res.status(500).json({message: `SQL syntax error!`})
@@ -201,7 +205,9 @@ export class RVController{
                  res.status(400).json({ message: `Missing ImageID: ${imageID}` });
                 return
             }
-            if(await this.rvService.deleteRV(vin, imageID)){
+            const result = await this.rvService.deleteRV(vin, imageID)
+            console.log(result)
+            if(result){
                 res.status(204).json({message: `Successfully deleted RV`})
             }else{
                 res.status(404).json({message:`Couldn't find RV with VIN: ${vin}`})

@@ -68,6 +68,9 @@
 #updateMyRVForm *{
     margin-bottom: 1%;
 }
+#updateMyRVForm button{
+    font-size: medium;
+}
 #updateMyRVForm img{
    border-radius: 20px;
   border: var(--default-color) 5px solid;

@@ -4,14 +4,16 @@ import { useState } from "react"
 import axios from "axios"
 import { LabelInput, LabelSelect } from "../../../../components/LabelInput"
 import { removeKeys } from "../../../../util/removeKeys"
+import useAxiosSubmit from "../../../../hooks/useAxiosSubmit"
+import { useNavigate } from "react-router-dom"
 export default function MyRVUpdateForm({onExit}){
     
     const [rvImage, setRVImage] = useState()
-    const [error, setError] = useState()
-    
-    
+    const [formError, setError] = useState()
+    const navigate = useNavigate();
+    const {sendRequest} = useAxiosSubmit();
     const [uploadStatus, setUploadStatus] = useState()
-    const {RV} = useRV();
+    const {RV,handleSetRV} = useRV();
     const [formData, setFormData] = useState(removeKeys(RV, ['ImageID','ImageURL']))
     const handleImageChange = (e)=>{
         setRVImage(e.target.files[0])
@@ -26,7 +28,22 @@ export default function MyRVUpdateForm({onExit}){
         }
         
     }
-    
+    const handleDelete = async()=>{
+        setError(null)
+        try{
+           const result = await sendRequest({
+                method: "delete",
+                url: `http://localhost:1231/RV/${RV.VIN}/${RV.ImageID}`,
+            })
+            if(result.status === 204){
+                navigate("accountInfo/RVs")
+                handleSetRV(null)
+                window.location.reload()
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
     const handleSubmit = async(e)=>{
         e.preventDefault()
         setError(null)
@@ -95,10 +112,13 @@ export default function MyRVUpdateForm({onExit}){
                 <label htmlFor="isAvailable" style={{fontWeight:"bolder", fontSize:"2vh"}}>Set Immediately Available:
                     <input id="isAvailable" type="checkbox" name="isAvailable" checked={Boolean(formData.isAvailable)} onChange={handleChange} ></input>
                 </label>
-                <input type="submit" value="Update RV"></input>
-    
-                {error  ?(
-                    <p className="error">{error}</p>
+                <div>
+                    <input type="submit" value="Update RV"></input>
+                    <button onClick={handleDelete}>Delete RV</button>
+                </div>
+
+                {formError  ?(
+                    <p className="error">{formError}</p>
                 ): uploadStatus ? (
                     <p className="success">{uploadStatus}</p>
                 ):(<></>)}

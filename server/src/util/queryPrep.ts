@@ -1,3 +1,4 @@
+import { SearchOptions } from "../types/RV.type.js";
 
 /**
  * Preps an object to be inserted into a table
@@ -49,4 +50,31 @@ export function getUpdateQuery(object:any, tableName: string, identifier: any): 
   const clause = createSetClause(object)
 
   return `UPDATE ${tableName} SET ${clause} WHERE ${identifier} = ?`;
+}
+export function getAddWhereClause(searchOptions:Partial<SearchOptions>){
+  
+  let clause = "";
+  const values: any[] = [];
+  console.log(searchOptions)
+  if(searchOptions){
+    if (searchOptions.AccountID && searchOptions.AccountID !== "") {
+      clause += " AND RV.OwnerID != ?";
+      values.push(String(searchOptions.AccountID));
+    }
+    if (searchOptions.City && searchOptions.City !== "") {
+      clause += " AND RV.City LIKE ?";
+      values.push(`%${searchOptions.City}%`);
+    }
+
+    if (searchOptions.State && searchOptions.State !== "") {
+      clause += " AND RV.State = ?";
+      values.push(searchOptions.State);
+    }
+
+    if (searchOptions.SizeClass && searchOptions.SizeClass !== "") {
+      clause += " AND RV.SizeClass = ?";
+      values.push(searchOptions.SizeClass);
+    }
+  }
+  return {clause, values}
 }

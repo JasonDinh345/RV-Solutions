@@ -6,13 +6,13 @@ const useAxiosSubmit = () => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
 
-  const sendRequest = async ({ method, url, data = {}, config = {} }) => {
+  const sendRequest = async ({ method, url, data = {}, config = {}, params = {} }) => {
     setLoading(true);
     setError(null);
     setResponse(null);
 
     try {
-      const res = await axios({ method, url, data, ...config });
+      const res = await axios({ method, url, data, params, ...config });
       setResponse(res.data);
       return res;
     } catch (err) {

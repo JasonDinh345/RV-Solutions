@@ -3,31 +3,37 @@ import { useEffect, useState } from "react";
 import "./Rent.css"
 import RVSearch from "./components/RVSearch";
 import RVListContianer  from "./components/RVListContainer"
-
+import useAxiosSubmit from "../../hooks/useAxiosSubmit";
 
 import useGet from "../../hooks/useGet";
 export default function Rent(){
-    const [searchValues, setSearchValues] = useState({Location: "", SizeClass: ""})
+    
     const {data: rvList, isLoading, error} = useGet(`http://localhost:1231/RV`, false)
     const [filteredRVs, setFilteredRVs] = useState([])
-    const handleSearchChange = (values)=>{
-        setSearchValues(values)
-    }
+    const {sendRequest, loading} = useAxiosSubmit();
     
     useEffect(() => {
       if (rvList) {
         setFilteredRVs(rvList);
       }
     }, [rvList]);
-    const handleSearch = ()=>{
+   
             
-    const newList = rvList.filter(rv =>
-        (!searchValues.City || rv.City.includes(searchValues.City)) &&
-        (!searchValues.State || rv.State.includes(searchValues.State)) &&
-        (!searchValues.SizeClass || rv.SizeClass ===  searchValues.SizeClass) 
-        );
-        setFilteredRVs(newList)
-            
+
+    const onSearch = async(searchOptions)=>{
+      try{
+            const result = await sendRequest({
+                method: "get",
+                url: `http://localhost:1231/RV`,
+                params: searchOptions
+            })
+            console.log(result)
+            if(result){
+               setFilteredRVs(result.data)
+            }
+        }catch(err){
+            console.log(err)
+        }
     }
     if(!rvList  && isLoading){
       return <p>Couldn't load RVs</p>
@@ -36,10 +42,10 @@ export default function Rent(){
         <>
         <div id="rentPage">
             
-            <RVSearch value={searchValues} onSearchChange={(e)=>handleSearchChange(e)} onSearch={handleSearch}/>
+            <RVSearch onSearch={onSearch}/>
                 
             
-            {isLoading ? (
+            {isLoading || loading ? (
                 <p>Loading...</p>
                 ) : error ? (
                 <p>{error}</p>

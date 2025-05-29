@@ -1,6 +1,6 @@
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import { RV, RVwImage } from "../types/RV.type.js";
-import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
+import { RV, RVwImage, SearchOptions } from "../types/RV.type.js";
+import { getAddWhereClause, getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
 import { Image } from "../types/Image.type.js";
 import { withTransaction } from "../util/db.js";
 import { deleteImage } from "../util/imageUpload.js";
@@ -15,15 +15,31 @@ export class RVService{
     }
     /**
      * Gets all RVs and their related images if they are available 
+     * but also excludes account that have 3 or more unpaid reports and RVs that 
+     * the current account own
      * @returns an array of RV objects with their images 
      */
-    async getAllRV():Promise<RVwImage[]>{
+    async getAllRV(searchOptions:Partial<SearchOptions>):Promise<RVwImage[]>{
         try{
-          const [rows] = await this.pool.query<RowDataPacket[]>(`
-            SELECT RV.*, 
-            Image.smallImageURL AS "imageURL" 
-            FROM RV JOIN Image ON RV.vin = Image.vin 
-            WHERE RV.isAvailable = true LIMT 100`);
+          let query = `
+          SELECT RV.*, 
+          Image.smallImageURL AS "imageURL"
+          FROM RV
+          JOIN Image ON RV.vin = Image.vin
+          WHERE RV.isAvailable = true
+            AND RV.ownerID NOT IN (
+             SELECT AccountID
+              FROM DamageReport
+              JOIN Booking b ON DamageReport.BookingID = b.BookingID
+              WHERE IsPaid = false
+              GROUP BY b.AccountID
+              HAVING COUNT(reportID) >= 3
+            )
+          `
+          const { clause, values } = getAddWhereClause(searchOptions);
+          query += clause;
+          query += ` LIMIT 100;`;
+          const [rows] = await this.pool.query<RowDataPacket[]>(query, values);
           return rows as RVwImage[] ;
         }catch(err){
           switch(err.code){
@@ -199,8 +215,9 @@ export class RVService{
                 return await deleteImage(imageID)
 
               }
+              return false;
             })
-            return false;
+             return result;
         }catch(err){
             if (err.code === 'ER_ROW_IS_REFERENCED') {
                 console.error('Cannot delete RV: Foreign key constraint violation', err.message);
