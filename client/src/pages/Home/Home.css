@@ -3,64 +3,36 @@
     align-items: flex-start;
     justify-content: center;
     flex-direction: column;
-    width: 100%;
+    width: 100%;    
+    
 }
+/* ImageSlide*/
 #imageSlideShow{
     width: 100%;
-    height: 40vh;
+    height: 40vw;
     gap: 4vw;
     position: relative;
     background-color: rgb(68, 68, 68);
     border-bottom:5px var(--default-color) solid;
     overflow: hidden;
-    
-}
-
-
-#RVDisplay {
-    position: relative;      
-    width: 600px;
-    height: 400px;
-    z-index: 3;
-    overflow: hidden;        
-}
-
-#RVDisplay img {
-    width: 100%;
-    height: 100%;
-    display: block;         
-    z-index: 3;
-    position: relative;
-}
-
-.RVDisplay-Overlay {
-    position: absolute;
-    
-    display: flex;
-    z-index: 10;
-    width: 100%;
-    height: 100%;
-    padding: 5%;
-   
-    flex-direction: column;
-    
-}
-.RVDisplay-Overlay h2{
-    color: white;
-    text-shadow:
-        -1px -1px 0 black,
-        1px -1px 0 black,
-        -1px  1px 0 black,
-        1px  1px 0 black;
-        
-}
-.RVDisplay-Overlay button{
-    align-self: center;
-    justify-self: center;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 5%;
+    
 }
+
+
+.mainImage {
+         
+    width: 50%;   
+    max-width: 600px;     /* or use max-width: 600px */
+    height: auto;
+    z-index: 3;
+    position: relative;    
+}
+
+
 .overlay{
     width: 100%;
     height: 100%;
@@ -71,7 +43,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap:33vw;
+    gap:50%;
 
 }
 .overlay h2{
@@ -90,22 +62,28 @@
    background-color: white;
     
 }
-.sideImage{
-    width: 300px;
-    height: 200px;
-    z-index: 1;
+.sideImage {
+    
+    width: 20%;
+    max-width: 200px;
+    height: auto;
+    object-fit: cover;
     filter: blur(2px);
+    z-index: 1;
+    
 }
+/**/
 #purpose, #projectInfo{
     display: flex;
-    margin: 2%;
+    
     align-items: center;
     flex-direction: column;
     width: 100%;
     justify-content: center;
+    margin-bottom : 5%;
 }
 #purpose #purposeContent{
-    width: 50%;
+    width: clamp(350px, 80vw, 900px);
     font-size: x-large;
     border: rgb(155, 155, 155) 5px solid;
     padding: 2vh;
@@ -133,6 +111,7 @@
 
 #homePage table{
     width:80%;
+    table-layout: auto;
     border-collapse: collapse;
     border: rgb(155, 155, 155) 5px solid;
     box-shadow: 20px 20px rgba(0, 0, 0, 0.301);
@@ -149,6 +128,7 @@
 }
 #homePage td{
     text-align: center;
+    white-space: nowrap;
     padding: 2%;
     border: rgb(155, 155, 155) 5px solid;
     font-size: large;

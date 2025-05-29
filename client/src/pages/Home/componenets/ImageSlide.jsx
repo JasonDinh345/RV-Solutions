@@ -24,7 +24,7 @@ export default function ImageSlide(){
         }
         intervalRef.current = setInterval(() => {
             setIndex((prev) => (prev + 1) % images.length);
-        }, 20000);
+        }, 8000);
         }
     };
 
@@ -50,11 +50,12 @@ export default function ImageSlide(){
                     alt="Slideshow"
                     key={index - 1}
                     />
-                <RVDisplay
-                imageData={images[index]}
-                
-                key={index}
+                <img  className="mainImage"
+                    src={images[index].ImageURL}
+                    alt="Slideshow"  
+                    key={index} 
                 />
+                
                 <img className="sideImage"
                 src={images[(index + 1) % images.length].ImageURL}
                 alt="Slideshow"
