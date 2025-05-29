@@ -2,13 +2,19 @@ import { v2 as cloudinary } from 'cloudinary';
 import stream from 'stream'
 
 
-    // Configuration
+    /**
+     * Cloudinary config
+     */
     cloudinary.config({ 
         cloud_name:  process.env.CLOUDINARY_NAME, 
         api_key: process.env.CLOUDINARY_API_KEY, 
         api_secret: process.env.CLOUDINARY_SECRET 
     });
-    // Function to upload an image and return both original and smaller version URLs
+    /**
+     * Uploads to the Cloudinary libary from a blob
+     * @param imageBlob image from user
+     * @returns an object with the image URLs and the ID
+     */
     export const uploadBlob = async (imageBlob: Buffer) => {
         try {
           // Create a readable stream from the Blob (Buffer)
@@ -55,17 +61,22 @@ import stream from 'stream'
           throw new Error("CLOUDINARY_ERROR");
         }
       };
+      /**
+       * Delets an image from the Cloudinary libary
+       * @param imageID the id connected to the image
+       * @returns a boolean stating if the deletion went through
+       */
       export async function deleteImage(imageID: string): Promise<boolean> {
-    try {
-        const publicId = process.env.CLOUDINARY_FOLDER + imageID;
-        console.log("Attempting to delete:", publicId);
+      try {
+          const publicId = process.env.CLOUDINARY_FOLDER + imageID;
+          console.log("Attempting to delete:", publicId);
 
-        const result = await cloudinary.uploader.destroy(publicId); 
-        console.log("Cloudinary delete result:", result);
+          const result = await cloudinary.uploader.destroy(publicId); 
+          console.log("Cloudinary delete result:", result);
 
-        return result.result === 'ok';
-    } catch (error) {
-        console.error('Error deleting image:', error);
-        return false;
+          return result.result === 'ok';
+      } catch (error) {
+          console.error('Error deleting image:', error);
+          return false;
     }
-}
+    }

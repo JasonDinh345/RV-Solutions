@@ -6,6 +6,11 @@ export class ImageController{
     constructor(imageService:ImageService){
         this.imageService = imageService;
     }
+    /**
+     * Retrives and sends the given images
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getRandomImages(req:Request, res: Response){
         try{
             const result = await this.imageService.getRandomImages()

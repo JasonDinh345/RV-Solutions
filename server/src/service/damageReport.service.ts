@@ -1,19 +1,31 @@
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { DamageReport, DamageReportwRV } from "../types/DamageReport.type.js";
 import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
-
+/**
+ * Service layer for the DamageReport table
+ */
 export class DamageReportService{
     private pool: Pool
 
     constructor(pool: Pool){
         this.pool = pool
     }
+    /**
+     * Gets the ReportID column in all DamageReport tuples that an account is at fault for
+     * @param accountID ID relating to an account
+     * @returns an array of objects with just the ReportID's where the account is at fault for
+     */
     async getAllDamageReportWithAccount(accountID: number): Promise<Partial<DamageReport>[]>{
         try{
             if(!accountID){
                 throw new Error("INVALID_ACCOUNT")
             }
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT ReportID FROM DamageReport JOIN Booking ON DamageReport.BookingID = Booking.BookingID WHERE Booking.AccountID = ?`, [accountID])
+            const [rows] = await this.pool.execute<RowDataPacket[]>(`
+                SELECT ReportID 
+                FROM DamageReport 
+                JOIN Booking ON DamageReport.BookingID = Booking.BookingID
+                WHERE Booking.AccountID = ?`
+                 , [accountID])
             return rows as Partial<DamageReport>[];
         }catch(err){
             switch(err.code){
@@ -26,6 +38,12 @@ export class DamageReportService{
             }
         }
     }
+    /**
+     * Gets all ReportID of the DamageReport, the name of the account at fault
+     * and the start and end date of the booking when it happened relating a RV
+     * @param vin vin relating to an RV
+     * @returns an array with objects with the specified columns
+     */
     async getAllDamageReportWithRV(vin: string): Promise<Partial<DamageReport>[]>{
         try{
             if(!vin){
@@ -49,29 +67,14 @@ export class DamageReportService{
             }
         }
     }
-    async getAllDamageReportWithOwner(ownerID: string): Promise<Partial<DamageReport>[]>{
-        try{
-            if(!ownerID){
-                throw new Error("INVALID_ACCOUNT")
-            }
-            const [rows] = await this.pool.execute<RowDataPacket[]>(
-                `SELECT ReportID FROM DamageReport 
-                    JOIN Booking ON DamageReport.BookingID = Booking.BookingID 
-                    JOIN RV ON Booking.vin = RV.vin WHERE RV.ownerID = ?`, [ownerID])
-            return rows as Partial<DamageReport>[];
-        }catch(err){
-            switch(err.code){
-                case "ER_PARSE_ERROR":
-                    console.error('SQL syntax error in SELECT query:', err.message);
-                    throw new Error("SQL_SYNTAX_ERROR");
-                default:
-                    console.error(err);
-                    throw new Error(err.message);
-            }
-        }
-        
-    }
-    
+  
+    /**
+     * Gets all columns of a DamageReport tuple with the 
+     * image, make, model and VIN relating to the RV, and the name of the account of 
+     * whoever is at fault
+     * @param reportID ID of the DamageReport to be searched
+     * @returns an object of all specified columns
+     */
     async getDamageReportwRV(reportID: number):Promise<DamageReportwRV>{
         try{
             if(!reportID){
@@ -106,6 +109,11 @@ export class DamageReportService{
             }
         }
     }
+    /**
+     * Inserts an object into the DamageReport table
+     * @param reportData object to be inserted to the table
+     * @returns a boolean stating if the insertion went through
+     */
     async insertDamageReport(reportData: Omit<DamageReport, 'ReportID'>):Promise<boolean>{
         try{
             const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery(reportData, "DamageReport"), Object.values(reportData))
@@ -133,6 +141,12 @@ export class DamageReportService{
             }
         }
     }
+    /**
+     * Updates a tuple based on an object
+     * @param reportData object with updated fields
+     * @param reportID reportID of tuple to be updated
+     * @returns a boolean stating if the update went through
+     */
     async updateDamageReport(reportData: Partial<DamageReport>, reportID: number):Promise<boolean>{
         delete reportData["bookingID"]
         try{
@@ -161,6 +175,11 @@ export class DamageReportService{
             }
         }
     }
+    /**
+     * Deletes a tuple from the table
+     * @param reportID ID of the tuple to be deleted
+     * @returns a boolean stating if the deletion went through
+     */
     async deleteDamageReport(reportID: number):Promise<boolean>{
         try{
             if(!reportID){

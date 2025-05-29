@@ -2,12 +2,21 @@ import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { Account } from "../types/Account.type.js";
 import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
 import bcrypt from 'bcrypt'
+/**
+ * Service layer for the Account Table
+ */
 export class AccountService{
     private pool :Pool;
 
     constructor(pool: Pool){
         this.pool = pool 
     }
+    /**
+     * Gets all account columns, the num of RVs currently hosting
+     * and the num of bookings made from a given user
+     * @param AccountID ID relating to an account
+     * @returns an object with the specified columns
+     */
     async getAccount(AccountID: number):Promise<Account>{
     
         try{
@@ -30,6 +39,11 @@ export class AccountService{
             throw new Error("SERVER_ERROR")
         }
     }
+    /**
+     * Inserts an account into the table
+     * @param accountData object to be inserted
+     * @returns a boolean if the insertion went through
+     */
     async insertAccount(accountData: Omit<Account, 'AccountID'>): Promise<boolean>{
         
         const hashedPass = await bcrypt.hash(accountData.Password!, 10)
@@ -53,6 +67,12 @@ export class AccountService{
             throw new Error("SERVER_ERROR");  
         }
     }
+    /**
+     * Updates a tuple in the table
+     * @param accountData an object with the updated fields
+     * @param AccountID ID relating to an account
+     * @returns a boolean if the update went through
+     */
     async updateAccount(accountData: Partial<Account>, AccountID: number):Promise<boolean>{
         
         if(accountData.Password){
@@ -86,6 +106,11 @@ export class AccountService{
             
         }
     }
+    /**
+     * Deletes a tuple from the table
+     * @param AccountID an ID relating to an account 
+     * @returns a boolean if the deletion went through
+     */
     async deleteAccount(AccountID: number): Promise<boolean>{
         try{
             const [result] = await this.pool.execute<ResultSetHeader>(`DELETE FROM account WHERE AccountID = ?`, [AccountID])

@@ -9,7 +9,11 @@ export class RVController{
     constructor(rvService: RVService){
         this.rvService = rvService
     }
-
+    /**
+     * Retrives and send "all" RVS
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getAllRV(req:Request, res: Response):Promise<void>{
         try{
             const allRVs = await this.rvService.getAllRV()
@@ -29,6 +33,11 @@ export class RVController{
             }
         }
     }
+    /**
+     * Retrives and send "all" RVS relating to an owner
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getAllRVwOwner(req:Request, res: Response):Promise<void>{
         try{
             const ownerID : number = Number(req.params.ownerID)
@@ -52,6 +61,11 @@ export class RVController{
             }
         }
     }
+    /**
+     * Retrives and send a given RV
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getRV(req:Request, res: Response):Promise<void>{
         try{
             const vin = req.params.vin
@@ -76,6 +90,11 @@ export class RVController{
             }
         }
     }
+    /**
+     * Retrives data from the end-user and sends the response of the insertion
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async insertRV(req:Request, res: Response):Promise<void>{
         try{
             if(!req.files){
@@ -116,6 +135,11 @@ export class RVController{
             }
         }
     }
+    /**
+     * Retrives data from the end-user and sends the response of the update
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async updateRV(req:Request, res: Response):Promise<void>{
         try{
             
@@ -161,6 +185,11 @@ export class RVController{
             }
         }
     }
+    /**
+     * Retrives data from the end-user and sends the response of the deletion
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async deleteRV(req:Request, res: Response):Promise<void>{
         try{
             const  {vin, imageID} = req.params

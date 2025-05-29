@@ -7,7 +7,11 @@ export class DamageReportController{
     constructor(damageReportService: DamageReportService){
         this.damageReportService = damageReportService
     }
-
+    /**
+     * Retrives and sends all damage reports linked to an account
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getAllDamageReportWithAccount(req:Request, res: Response):Promise<void>{
         try{
             const accoundID = Number(req.params.accountID);
@@ -31,6 +35,11 @@ export class DamageReportController{
             }
         }
     }
+    /**
+     * Retrives and sends all damage reports linked to RV
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getAllDamageReportWithRV(req:Request, res: Response):Promise<void>{
         try{
             const vin = req.params.vin;
@@ -54,30 +63,11 @@ export class DamageReportController{
             }
         }
     }
-    async getAllDamageReportWithOwner(req:Request, res: Response):Promise<void>{
-        try{
-            const ownerID = req.params.ownerID;
-            const damageReports: Partial<DamageReport>[] = await this.damageReportService.getAllDamageReportWithOwner(ownerID)
-            if(damageReports.length === 0){
-                res.status(404).json({message:`No damage reports found`})
-            }else{
-                res.status(200).json(damageReports)
-            }
-        }catch(err){
-            switch(err.message){
-                case "INVALID_ACCOUNT":
-                    res.status(400).json({message: `Owner ID can't be null`})
-                    break;
-                case "SQL_SYNTAX_ERROR":
-                    res.status(500).json({message: `SQL syntax error!`})
-                    break;
-                default:
-                    res.status(500).json({message: `Server error occured!`})
-                    break;
-            }
-        }
-    }
-    
+    /**
+     * Retrives and sends a given damage report 
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getDamageReportwRV(req:Request, res: Response):Promise<void>{
         try{
             const reportID = Number(req.params.reportID);
@@ -102,6 +92,11 @@ export class DamageReportController{
             }
         }
     }
+    /**
+     * Retrives data and sends the response of the insertion
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async insertDamageReport(req:Request, res: Response):Promise<void>{
         try{
             const reportData = req.body
@@ -133,6 +128,11 @@ export class DamageReportController{
             }
         }
     }
+     /**
+     * Retrives data and sends the response of the update
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async updateDamageReport(req:Request, res: Response):Promise<void>{
         try{
             const reportData = req.body
@@ -165,6 +165,11 @@ export class DamageReportController{
             }
         }
     }
+     /**
+     * Retrives data and sends the response of the deletion
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async deleteDamageReport(req:Request, res: Response):Promise<void>{
         try{
             const reportID = Number(req.params.reportID);

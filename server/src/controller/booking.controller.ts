@@ -8,7 +8,11 @@ export class BookingController{
     constructor(bookingService: BookingService){
         this.bookingService = bookingService
     }
-
+     /**
+     * Retrives and sends all bookings linked to a RV
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getAllBookingToVIN(req:Request, res: Response):Promise<void>{
         try{
             const vin = req.params.vin
@@ -32,6 +36,11 @@ export class BookingController{
             }
         }
     }
+    /**
+     * Retrives and sends all bookings linked to an account
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getAllBookingsToAccount(req:Request, res: Response):Promise<void>{
         try{
             const accountID = Number(req.params.accountID)
@@ -55,6 +64,11 @@ export class BookingController{
             }
         }
     }
+    /**
+     * Retrives and send a HTML table of all bookings linked to an account
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getAllBookingsToAccountHTML(req:Request, res: Response):Promise<void>{
         try{
             const accountID = Number(req.params.accountID)
@@ -79,30 +93,12 @@ export class BookingController{
             }
         }
     }
-    async getAllBookingsToOwner(req:Request, res: Response):Promise<void>{
-        try{
-            const ownerID = Number(req.params.ownerID)
-            if(!ownerID){
-                throw new Error("INVALID_OWNER")
-            }
-            const bookings : Partial<Booking>[] = await this.bookingService.getAllBookingsToOwner(ownerID)
-            if(bookings.length > 0){
-                res.status(200).json(bookings)
-            }else{
-                res.status(404).json({message: `No booking found with an RV with ownerID: ${ownerID}`})
-            }
-        }catch(err){
-            switch(err.message){
-                case "SQL_SYNTAX_ERROR":
-                    res.status(500).json({message: `SQL syntax error!`})
-                    break;
-                default:
-                    res.status(500).json({message: `Server error occured!`})
-                    break;
-            }
-        }
-    }
-   
+    
+   /**
+     * Retrives and send a given booking
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getBooking(req:Request, res: Response):Promise<void>{
         try{
             const bookingID = Number(req.params.bookingID)
@@ -124,6 +120,11 @@ export class BookingController{
             }
         }
     }
+    /**
+     * Retrives data and send the response of the insertion
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async insertBooking(req:Request, res: Response):Promise<void>{
         try{
             const bookingData = req.body
@@ -155,6 +156,11 @@ export class BookingController{
             }
         }
     }
+    /**
+     * Retrives data and send the response of the update
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async updateBooking(req:Request, res: Response):Promise<void>{
         try{
             const bookingData = req.body.bookingData
@@ -184,6 +190,11 @@ export class BookingController{
             }
         }
     }
+    /**
+     * Retrives data and send the response of the deletion
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async deleteBooking(req:Request, res: Response):Promise<void>{
         try{
             const bookingID = req.body.bookingID

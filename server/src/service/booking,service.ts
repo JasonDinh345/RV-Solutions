@@ -1,13 +1,20 @@
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { Booking, BookingwRV } from "../types/Booking.type.js";
 import { getInsertQuery, getUpdateQuery } from "../util/queryPrep.js";
-
+/**
+ * Service layer for the Booking table
+ */
 export class BookingService{
     private pool: Pool
     constructor(pool :Pool){
         this.pool = pool
     }
-
+    /**
+     * Gets all BookingID, their start and end date, and the account who rented
+     * the RV relating to a RV 
+     * @param vin a vin relating to a RV
+     * @returns an array of objects with the specified columns
+     */
     async getAllBookingToVIN(vin: string): Promise<Partial<Booking>[]>{
         try{
             const [rows] = await this.pool.execute<RowDataPacket[]>(`
@@ -29,6 +36,11 @@ export class BookingService{
         
         }
     }
+    /**
+     * Gets all BookingID that an account has rented
+     * @param accountID an ID relating to an account
+     * @returns an array of objects with their BookingID
+     */
     async getAllBookingsToAccount(accountID: number): Promise<Partial<Booking>[]>{
         try{
             const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT BookingID FROM BOOKING WHERE accountID = ?`, [accountID])
@@ -46,23 +58,13 @@ export class BookingService{
             }
         }
     }
-    async getAllBookingsToOwner(ownerID: number): Promise<Partial<Booking>[]>{
-        try{
-            const [rows] = await this.pool.execute<RowDataPacket[]>(`SELECT BookingID FROM BOOKING WHERE vin IN (SELECT vin FROM RV WHERE ownerID = ?)`, [ownerID])
-            
-            return rows as Partial<Booking>[]
-        }catch(err){
-           
-            switch(err.code){
-                case "ER_PARSE_ERROR":
-                    console.error('SQL syntax error in SELECT query:', err.message);
-                    throw new Error("SQL_SYNTAX_ERROR");
-                default:
-                    console.error(err);
-                    throw new Error("SERVER_ERROR");
-            }
-        }
-    }
+    /**
+     * Gets all booking data, the make and model of the RV, and
+     * the relating image to the RV based on all booking an account
+     * as purchased and puts it all in a HTML table
+     * @param accountID an ID relating to an account
+     * @returns a HTML table displaying the data
+     */
     async getAllBookingsToAccountHTML(accountID: number): Promise<any>{
         try{
             const [rows] = await this.pool.execute<RowDataPacket[]>(`
@@ -125,6 +127,12 @@ export class BookingService{
             }
         }
     }
+    /**
+     * Gets the booking tuple, the make and model of the RV, and
+     * the relating image to the RV based on a booking 
+     * @param bookingID ID relating to a tuple
+     * @returns an object with the specified columns
+     */
     async getBookingDetails(bookingID: number): Promise<BookingwRV>{
         try{
             const [rows] = await this.pool.execute<RowDataPacket[]>(`
@@ -156,6 +164,11 @@ export class BookingService{
             
         }
     }
+    /**
+     * Inserts an object into the table
+     * @param bookingData object to be inserted
+     * @returns a boolean stating if the insertion went through
+     */
     async insertBooking(bookingData: Omit<Booking,'BookingID'>):Promise<boolean>{
         try{
             const [result] = await this.pool.execute<ResultSetHeader>(getInsertQuery(bookingData, 'BOOKING'), Object.values(bookingData)) 
@@ -183,6 +196,12 @@ export class BookingService{
             }
         }
     }
+    /**
+     * Updates a tuple based on a object
+     * @param bookingData object with the updated fields
+     * @param bookingID ID relating to a tuple
+     * @returns a boolean statng if the update went through
+     */
     async updateBooking(bookingData: Partial<Booking>, bookingID: number):Promise<boolean>{
         delete bookingData["vin"]
         try{
@@ -208,6 +227,11 @@ export class BookingService{
             }
         }
     }
+    /**
+     * Deletes a tuple from the table
+     * @param bookingID ID relating to a tuple
+     * @returns a boolean statng if the deletion went through
+     */
     async deleteBooking(bookingID: number):Promise<boolean>{
         try{
             const [result] = await this.pool.execute<ResultSetHeader>(`DELETE FROM BOOKING WHERE bookingID = ?`, [bookingID]) 
