@@ -80,4 +80,17 @@
     object-fit: cover; /* or 'contain' depending on your goal */
     display: block;
 }
-
+.buttonContainer{
+    display: flex;
+    
+}
+.buttonContainer *{
+    font-size: larger;
+    height: 5vh;
+    margin-left: 1%;
+    
+}
+.buttonContainer *:hover{
+    background-color: rgb(209, 209, 209);
+    
+}
