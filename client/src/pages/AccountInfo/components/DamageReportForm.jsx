@@ -44,7 +44,7 @@ export function AddDamageReportForm({onExit}){
                     <h1>Add Damage Report for:</h1>
                     <h2>{RV.Make}, {RV.Model}</h2>
                     <LabelSelect fieldName="BookingID" value={formData.BookingID} label="Choose a Booking" onChange={handleChange}>
-                        <option value={-1}>Select A Report</option>
+                        <option value={-1}>Select A Booking</option>
                         {bookings.map(booking =>
                             <option key={booking.BookingID} value={booking.BookingID}>{booking.Name}, {reformatDate(booking.StartDate)} - {reformatDate(booking.EndDate)}</option>
                         )}
@@ -162,9 +162,9 @@ export function EditDamageReportForm({onExit}){
                     <label htmlFor="IsPaid" style={{fontWeight:"bolder", fontSize:"2vh"}}>Is Paid?:
                         <input id="IsPaid" type="checkbox" name="IsPaid" checked={Boolean(formData.IsPaid)} onChange={handleChange}></input>
                     </label>
-                    <div>
-                        <input type="submit" value="Update Damage Report" disabled={!formData.ReportID || formData.ReportID < 0}></input>
-                        <button onClick={handleDelete} disabled={!formData.ReportID || formData.ReportID < 0}>Delete Report</button>
+                    <div className="buttonContainer">
+                        <input type="submit" value="Update Damage Report" className="defaultBorder-thin"disabled={!formData.ReportID || formData.ReportID < 0}></input>
+                        <button type="button" onClick={handleDelete}  className="defaultBorder-thin" disabled={!formData.ReportID || formData.ReportID < 0}>Delete Report</button>
                     </div>
                      {loading ? <p className="success">Updating report...</p>: error ? <p className="error">{error.message}</p>: response ? <p className="success">Successfully updated report!</p>:<></>}
                 </form>
