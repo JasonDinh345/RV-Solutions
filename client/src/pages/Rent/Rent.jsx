@@ -27,14 +27,18 @@ export default function Rent(){
                 url: `http://localhost:1231/RV`,
                 params: searchOptions
             })
-            console.log(result)
+           
             if(result){
                setFilteredRVs(result.data)
+            }else{
+              setFilteredRVs([])
             }
         }catch(err){
+            setFilteredRVs([])
             console.log(err)
         }
     }
+   
     if(!rvList  && isLoading){
       return <p>Couldn't load RVs</p>
     }

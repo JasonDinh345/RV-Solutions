@@ -1,6 +1,6 @@
 import useGet from "../../../hooks/useGet"
 import { useState, useEffect,useRef } from "react";
-import RVDisplay from "./RVDisplay";
+
 export default function ImageSlide(){
     const [index, setIndex] = useState(0);
     const intervalRef = useRef(null);

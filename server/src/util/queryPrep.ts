@@ -55,7 +55,7 @@ export function getAddWhereClause(searchOptions:Partial<SearchOptions>){
   
   let clause = "";
   const values: any[] = [];
-  console.log(searchOptions)
+
   if(searchOptions){
     if (searchOptions.AccountID && searchOptions.AccountID !== "") {
       clause += " AND RV.OwnerID != ?";

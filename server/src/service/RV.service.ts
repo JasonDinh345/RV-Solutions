@@ -39,6 +39,7 @@ export class RVService{
           const { clause, values } = getAddWhereClause(searchOptions);
           query += clause;
           query += ` LIMIT 100;`;
+          
           const [rows] = await this.pool.query<RowDataPacket[]>(query, values);
           return rows as RVwImage[] ;
         }catch(err){

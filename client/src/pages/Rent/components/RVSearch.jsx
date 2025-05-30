@@ -17,7 +17,7 @@ export default function RVSearch({onSearch }) {
         
     }
     
-    console.log(searchOptions)
+   
     return(
         <>
         <div id='RVSearchBox'>
@@ -25,11 +25,11 @@ export default function RVSearch({onSearch }) {
             <input type='text' value={searchOptions.State|| ""} name="State"onChange={handleChange} placeholder={"State"}/>
             <div id="RVSearchClass">
                 <p>RV Class:</p>
-                <select defaultValue="" onChange={handleChange}>
+                <select name="SizeClass"defaultValue="" onChange={handleChange}>
                         <option value="" >None</option>
-                        <option>A</option>
-                        <option>B</option>
-                        <option>C</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
                 </select>
             </div>
             

@@ -206,7 +206,7 @@ export class RVController{
                 return
             }
             const result = await this.rvService.deleteRV(vin, imageID)
-            console.log(result)
+           
             if(result){
                 res.status(204).json({message: `Successfully deleted RV`})
             }else{
