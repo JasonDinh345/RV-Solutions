@@ -112,9 +112,9 @@ export default function MyRVUpdateForm({onExit}){
                 <label htmlFor="isAvailable" style={{fontWeight:"bolder", fontSize:"2vh"}}>Set Immediately Available:
                     <input id="isAvailable" type="checkbox" name="isAvailable" checked={Boolean(formData.isAvailable)} onChange={handleChange} ></input>
                 </label>
-                <div>
-                    <input type="submit" value="Update RV"></input>
-                    <button onClick={handleDelete}>Delete RV</button>
+                <div className="buttonContainer">
+                    <input type="submit" className="defaultBorder-thin" value="Update RV"></input>
+                    <button type="button"onClick={handleDelete} className="defaultBorder-thin">Delete RV</button>
                 </div>
 
                 {formError  ?(
