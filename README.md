@@ -10,6 +10,8 @@
                 <li><code>assets</code>: global files
                 <li><code>components</code>: global components
                 <li><code>hooks</code>: custom React hooks
+                <li><code>provider</code>: custom React providers for context
+                <li><code>context</code>: custom React useContext hooks
                 <li><code>pages</code>: folder containing each page for the site
                 <li><code>util</code>: functions to be imported from to keep things organized
             </ul>
@@ -27,9 +29,20 @@
         </ul>
 </ul>
     
-<h1>Dependencies</h1>
-<p>Run <code>cd client</code>, then run <code>npm install</code> or <code>npm i</code> to install the needed npm modules</p>
-<p>Run <code>cd ..</code> to return back to the root folder</p>
-<p>Run <code>cd server</code>, then run <code>npm install</code> or <code>npm i</code> to install the needed npm modules</p>
+<h1>How to Run</h1>
+<ol>
+    <li>Have Node installed locally</li>
+    <li>Start MySQL and the Apache Web Server using the XAMPP program</li>
+    <li>Create a new database called "rvSolutions"</li>
+    <li>Import the included SQL file into the database</li>
+    <li>Create a new user privilege with the specifed attributes listed in the .env and set to have all global privilege </li>
+    <li>In the project folder open a new terminal and run <code>cd server</code></li>
+    <li>Next run <code>npm install</code> or <code>npm i</code> to install the needed npm modules for this package</li>
+    <li>Then run <code>npm run build</code></li>
+    <li>Finally, run <code>npm run dev</code>, this should say "Server running!" in the terminal</li>
+    <li>Open a new terminal and run <code>cd client</code></li>
+    <li>Next run <code>npm install</code> or <code>npm i</code> to install the needed npm modules for this package</li>
+    <li>Finally, run <code>npm run dev</code>, there should a localhost server in the terminal where you can visit the frontend</li>
+</ol>
 
 

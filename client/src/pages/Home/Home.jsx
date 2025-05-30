@@ -36,7 +36,7 @@ export default function Home(){
                     </tr>
                     <tr>
                         <td>Cuauhtemoc Aguilar Mandujano</td>
-                        <td>insert</td>
+                        <td>aguilcua@uw.edu</td>
   
                     </tr>
                     <tr>
@@ -46,7 +46,7 @@ export default function Home(){
                     </tr>
                     <tr>
                         <td>Holden Tsang</td>
-                        <td>insert</td>
+                        <td>ht0726@uw.edu</td>
                       
                     </tr>
                     
