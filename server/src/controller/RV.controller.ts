@@ -9,16 +9,24 @@ export class RVController{
     constructor(rvService: RVService){
         this.rvService = rvService
     }
-
+    /**
+     * Retrives and send "all" RVS
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getAllRV(req:Request, res: Response):Promise<void>{
         try{
-            const allRVs = await this.rvService.getAllRV()
+            
+            const searchOptions = {...req.query}
+           
+            const allRVs = await this.rvService.getAllRV(searchOptions)
             if(allRVs.length > 0){
                 res.status(200).json(allRVs)
             }else{
                 res.status(404).json({message:"No RVs Found"})
             }
         }catch(err){
+            console.log(err)
             switch(err.message){
                 case "SQL_SYNTAX_ERROR":
                     res.status(500).json({message: `SQL syntax error!`})
@@ -29,6 +37,11 @@ export class RVController{
             }
         }
     }
+    /**
+     * Retrives and send "all" RVS relating to an owner
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getAllRVwOwner(req:Request, res: Response):Promise<void>{
         try{
             const ownerID : number = Number(req.params.ownerID)
@@ -52,6 +65,11 @@ export class RVController{
             }
         }
     }
+    /**
+     * Retrives and send a given RV
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getRV(req:Request, res: Response):Promise<void>{
         try{
             const vin = req.params.vin
@@ -76,6 +94,11 @@ export class RVController{
             }
         }
     }
+    /**
+     * Retrives data from the end-user and sends the response of the insertion
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async insertRV(req:Request, res: Response):Promise<void>{
         try{
             if(!req.files){
@@ -116,6 +139,11 @@ export class RVController{
             }
         }
     }
+    /**
+     * Retrives data from the end-user and sends the response of the update
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async updateRV(req:Request, res: Response):Promise<void>{
         try{
             
@@ -161,6 +189,11 @@ export class RVController{
             }
         }
     }
+    /**
+     * Retrives data from the end-user and sends the response of the deletion
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async deleteRV(req:Request, res: Response):Promise<void>{
         try{
             const  {vin, imageID} = req.params
@@ -172,7 +205,9 @@ export class RVController{
                  res.status(400).json({ message: `Missing ImageID: ${imageID}` });
                 return
             }
-            if(await this.rvService.deleteRV(vin, imageID)){
+            const result = await this.rvService.deleteRV(vin, imageID)
+            console.log(result)
+            if(result){
                 res.status(204).json({message: `Successfully deleted RV`})
             }else{
                 res.status(404).json({message:`Couldn't find RV with VIN: ${vin}`})

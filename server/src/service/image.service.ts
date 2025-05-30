@@ -1,11 +1,18 @@
 import { Pool, RowDataPacket } from "mysql2/promise";
 import { Image } from "../types/Image.type.js";
+/**
+ * Service layer for the Image table
+ */
 export class ImageService{
     private pool: Pool;
     
     constructor(pool: Pool){
         this.pool = pool;
     }
+    /**
+     * Gets 8 random images from the image table
+     * @returns an array of image tuples
+     */
     async getRandomImages():Promise<Image[]>{
         try{
             const [rows] = await this.pool.execute<RowDataPacket[]>(

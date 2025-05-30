@@ -6,7 +6,7 @@ import pool from "../util/db.js";
 const imageRouter: Router = Router();
 const imageService = new ImageService(pool)
 const imageController: ImageController = new ImageController(imageService);
-
+/** GET request for to some Images */
 imageRouter.get("/", imageController.getRandomImages.bind(imageController))
 
 export default imageRouter;

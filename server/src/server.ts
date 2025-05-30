@@ -28,11 +28,17 @@ app.use(fileUpload());
 app.get("/", (req : Request, res: Response)=>{
     res.status(200).sendFile(path.join(process.cwd(), 'public', 'home.html'));
 })
+/** Router for auth router */
 app.use('/auth', authRouter);
+/** Router for account router */
 app.use('/account', accountRouter)
+/** Router for RV router */
 app.use('/RV', rvRouter)
+/** Router for booking router */
 app.use('/booking', bookingRouter)
+/** Router for image router */
 app.use("/image", imageRouter)
+/** Router for damage report router */
 app.use('/damageReport', damageReportRouter)
 
 

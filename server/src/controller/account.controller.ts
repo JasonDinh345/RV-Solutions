@@ -40,6 +40,11 @@ export class AccountController{
             next()
         })
     }
+    /**
+     * Retrives and send a given user
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async getAccount(req:Request, res: Response):Promise<void>{
         try{
             const account = await this.accountService.getAccount( Number(req.account.AccountID))
@@ -59,6 +64,11 @@ export class AccountController{
             }
         }
     }
+    /**
+     * Retrives and send the response for the insertion
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async insertAccount(req:Request, res: Response):Promise<void>{
         try{
             const accountData: Partial<Account> = req.body;
@@ -85,6 +95,11 @@ export class AccountController{
             }
         }
     }
+    /**
+     * Retrives and send the response for the update
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async updateAccount(req:Request, res: Response):Promise<void>{
         try{
             
@@ -115,6 +130,11 @@ export class AccountController{
             }
         }
     }
+    /**
+     * Retrives and send the response for the deletion
+     * @param req request from the user
+     * @param res response from the the backend
+     */
     async deleteAccount(req:Request, res: Response):Promise<void>{
         try{
             if(await this.accountService.deleteAccount( Number(req.account.AccountID))){
