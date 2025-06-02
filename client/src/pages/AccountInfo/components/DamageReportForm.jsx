@@ -136,7 +136,7 @@ export function EditDamageReportForm({onExit}){
                 <form onSubmit={handleSubmit}>
                     <h3 className="exitButton" onClick={onExit}>X</h3>
                     <h2>{RV.Make}, {RV.Model}</h2>
-                     <LabelSelect fieldName="ReportID" value={formData.ReportID} label="Choose a Booking" onChange={handleChange}>
+                     <LabelSelect fieldName="ReportID" value={formData.ReportID} label="Choose a Report" onChange={handleChange}>
                         <option value={-1}>Select A Report</option>
                         {reportList.map(report =>
                             <option key={report.ReportID} value={report.ReportID}>Report ID: {report.ReportID}, {report.Name}</option>

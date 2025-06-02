@@ -147,14 +147,12 @@ export class RVController{
     async updateRV(req:Request, res: Response):Promise<void>{
         try{
             
-            if(!req.files){
-                throw new Error("INVALID_REQUEST")
-            }
+    
             
             const rvData = JSON.parse(req.body.RV)
-           
-            const imageData = req.files.img as fileUpload.UploadedFile
-            const imageURLData = await uploadBlob(imageData.data)
+            console.log(rvData)
+            
+          
             
             const vin = req.params.vin
             const imageID = req.params.imageID
@@ -166,6 +164,8 @@ export class RVController{
             if(!req.files){
                 result = await this.rvService.updateRV(rvData, vin)
             }else{
+                const imageData = req.files.img as fileUpload.UploadedFile
+                const imageURLData = await uploadBlob(imageData.data)
                 result = await this.rvService.updateRVwImage(rvData, imageURLData, vin,imageID)
             }
             if(result){
@@ -174,6 +174,7 @@ export class RVController{
                 res.status(404).json({message:`Couldn't find RV`})
             }
         }catch(err){
+            console.log(err)
             switch(err.message){
                 case "INVALID_FIELD":
                     res.status(400).json({ message: `Unknown field in update query: ${req.body}` });

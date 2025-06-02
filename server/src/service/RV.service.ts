@@ -152,7 +152,7 @@ export class RVService{
      * @returns a boolean stating if the update went smoothly or not
      */
     async updateRV(rvData: Partial<RV>, VIN: string): Promise<boolean>{
-
+        
         try{
             const [result] = await this.pool.execute<ResultSetHeader>(getUpdateQuery(rvData, 'RV', 'VIN'), [...Object.values(rvData), VIN])
             return result.affectedRows > 0;

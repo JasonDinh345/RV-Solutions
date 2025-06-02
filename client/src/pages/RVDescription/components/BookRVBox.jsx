@@ -34,7 +34,7 @@ export default function BookRVBox({costPer}){
             
             const res = await axios.post("http://localhost:1231/booking", {...bookingInfo, VIN: vin, AccountID: account.AccountID, TotalCost: totalCost})
             if(res.status === 201){
-                navigate("/accountInfo/bookings")
+                navigate("/accountInfo/Bookings")
             }
         }catch(err){
             console.error(err)

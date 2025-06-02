@@ -73,7 +73,9 @@ export default function MyRVUpdateForm({onExit}){
         }
         
     }
-    
+    if(RV){
+        console.log(RV)
+    }
     
     return(
            <div className="blackBG">
