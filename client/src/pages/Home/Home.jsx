@@ -42,7 +42,7 @@ export default function Home(){
                     </tr>
                     <tr>
                         <td>RJ Calderon</td>
-                        <td>insert</td>
+                        <td>rjcal02@uw.edu</td>
                         
                     </tr>
                     <tr>
