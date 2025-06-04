@@ -21,7 +21,7 @@ export class ImageService{
         }catch(err){
             switch(err.code){
                 case "ER_PARSE_ERROR":
-                    console.error('SQL syntax error in DELETE query:', err.message);
+                    console.error('SQL syntax error in SELECT query:', err.message);
                     throw new Error("SQL_SYNTAX_ERROR");
                 default:
                     console.error(err);

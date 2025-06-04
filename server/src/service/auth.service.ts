@@ -53,7 +53,7 @@ export class AuthService{
                         console.error('Duplicate user with refresh token error:', err.message);
                         throw new Error("DUPLICATE_ENTRY");
                     case "ER_PARSE_ERROR":
-                        console.error('SQL syntax error in DELETE query:', err.message);
+                        console.error('SQL syntax error in query:', err.message);
                         throw new Error("SQL_SYNTAX_ERROR");
                     default:
                         console.error('Unexpected DB error:', err);

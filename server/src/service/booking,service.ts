@@ -188,7 +188,7 @@ export class BookingService{
                     console.error('Foreign key constraint fails:', err.message);
                 throw new Error("FOREIGN_KEY_ERROR");
                 case "ER_PARSE_ERROR":
-                    console.error('SQL syntax error in DELETE query:', err.message);
+                    console.error('SQL syntax error in UPDATE query:', err.message);
                     throw new Error("SQL_SYNTAX_ERROR");
                 default:
                     console.error('Unexpected DB error:', err);
@@ -219,7 +219,7 @@ export class BookingService{
                     console.error('Foreign key constraint fails:', err.message);
                     throw new Error("FOREIGN_KEY_ERROR");
                 case "ER_PARSE_ERROR":
-                    console.error('SQL syntax error in DELETE query:', err.message);
+                    console.error('SQL syntax error in UPDATE query:', err.message);
                     throw new Error("SQL_SYNTAX_ERROR");
                 default:
                     console.error('Unexpected DB error:', err);
