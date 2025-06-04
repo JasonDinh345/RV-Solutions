@@ -1,10 +1,10 @@
 import useGet from "../../../hooks/useGet"
 import { useState, useEffect,useRef } from "react";
-
+import {useNavigate} from 'react-router-dom'
 export default function ImageSlide(){
     const [index, setIndex] = useState(0);
     const intervalRef = useRef(null);
-
+    const navigate = useNavigate();
     const {data: images, isLoading} = useGet("http://localhost:1231/image")
     const goNext = () => {
     setIndex((prev) => (prev + 1) % images.length);
@@ -52,6 +52,7 @@ export default function ImageSlide(){
                     />
                 <img  className="mainImage"
                     src={images[index].ImageURL}
+                    onClick={()=>navigate(`/RV/${images[index].VIN}`)}
                     alt="Slideshow"  
                     key={index} 
                 />
