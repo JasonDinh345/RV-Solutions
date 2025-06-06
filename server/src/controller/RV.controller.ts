@@ -146,14 +146,8 @@ export class RVController{
      */
     async updateRV(req:Request, res: Response):Promise<void>{
         try{
-            
     
-            
             const rvData = JSON.parse(req.body.RV)
-            console.log(rvData)
-            
-          
-            
             const vin = req.params.vin
             const imageID = req.params.imageID
             if(!rvData || !vin){
